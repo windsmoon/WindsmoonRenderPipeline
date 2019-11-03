@@ -34,3 +34,5 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+WindsmoonRenderPipeline/Assets/Plugins/Editor/JetBrains.meta
+WindsmoonRenderPipeline/Assets/Plugins/Editor/JetBrains/
