@@ -36,3 +36,4 @@ sysinfo.txt
 *.unitypackage
 WindsmoonRenderPipeline/Assets/Plugins/Editor/JetBrains.meta
 WindsmoonRenderPipeline/Assets/Plugins/Editor/JetBrains/
+WindsmoonRenderPipeline/.idea/
