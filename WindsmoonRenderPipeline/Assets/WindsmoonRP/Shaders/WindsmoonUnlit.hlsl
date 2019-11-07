@@ -3,6 +3,8 @@
 
 #include "WindsmoonCommon.hlsl"
 
+float4 _BaseColor;
+
 float4 UnlitVertex(float3 positionOS : POSITION) : SV_Position
 {
     float3 worldPos = TransformObjectToWorld(positionOS);
@@ -11,7 +13,7 @@ float4 UnlitVertex(float3 positionOS : POSITION) : SV_Position
 
 float4 UnlitFragment() : SV_Target
 {
-    return 1.0;
+    return _BaseColor;
 }
 
 #endif
