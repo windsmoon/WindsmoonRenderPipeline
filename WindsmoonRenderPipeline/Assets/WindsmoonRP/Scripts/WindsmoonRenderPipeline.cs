@@ -3,7 +3,6 @@ using UnityEngine.Rendering;
 
 namespace WindsmoonRP
 {
-    [CreateAssetMenu(menuName = "Windsmoon/Windsmoon Render Pipeline/Create Windsmoon Render Pipeline")]
     public class WindsmoonRenderPipeline : RenderPipeline
     {
         #region fields
