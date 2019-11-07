@@ -9,6 +9,13 @@ namespace WindsmoonRP
         private CameraRenderer cameraRenderer = new CameraRenderer();
         #endregion
         
+        #region constructors
+        public WindsmoonRenderPipeline()
+        {
+            GraphicsSettings.useScriptableRenderPipelineBatching = true;
+        }
+        #endregion
+        
         #region methods
         protected override void Render(ScriptableRenderContext context, Camera[] cameras)
         {

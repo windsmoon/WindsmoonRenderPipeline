@@ -3,7 +3,9 @@
 
 #include "WindsmoonCommon.hlsl"
 
-float4 _BaseColor;
+CBUFFER_START(UnityPerMaterial)
+    float4 _BaseColor;
+CBUFFER_END
 
 float4 UnlitVertex(float3 positionOS : POSITION) : SV_Position
 {
