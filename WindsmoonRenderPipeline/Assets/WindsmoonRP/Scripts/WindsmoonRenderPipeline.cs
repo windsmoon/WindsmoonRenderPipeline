@@ -7,12 +7,16 @@ namespace WindsmoonRP
     {
         #region fields
         private CameraRenderer cameraRenderer = new CameraRenderer();
+        private bool useDynamicBatching;
+        private bool useGPUInstancing;
         #endregion
         
         #region constructors
-        public WindsmoonRenderPipeline()
+        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher)
         {
-            GraphicsSettings.useScriptableRenderPipelineBatching = true;
+            this.useDynamicBatching = useDynamicBatching;
+            this.useGPUInstancing = useGPUInstancing;
+            GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
         }
         #endregion
         
@@ -21,7 +25,7 @@ namespace WindsmoonRP
         {
             foreach (Camera camera in cameras)
             {
-                cameraRenderer.Render(context, camera);
+                cameraRenderer.Render(context, camera, useDynamicBatching, useGPUInstancing);
             }
         }
         #endregion

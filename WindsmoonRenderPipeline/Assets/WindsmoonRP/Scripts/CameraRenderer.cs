@@ -34,7 +34,7 @@ namespace WindsmoonRP
         #endregion
         
         #region methods
-        public void Render(ScriptableRenderContext renderContext, Camera camera)
+        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing)
         {
             this.renderContext = renderContext;
             this.camera = camera;
@@ -50,8 +50,8 @@ namespace WindsmoonRP
             }
             
             Setup();
-            DrawVisibleObjects();
-            
+            DrawVisibleObjects(useDynamicBatching, useGPUInstancing);
+
             #if UNITY_EDITOR || DEBUG
             DrawUnsupportedShaderObjects();
             DrawGizmos();
@@ -83,10 +83,11 @@ namespace WindsmoonRP
             ExcuteCommandBuffer();
         }
         
-        private void DrawVisibleObjects()
+        private void DrawVisibleObjects(bool useDynamicBatching, bool useGPUInstancing)
         {
             SortingSettings sortingSettings = new SortingSettings(camera) {criteria = SortingCriteria.CommonOpaque};
-            DrawingSettings drawingSettings = new DrawingSettings(unlitShaderTagID, sortingSettings);
+            DrawingSettings drawingSettings = new DrawingSettings(unlitShaderTagID, sortingSettings)
+                {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing};
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
             renderContext.DrawSkybox(camera);
