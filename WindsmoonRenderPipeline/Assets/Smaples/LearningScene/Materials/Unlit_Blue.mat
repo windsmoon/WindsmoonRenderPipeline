@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Unlit_Blue
   m_Shader: {fileID: 4800000, guid: fd26a8e8261e5974c92c3b78d41b21ad, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: ALPHA_CLIPPING
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: eb012dd5a30b6be4f8fa2d21e8db172f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -72,6 +76,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
+    - _alphaClipping: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 0.0141509175, b: 0.0141509175, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

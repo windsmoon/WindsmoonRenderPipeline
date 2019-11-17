@@ -6,12 +6,15 @@ using UnityEngine;
 namespace WindsmoonRP.Samples.LearningScene
 {
     [DisallowMultipleComponent]
-    public class BaseColor : MonoBehaviour
+    public class PerObjectMaterialProperties : MonoBehaviour
     {
         #region fields
         private static readonly int baseColorPropertyID = Shader.PropertyToID("_BaseColor");
+        private static readonly int cutoffPropertyID = Shader.PropertyToID("_Cutoff");
         [SerializeField]
-        Color baseColor = Color.white;
+        private Color baseColor = Color.white;
+        [SerializeField]
+        private float cutoff = 0.5f;
         private static MaterialPropertyBlock materialPripertyBlock;
         #endregion
 
@@ -28,6 +31,7 @@ namespace WindsmoonRP.Samples.LearningScene
                 materialPripertyBlock = new MaterialPropertyBlock();
             }
             materialPripertyBlock.SetColor(baseColorPropertyID, baseColor);
+            materialPripertyBlock.SetFloat(cutoffPropertyID, cutoff);
             GetComponent<Renderer>().SetPropertyBlock(materialPripertyBlock);
         }
         #endregion
