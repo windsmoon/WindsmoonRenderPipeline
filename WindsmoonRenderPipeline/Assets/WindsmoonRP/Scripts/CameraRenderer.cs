@@ -16,6 +16,7 @@ namespace WindsmoonRP
         private CommandBuffer commandBuffer = new CommandBuffer();
         private CullingResults cullingResults;
         private static ShaderTagId unlitShaderTagID = new ShaderTagId("SRPDefaultUnlit");
+        private static ShaderTagId litShaderTagID = new ShaderTagId("WindsmoonLit");
         private string commandBufferName;
         
         #if UNITY_EDITOR || DEBUG
@@ -88,6 +89,7 @@ namespace WindsmoonRP
             SortingSettings sortingSettings = new SortingSettings(camera) {criteria = SortingCriteria.CommonOpaque};
             DrawingSettings drawingSettings = new DrawingSettings(unlitShaderTagID, sortingSettings)
                 {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing};
+            drawingSettings.SetShaderPassName(1, litShaderTagID);
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
             renderContext.DrawSkybox(camera);
