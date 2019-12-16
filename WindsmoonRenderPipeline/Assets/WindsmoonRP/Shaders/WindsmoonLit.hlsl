@@ -2,6 +2,9 @@
 #define WINDSMOON_LIT_INCLUDED
 
 #include "WindsmoonCommon.hlsl"
+#include "WindsmoonSurface.hlsl"
+#include "WindsmoonLight.hlsl"
+#include "WindsmoonLighting.hlsl"
 
 //CBUFFER_START(UnityPerMaterial)
   //  float4 _BaseColor;
@@ -56,9 +59,10 @@ float4 LitFragment(Varyings input) : SV_Target
 	    clip(color.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
 	#endif
 	
-	//color.rbg = input.normalWS;
-	//color.rgb = abs(length(input.normalWS) - 1.0) * 10.0;
-	color.rbg = normalize(input.normalWS);
-	return color;
+	Surface surface;
+	surface.normal = normalize(input.normalWS);
+	surface.color = baseColor.rgb;
+	surface.alpha = baseColor.a;
+	return float4(GetLighting(surface), surface.alpha);
 }
 #endif
