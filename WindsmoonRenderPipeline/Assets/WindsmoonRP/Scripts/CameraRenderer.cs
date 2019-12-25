@@ -6,7 +6,7 @@ namespace WindsmoonRP
 {
     public class CameraRenderer
     {
-        #region fields
+        #region constants
         private const string defaultCommandBufferName = "Camera Renderer";
         #endregion
 
@@ -18,7 +18,8 @@ namespace WindsmoonRP
         private static ShaderTagId unlitShaderTagID = new ShaderTagId("SRPDefaultUnlit");
         private static ShaderTagId litShaderTagID = new ShaderTagId("WindsmoonLit");
         private string commandBufferName;
-        
+        private Lighting lighting = new Lighting();
+
         #if UNITY_EDITOR || DEBUG
         private static ShaderTagId[] legacyShaderTagIDs = 
         {
@@ -82,6 +83,7 @@ namespace WindsmoonRP
                 camera.backgroundColor.linear : Color.clear); // ?? tbdr resolve
             commandBuffer.BeginSample(commandBufferName);
             ExcuteCommandBuffer();
+            lighting.Setup(renderContext, cullingResults);
         }
         
         private void DrawVisibleObjects(bool useDynamicBatching, bool useGPUInstancing)
