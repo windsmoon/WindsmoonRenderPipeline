@@ -11,10 +11,16 @@ namespace WindsmoonRP.Samples.LearningScene
         #region fields
         private static readonly int baseColorPropertyID = Shader.PropertyToID("_BaseColor");
         private static readonly int cutoffPropertyID = Shader.PropertyToID("_Cutoff");
+        private static readonly int metallicPropertyID = Shader.PropertyToID("_Metallic");
+        private static readonly int smoothnessPropertyID = Shader.PropertyToID("_Smoothness");
         [SerializeField]
         private Color baseColor = Color.white;
         [SerializeField]
         private float cutoff = 0.5f;
+        [SerializeField]
+        private float metallic = 0f;
+        [SerializeField]
+        private float smoothness = 0.5f;
         private static MaterialPropertyBlock materialPripertyBlock;
         #endregion
 
@@ -32,6 +38,8 @@ namespace WindsmoonRP.Samples.LearningScene
             }
             materialPripertyBlock.SetColor(baseColorPropertyID, baseColor);
             materialPripertyBlock.SetFloat(cutoffPropertyID, cutoff);
+            materialPripertyBlock.SetFloat(metallicPropertyID, metallic);
+            materialPripertyBlock.SetFloat(smoothnessPropertyID, smoothness);
             GetComponent<Renderer>().SetPropertyBlock(materialPripertyBlock);
         }
         #endregion

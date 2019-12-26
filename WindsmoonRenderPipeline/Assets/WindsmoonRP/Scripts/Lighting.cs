@@ -15,7 +15,7 @@ namespace WindsmoonRP
         private CommandBuffer commandBuffer = new CommandBuffer();
         private int directionalLightColorsPropertyID = Shader.PropertyToID("_DirectionalLightColors");
         private int directionalLightDirectionsPropertyID = Shader.PropertyToID("_DirectionalLightDirections");
-        private int directionalLightCountPropertyID = Shader.PropertyToID("_directionalLightCount");
+        private int directionalLightCountPropertyID = Shader.PropertyToID("_DirectionalLightCount");
         private CullingResults cullingResults;
         private static Vector4[] directionalLightColors = new Vector4[maxDirectionalLightCount]; 
         private static Vector4[] directionalLightDirections = new Vector4[maxDirectionalLightCount];

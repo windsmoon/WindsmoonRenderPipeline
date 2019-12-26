@@ -23,8 +23,8 @@ int GetDirectionalLightCount()
 Light GetDirectionalLight(int index)
 {
     Light light;
-    light.direction = _DirectionalLightDirection[index].xyz;
-    light.color = _DirectionalLightColor[index].rgb;
+    light.direction = _DirectionalLightDirections[index].xyz;
+    light.color = _DirectionalLightColors[index].rgb;
     return light;
 }
 
