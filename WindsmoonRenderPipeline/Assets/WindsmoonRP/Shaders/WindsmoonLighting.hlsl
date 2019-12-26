@@ -1,12 +1,12 @@
 #ifndef WINDSMOON_LIGHTING_INCLUDED
 #define WINDSMOON_LIGHTING_INCLUDED
 
-float3 GetIncomingLight(Surface surface, Light light)
+float3 GetLight(Surface surface, Light light, BRDFLight brdfLight)
 {
-    return saturate(dot(surface.normal, light.direction)) * light.color;
+    return saturate(dot(surface.normal, light.direction)) * light.color * brdfLight.diffuse;
 }
 
-float3 GetLighting(Surface surface) 
+float3 GetLighting(Surface surface, BRDFLight brdfLight) 
 {
 	//return GetIncomingLight(surface, GetDirectionalLight()) * surface.color;
 	
@@ -14,8 +14,9 @@ float3 GetLighting(Surface surface)
 	
 	for (int i = 0; i < GetDirectionalLightCount(); i++) 
 	{
-		color += GetIncomingLight(surface, GetDirectionalLight(i));
+		color += GetLight(surface, GetDirectionalLight(i), brdfLight);
 	}
+	
 	return color;
 }
 

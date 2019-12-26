@@ -15,11 +15,11 @@ namespace WindsmoonRP.Samples.LearningScene
         private static readonly int smoothnessPropertyID = Shader.PropertyToID("_Smoothness");
         [SerializeField]
         private Color baseColor = Color.white;
-        [SerializeField]
+        [SerializeField, Range(0f, 1f)]
         private float cutoff = 0.5f;
-        [SerializeField]
+        [SerializeField, Range(0f, 1f)]
         private float metallic = 0f;
-        [SerializeField]
+        [SerializeField, Range(0f, 1f)]
         private float smoothness = 0.5f;
         private static MaterialPropertyBlock materialPripertyBlock;
         #endregion
@@ -36,6 +36,7 @@ namespace WindsmoonRP.Samples.LearningScene
             {
                 materialPripertyBlock = new MaterialPropertyBlock();
             }
+            
             materialPripertyBlock.SetColor(baseColorPropertyID, baseColor);
             materialPripertyBlock.SetFloat(cutoffPropertyID, cutoff);
             materialPripertyBlock.SetFloat(metallicPropertyID, metallic);

@@ -11,7 +11,8 @@ struct BRDFLight
 BRDFLight GetBRDFLight(Surface surface) 
 {
 	BRDFLight brdfLight;
-	brdfLight.diffuse = surface.color;
+	float oneMinusReflectivity = 1.0 - surface.metallic;
+	brdfLight.diffuse = surface.color * oneMinusReflectivity;
 	brdfLight.specular = 0.0;
 	brdfLight.roughness = 1.0;
 	return brdfLight;
