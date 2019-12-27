@@ -10,6 +10,8 @@ namespace WindsmoonRP.Samples.LearningScene
     {
         #region fields
         private static int baseColorPropertyID = Shader.PropertyToID("_BaseColor");
+        private static int metallicPropertyID = Shader.PropertyToID("_Metallic");
+        private static int smoothnessPropertyID = Shader.PropertyToID("_Smoothness");
         [SerializeField]
         private Mesh mesh;
         [SerializeField]
@@ -20,6 +22,8 @@ namespace WindsmoonRP.Samples.LearningScene
         private int radius = 10;
         private Matrix4x4[] matrices;
         private Vector4[] baseColors;
+        private float[] metallics;
+        private float[] smoothnesses;
         private MaterialPropertyBlock materialPropertyBlock;
         #endregion
         
@@ -45,6 +49,8 @@ namespace WindsmoonRP.Samples.LearningScene
         {
             matrices = new Matrix4x4[meshCount];
             baseColors = new Vector4[meshCount];
+            metallics = new float[meshCount];
+            smoothnesses = new float[meshCount];
             
             for (int i = 0; i < matrices.Length; i++)
             {
@@ -52,10 +58,14 @@ namespace WindsmoonRP.Samples.LearningScene
                     Quaternion.Euler(Random.value * 360f, Random.value * 360f, Random.value * 360f),
                     Vector3.one * Random.Range(0.5f, 1.5f));
                 baseColors[i] = new Vector4(Random.value, Random.value, Random.value, Random.Range(0.5f, 1f));
+                metallics[i] = Random.value < 0.25f ? 1f : 0f;
+                smoothnesses[i] = Random.Range(0.05f, 0.95f);
             }
             
             materialPropertyBlock = new MaterialPropertyBlock();
             materialPropertyBlock.SetVectorArray(baseColorPropertyID, baseColors);
+            materialPropertyBlock.SetFloatArray(metallicPropertyID, metallics);
+            materialPropertyBlock.SetFloatArray(smoothnessPropertyID, smoothnesses);
         }
         #endregion
     }
