@@ -14,6 +14,7 @@ float4 TransformWorldToHClip(float3 positionWS)
 }*/
 
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
 #include "WindsmoonInput.hlsl"
 
 #define UNITY_MATRIX_M unity_ObjectToWorld
@@ -24,5 +25,10 @@ float4 TransformWorldToHClip(float3 positionWS)
 
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
+
+float Square (float v) 
+{
+	return v * v;
+}
 
 #endif
