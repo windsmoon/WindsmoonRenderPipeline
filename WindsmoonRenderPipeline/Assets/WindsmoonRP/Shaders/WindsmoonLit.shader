@@ -5,8 +5,8 @@
         _BaseMap("Base Texture", 2D) = "white" {}
         _BaseColor("Base Color", Color) = (0.5, 0.5, 0.5, 1.0)
         _Cutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
-        [Toggle(ALPHA_CLIPPING)] _alphaClipping ("Alpha Clipping", Float) = 0
-        [Toggle(PREMULTIPLY_ALPHA)] _PremulAlpha ("Premultiply Alpha", Float) = 0
+        [Toggle(ALPHA_CLIPPING)] _AlphaClipping ("Alpha Clipping", Float) = 0
+        [Toggle(PREMULTIPLY_ALPHA)] _PremultiplyAlpha ("Premultiply Alpha", Float) = 0
         _Metallic("Metallic", Range(0, 1)) = 0
 		_Smoothness("Smoothness", Range(0, 1)) = 0.5
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Src Blend", Float) = 1
@@ -37,4 +37,6 @@
             ENDHLSL
         }
     }
+    
+    CustomEditor "WindsmoonRP.Editor.WindsmoonShaderGUI"
 }

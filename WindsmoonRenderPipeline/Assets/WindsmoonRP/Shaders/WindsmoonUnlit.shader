@@ -28,4 +28,6 @@
             ENDHLSL
         }
     }
+    
+    CustomEditor "WindsmoonRP.Editor.WindsmoonShaderGUI"
 }
