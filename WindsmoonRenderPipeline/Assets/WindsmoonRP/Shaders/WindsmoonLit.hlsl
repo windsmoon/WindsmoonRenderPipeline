@@ -4,7 +4,7 @@
 #include "WindsmoonCommon.hlsl"
 #include "WindsmoonSurface.hlsl"
 #include "WindsmoonLight.hlsl"
-#include "BRDF.hlsl"
+#include "WindsmoonBRDF.hlsl"
 #include "WindsmoonLighting.hlsl"
 
 //CBUFFER_START(UnityPerMaterial)
@@ -58,10 +58,10 @@ float4 LitFragment(Varyings input) : SV_Target
     UNITY_SETUP_INSTANCE_ID(input);
     float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
 	float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-	float4 color = baseMap * baseColor;
+	baseColor *= baseMap;
 	
 	#if defined(ALPHA_CLIPPING)
-	    clip(color.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
+	    clip(baseColor.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
 	#endif
 	
 	Surface surface;

@@ -1,5 +1,5 @@
-#ifndef BRDF_INCLUDED
-#define BRDF_INCLUDED
+#ifndef WINDSMOON_BRDF_INCLUDED
+#define WINDSMOON_BRDF_INCLUDED
 
 #define MIN_REFLECTIVITY 0.04
 
@@ -21,6 +21,11 @@ BRDFLight GetBRDFLight(Surface surface)
 	BRDFLight brdfLight;
 	float oneMinusReflectivity = OneMinusReflectivity(surface.metallic);
 	brdfLight.diffuse = surface.color * oneMinusReflectivity;
+	
+	#if defined(PREMULTIPLY_ALPHA)
+		brdfLight.diffuse *= surface.alpha;
+	#endif
+	
 	//brdfLight.specular = 0.0;
 	brdfLight.specular = lerp(MIN_REFLECTIVITY, surface.color, surface.metallic);
 	float perceptualRoughness = PerceptualSmoothnessToPerceptualRoughness(surface.smoothness); // disne
