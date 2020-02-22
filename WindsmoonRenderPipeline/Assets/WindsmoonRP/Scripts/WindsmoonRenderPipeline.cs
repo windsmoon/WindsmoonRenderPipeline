@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+using WindsmoonRP.Shadow;
 
 namespace WindsmoonRP
 {
@@ -9,15 +10,17 @@ namespace WindsmoonRP
         private CameraRenderer cameraRenderer = new CameraRenderer();
         private bool useDynamicBatching;
         private bool useGPUInstancing;
+        private ShadowSetting shadowSetting;
         #endregion
         
         #region constructors
-        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher)
+        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher, ShadowSetting shadowSetting)
         {
             this.useDynamicBatching = useDynamicBatching;
             this.useGPUInstancing = useGPUInstancing;
             GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
             GraphicsSettings.lightsUseLinearIntensity = true;
+            this.shadowSetting = shadowSetting;
         }
         #endregion
         
@@ -26,7 +29,7 @@ namespace WindsmoonRP
         {
             foreach (Camera camera in cameras)
             {
-                cameraRenderer.Render(context, camera, useDynamicBatching, useGPUInstancing);
+                cameraRenderer.Render(context, camera, useDynamicBatching, useGPUInstancing, shadowSetting);
             }
         }
         #endregion

@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using WindsmoonRP.Shadow;
 
 namespace WindsmoonRP
 {
@@ -36,7 +37,7 @@ namespace WindsmoonRP
         #endregion
         
         #region methods
-        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing)
+        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing, ShadowSetting shadowSetting)
         {
             this.renderContext = renderContext;
             this.camera = camera;
@@ -46,12 +47,12 @@ namespace WindsmoonRP
             DrawSceneView();
             #endif
             
-            if (Cull() == false)
+            if (Cull(shadowSetting.MaxDistance) == false)
             {
                 return;
             }
             
-            Setup();
+            Setup(shadowSetting);
             DrawVisibleObjects(useDynamicBatching, useGPUInstancing);
 
             #if UNITY_EDITOR || DEBUG
@@ -62,12 +63,13 @@ namespace WindsmoonRP
             Submit();
         }
 
-        private bool Cull()
+        private bool Cull(float maxShadowDistance)
         {
             ScriptableCullingParameters scriptableCullingParameters;
             
             if (camera.TryGetCullingParameters(out scriptableCullingParameters))
             {
+                scriptableCullingParameters.shadowDistance = Mathf.Min(maxShadowDistance, camera.farClipPlane);
                 cullingResults = renderContext.Cull(ref scriptableCullingParameters);
                 return true;
             }
@@ -75,7 +77,7 @@ namespace WindsmoonRP
             return false;
         }
         
-        private void Setup()
+        private void Setup(ShadowSetting shadowSetting)
         {
             renderContext.SetupCameraProperties(camera); // ?? this method must be called before excute commandbuffer, or clear command will call GL.Draw to clear
             CameraClearFlags cameraClearFlags = camera.clearFlags;

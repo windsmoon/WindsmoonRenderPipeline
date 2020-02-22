@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+using WindsmoonRP.Shadow;
 
 namespace WindsmoonRP
 {
@@ -13,12 +14,14 @@ namespace WindsmoonRP
         private bool useGPUInstancing = true;
         [SerializeField]
         private bool useSPRBatcher = true;
+        [SerializeField]
+        private ShadowSetting shadowSetting;
         #endregion
 
         #region methods
         protected override RenderPipeline CreatePipeline()
         {
-            return new WindsmoonRenderPipeline(useDynamicBatching, useGPUInstancing, useSPRBatcher);
+            return new WindsmoonRenderPipeline(useDynamicBatching, useGPUInstancing, useSPRBatcher, shadowSetting);
         }
         #endregion
     }
