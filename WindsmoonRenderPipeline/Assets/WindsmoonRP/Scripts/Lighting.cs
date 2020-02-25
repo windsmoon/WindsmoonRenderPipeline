@@ -1,6 +1,8 @@
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
+using WindsmoonRP.Shadow;
+
 
 namespace WindsmoonRP
 {
@@ -19,17 +21,25 @@ namespace WindsmoonRP
         private CullingResults cullingResults;
         private static Vector4[] directionalLightColors = new Vector4[maxDirectionalLightCount]; 
         private static Vector4[] directionalLightDirections = new Vector4[maxDirectionalLightCount];
+        private ShadowRenderer shadowRenderer = new ShadowRenderer();
         #endregion
         
         #region methods
-        public void Setup(ScriptableRenderContext context, CullingResults cullingResults)
+        public void Setup(ScriptableRenderContext renderContext, CullingResults cullingResults, ShadowSettings shadowSettings)
         {
             this.cullingResults = cullingResults;
             commandBuffer.BeginSample(bufferName);
+            shadowRenderer.Setup(renderContext, cullingResults, shadowSettings);
             SetupLights();
+            shadowRenderer.Render();
             commandBuffer.EndSample(bufferName);
-            context.ExecuteCommandBuffer(commandBuffer);
+            renderContext.ExecuteCommandBuffer(commandBuffer);
             commandBuffer.Clear();
+        }
+
+        public void Cleanup()
+        {
+            shadowRenderer.Cleanup();
         }
         
         private void SetupLights()
@@ -51,7 +61,7 @@ namespace WindsmoonRP
                     break;
                 }
                 
-                SetupDirectionalLight(i, ref visibleLight);
+                SetupDirectionalLight(directionalCount, ref visibleLight);
                 ++directionalCount;
             }
             // Light light = RenderSettings.sun;
@@ -65,7 +75,8 @@ namespace WindsmoonRP
         private void SetupDirectionalLight(int index, ref VisibleLight visiblelight)
         {
             directionalLightColors[index] = visiblelight.finalColor;
-            directionalLightDirections[index] = -visiblelight.localToWorldMatrix.GetColumn(2);
+            directionalLightDirections[index] = -visiblelight.localToWorldMatrix.GetColumn(2); // ?? remeber to revise
+            shadowRenderer.ReserveDirectionalShadows(visiblelight.light, index);
         }
         #endregion
     }

@@ -15,13 +15,13 @@ namespace WindsmoonRP
         [SerializeField]
         private bool useSPRBatcher = true;
         [SerializeField]
-        private ShadowSetting shadowSetting;
+        private ShadowSettings shadowSettings;
         #endregion
 
         #region methods
         protected override RenderPipeline CreatePipeline()
         {
-            return new WindsmoonRenderPipeline(useDynamicBatching, useGPUInstancing, useSPRBatcher, shadowSetting);
+            return new WindsmoonRenderPipeline(useDynamicBatching, useGPUInstancing, useSPRBatcher, shadowSettings);
         }
         #endregion
     }

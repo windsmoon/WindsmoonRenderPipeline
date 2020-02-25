@@ -27,13 +27,32 @@
             ZWrite [_ZWrite]
             
             HLSLPROGRAM
-            //#pragma target 3.5
+            //#pragma target 3.5 ??
             #pragma multi_compile _ ALPHA_CLIPPING
             #pragma multi_compile _ PREMULTIPLY_ALPHA
             #pragma multi_compile_instancing
             #pragma vertex LitVertex
             #pragma fragment LitFragment
-            #include "WindsmoonLit.hlsl"
+            #include "WindsmoonLitPass.hlsl"
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            Tags
+            {
+                "LightMode" = "ShadowCaster"
+            }
+            
+            ColorMask 0
+            
+            HLSLPROGRAM
+            //#pragma target 3.5 ??
+            #pragma multi_compile _ ALPHA_CLIPPING
+			#pragma multi_compile_instancing
+			#pragma vertex ShadowCasterVertex
+			#pragma fragment ShadowCasterFragment
+			#include "WindsmoonShadowCasterPass.hlsl"
             ENDHLSL
         }
     }

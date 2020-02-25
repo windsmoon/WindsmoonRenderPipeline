@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useDynamicBatching: 0
   useGPUInstancing: 1
-  useSPRBatcher: 1
+  useSPRBatcher: 0
+  shadowSettings:
+    maxDistance: 10.59
+    directionalShadowSetting:
+      ShadowMapSize: 2048

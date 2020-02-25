@@ -1,5 +1,5 @@
-﻿#ifndef WINDSMOON_LIT_INCLUDED
-#define WINDSMOON_LIT_INCLUDED
+﻿#ifndef WINDSMOON_LIT_PASS_INCLUDED
+#define WINDSMOON_LIT_PASS_INCLUDED
 
 #include "WindsmoonCommon.hlsl"
 #include "WindsmoonSurface.hlsl"

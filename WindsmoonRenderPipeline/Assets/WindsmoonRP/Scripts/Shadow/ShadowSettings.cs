@@ -5,7 +5,7 @@ using System.Reflection;
 namespace WindsmoonRP.Shadow
 {
     [Serializable]
-    public class ShadowSetting
+    public class ShadowSettings
     {
         #region fields
         [Min(0f), SerializeField]

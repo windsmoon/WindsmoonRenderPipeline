@@ -37,7 +37,7 @@ namespace WindsmoonRP
         #endregion
         
         #region methods
-        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing, ShadowSetting shadowSetting)
+        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing, ShadowSettings shadowSettings)
         {
             this.renderContext = renderContext;
             this.camera = camera;
@@ -47,12 +47,16 @@ namespace WindsmoonRP
             DrawSceneView();
             #endif
             
-            if (Cull(shadowSetting.MaxDistance) == false)
+            if (Cull(shadowSettings.MaxDistance) == false)
             {
                 return;
             }
             
-            Setup(shadowSetting);
+            commandBuffer.BeginSample(commandBufferName);
+            ExecuteCommandBuffer(); // ?? why tutorial do this ? maybe begin sample must be execute before next sample
+            lighting.Setup(renderContext, cullingResults, shadowSettings);
+            commandBuffer.EndSample(commandBufferName);
+            Setup(shadowSettings);
             DrawVisibleObjects(useDynamicBatching, useGPUInstancing);
 
             #if UNITY_EDITOR || DEBUG
@@ -60,6 +64,7 @@ namespace WindsmoonRP
             DrawGizmos();
             #endif
             
+            lighting.Cleanup();
             Submit();
         }
 
@@ -67,7 +72,7 @@ namespace WindsmoonRP
         {
             ScriptableCullingParameters scriptableCullingParameters;
             
-            if (camera.TryGetCullingParameters(out scriptableCullingParameters))
+            if (camera.TryGetCullingParameters(out scriptableCullingParameters)) // note: this method check if camera setting is invalid, return false 
             {
                 scriptableCullingParameters.shadowDistance = Mathf.Min(maxShadowDistance, camera.farClipPlane);
                 cullingResults = renderContext.Cull(ref scriptableCullingParameters);
@@ -77,15 +82,14 @@ namespace WindsmoonRP
             return false;
         }
         
-        private void Setup(ShadowSetting shadowSetting)
+        private void Setup(ShadowSettings shadowSettings)
         {
             renderContext.SetupCameraProperties(camera); // ?? this method must be called before excute commandbuffer, or clear command will call GL.Draw to clear
             CameraClearFlags cameraClearFlags = camera.clearFlags;
             commandBuffer.ClearRenderTarget(cameraClearFlags <= CameraClearFlags.Depth, cameraClearFlags == CameraClearFlags.Color, cameraClearFlags == CameraClearFlags.Color ?
                 camera.backgroundColor.linear : Color.clear); // ?? tbdr resolve
             commandBuffer.BeginSample(commandBufferName);
-            ExcuteCommandBuffer();
-            lighting.Setup(renderContext, cullingResults);
+            ExecuteCommandBuffer();
         }
         
         private void DrawVisibleObjects(bool useDynamicBatching, bool useGPUInstancing)
@@ -148,11 +152,11 @@ namespace WindsmoonRP
         private void Submit()
         {
             commandBuffer.EndSample(commandBufferName);
-            ExcuteCommandBuffer();
+            ExecuteCommandBuffer();
             renderContext.Submit();
         }
 
-        private void ExcuteCommandBuffer()
+        private void ExecuteCommandBuffer()
         {
             renderContext.ExecuteCommandBuffer(commandBuffer);
             commandBuffer.Clear();

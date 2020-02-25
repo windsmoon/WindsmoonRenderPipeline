@@ -10,26 +10,26 @@ namespace WindsmoonRP
         private CameraRenderer cameraRenderer = new CameraRenderer();
         private bool useDynamicBatching;
         private bool useGPUInstancing;
-        private ShadowSetting shadowSetting;
+        private ShadowSettings shadowSettings;
         #endregion
         
         #region constructors
-        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher, ShadowSetting shadowSetting)
+        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher, ShadowSettings shadowSettings)
         {
             this.useDynamicBatching = useDynamicBatching;
             this.useGPUInstancing = useGPUInstancing;
             GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
             GraphicsSettings.lightsUseLinearIntensity = true;
-            this.shadowSetting = shadowSetting;
+            this.shadowSettings = shadowSettings;
         }
         #endregion
         
         #region methods
-        protected override void Render(ScriptableRenderContext context, Camera[] cameras)
+        protected override void Render(ScriptableRenderContext renderContex, Camera[] cameras)
         {
             foreach (Camera camera in cameras)
             {
-                cameraRenderer.Render(context, camera, useDynamicBatching, useGPUInstancing, shadowSetting);
+                cameraRenderer.Render(renderContex, camera, useDynamicBatching, useGPUInstancing, shadowSettings);
             }
         }
         #endregion
