@@ -3,10 +3,13 @@
 
 float3 GetLight(Surface surface, Light light, BRDFLight brdfLight)
 {
-    return saturate(dot(surface.normal, light.direction)) * light.color * GetDirectBRDFLight(surface, brdfLight, light);
+    // ?? why tutorial do light attenuation in saturate
+    //return saturate(dot(surface.normal, light.direction) * light.attenuation;) * light.color * GetDirectBRDFLight(surface, brdfLight, light);
+
+    return saturate(dot(surface.normal, light.direction)) * light.color * GetDirectBRDFLight(surface, brdfLight, light) * light.attenuation;
 }
 
-float3 GetLighting(Surface surface, BRDFLight brdfLight) 
+float3 GetLighting(Surface surfaceWS, BRDFLight brdfLight) 
 {
 	//return GetIncomingLight(surface, GetDirectionalLight()) * surface.color;
 	
@@ -14,7 +17,7 @@ float3 GetLighting(Surface surface, BRDFLight brdfLight)
 	
 	for (int i = 0; i < GetDirectionalLightCount(); i++) 
 	{
-		color += GetLight(surface, GetDirectionalLight(i), brdfLight);
+		color += GetLight(surfaceWS, GetDirectionalLight(i, surfaceWS), brdfLight);
 	}
 	
 	return color;

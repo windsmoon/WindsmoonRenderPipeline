@@ -3,6 +3,7 @@
 
 #include "WindsmoonCommon.hlsl"
 #include "WindsmoonSurface.hlsl"
+#include "WindsmoonShadow.hlsl"
 #include "WindsmoonLight.hlsl"
 #include "WindsmoonBRDF.hlsl"
 #include "WindsmoonLighting.hlsl"
@@ -65,6 +66,7 @@ float4 LitFragment(Varyings input) : SV_Target
 	#endif
 	
 	Surface surface;
+	surface.position = input.positionWS;
 	surface.normal = normalize(input.normalWS);
 	surface.viewDirection = normalize(_WorldSpaceCameraPos - input.positionWS);
 	surface.color = baseColor.rgb;

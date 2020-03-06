@@ -6,7 +6,7 @@ using WindsmoonRP.Shadow;
 
 namespace WindsmoonRP
 {
-    public class Lighting
+    public class Lighting // todo : rename to LightRenderer
     {
         #region contants
         private const string bufferName = "Lighting";
@@ -15,12 +15,14 @@ namespace WindsmoonRP
         
         #region fields
         private CommandBuffer commandBuffer = new CommandBuffer();
-        private int directionalLightColorsPropertyID = Shader.PropertyToID("_DirectionalLightColors");
-        private int directionalLightDirectionsPropertyID = Shader.PropertyToID("_DirectionalLightDirections");
-        private int directionalLightCountPropertyID = Shader.PropertyToID("_DirectionalLightCount");
+        private static int directionalLightColorsPropertyID = Shader.PropertyToID("_DirectionalLightColors");
+        private static int directionalLightDirectionsPropertyID = Shader.PropertyToID("_DirectionalLightDirections");
+        private static int directionalLightCountPropertyID = Shader.PropertyToID("_DirectionalLightCount");
+        private static int directionalShadowInfosPropertyID = Shader.PropertyToID("_DirectionalShadowInfos");
         private CullingResults cullingResults;
         private static Vector4[] directionalLightColors = new Vector4[maxDirectionalLightCount]; 
         private static Vector4[] directionalLightDirections = new Vector4[maxDirectionalLightCount];
+        private static Vector4[] _DirectionalShadowInfos = new Vector4[maxDirectionalLightCount];
         private ShadowRenderer shadowRenderer = new ShadowRenderer();
         #endregion
         
@@ -70,13 +72,14 @@ namespace WindsmoonRP
             commandBuffer.SetGlobalVectorArray(directionalLightColorsPropertyID, directionalLightColors);
             commandBuffer.SetGlobalVectorArray(directionalLightDirectionsPropertyID, directionalLightDirections);
             commandBuffer.SetGlobalInt(directionalLightCountPropertyID, directionalCount);
+            commandBuffer.SetGlobalVectorArray(directionalShadowInfosPropertyID, _DirectionalShadowInfos);
         }
 
         private void SetupDirectionalLight(int index, ref VisibleLight visiblelight)
         {
             directionalLightColors[index] = visiblelight.finalColor;
             directionalLightDirections[index] = -visiblelight.localToWorldMatrix.GetColumn(2); // ?? remeber to revise
-            shadowRenderer.ReserveDirectionalShadows(visiblelight.light, index);
+            _DirectionalShadowInfos[index] = shadowRenderer.ReserveDirectionalShadows(visiblelight.light, index);
         }
         #endregion
     }
