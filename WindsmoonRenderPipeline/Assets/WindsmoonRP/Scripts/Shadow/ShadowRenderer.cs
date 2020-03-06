@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.UI;
 
 namespace WindsmoonRP.Shadow
 {
@@ -19,6 +20,9 @@ namespace WindsmoonRP.Shadow
         private DirectionalShadow[] directionalShadows = new DirectionalShadow[maxDirectionalShadowCount];
         private int currentDirectionalLightShadowCount;
         private Matrix4x4[] directionalShadowMatrices = new Matrix4x4[maxDirectionalShadowCount * maxCascadeCount];
+        private static int cascadeCountPropertyID = Shader.PropertyToID("_CascadeCount");
+        private static int cascadeCullingSpheresPropertyID = Shader.PropertyToID("_CascadeCullingSpheres");
+        private static Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
         #endregion
 
         #region methods
@@ -77,9 +81,11 @@ namespace WindsmoonRP.Shadow
 
             for (int i = 0; i < currentDirectionalLightShadowCount; ++i)
             {
-                RenderDirectionalShadow(i, splitCount, tileSize);
+                RenderDirectionalShadow(i, splitCount, tileSize); // this methods also set global shader properties
             }
             
+            commandBuffer.SetGlobalInt(cascadeCountPropertyID, shadowSettings.DirectionalShadowSetting.CascadeCount);
+            commandBuffer.SetGlobalVectorArray(cascadeCullingSpheresPropertyID, cascadeCullingSpheres);
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.DirectionalShadowMatrices, directionalShadowMatrices);
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
@@ -96,25 +102,32 @@ namespace WindsmoonRP.Shadow
 
             for (int i = 0; i < cascadeCount; ++i)
             {
-                
+                // note : the split data contains information about how shadow caster objects should be culled
+                cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(directionalShadow.visibleLightIndex, i, cascadeCount,
+                    cascadeRatios, tileSize, 0f, out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
+                shadowDrawingSettings.splitData = shadowSplitData;
+
+                if (index == 0)
+                {
+                    Vector4 cullingSphere = shadowSplitData.cullingSphere; // w means sphere's radius
+                    cullingSphere.w *= cullingSphere.w;
+                    cascadeCullingSpheres[i] = cullingSphere;
+                }
+
+                int tileIndex = tileOffset + i;
+                SetViewPort(tileIndex, splitCount, tileSize, out Vector2 offset);
+                // Matrix4x4 vpMatrix = projectionMatrix * viewMatrix
+                directionalShadowMatrices[tileIndex] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, splitCount);
+                // directionalShadowMatrices[index] = projectionMatrix * viewMatrix;
+                commandBuffer.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
+                ExecuteBuffer();
+                renderContext.DrawShadows(ref shadowDrawingSettings);
             }
-            
-            // note : the split data contains information about how shadow caster objects should be culled
-            cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(directionalShadow.visibleLightIndex, 0, 1,
-                Vector3.zero, tileSize, 0f, out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
-            shadowDrawingSettings.splitData = shadowSplitData;
-            SetViewPort(index, splitCount, tileSize, out Vector2 offset);
-            // Matrix4x4 vpMatrix = projectionMatrix * viewMatrix
-            directionalShadowMatrices[index] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, splitCount);
-            // directionalShadowMatrices[index] = projectionMatrix * viewMatrix;
-            commandBuffer.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
-            ExecuteBuffer();
-            renderContext.DrawShadows(ref shadowDrawingSettings);
         }
 
         private void SetViewPort(int index, int split, float tileSize, out Vector2 offset)
         {
-            // left to right then up to down
+            // left to right then up to down / down to up
             offset = new Vector2(index % split, index / split);
             commandBuffer.SetViewport(new Rect(offset.x * tileSize, offset.y * tileSize, tileSize, tileSize));
         }
