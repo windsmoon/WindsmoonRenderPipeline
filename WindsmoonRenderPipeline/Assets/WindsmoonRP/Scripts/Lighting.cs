@@ -63,7 +63,7 @@ namespace WindsmoonRP
                     break;
                 }
                 
-                SetupDirectionalLight(directionalCount, ref visibleLight);
+                SetupDirectionalLight(directionalCount, ref visibleLight); // ?? sure to use directionalCount as index ?
                 ++directionalCount;
             }
             // Light light = RenderSettings.sun;
