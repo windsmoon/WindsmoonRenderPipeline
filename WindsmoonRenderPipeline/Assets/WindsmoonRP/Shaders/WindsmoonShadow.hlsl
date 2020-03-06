@@ -2,13 +2,14 @@
 #define WINDSMOON_SHADOW_INCLUDED
 
 #define MAX_DIRECTIONAL_SHADOW_COUNT 4
+#define MAX_CASCADE_COUNT 4
 
 TEXTURE2D_SHADOW(_DirectionalShadowMap); // ?? what does TEXTURE2D_SHADOW mean ?
 #define SHADOW_SAMPLER sampler_linear_clamp_compare // ??
 SAMPLER_CMP(SHADOW_SAMPLER); // ?? note : use a special SAMPLER_CMP macro to define the sampler state, as this does define a different way to sample shadow maps, because regular bilinear filtering doesn't make sense for depth data.
 
 CBUFFER_START(ShadowInfo)
-    float4x4 _DirectionalShadowMatrices[MAX_DIRECTIONAL_SHADOW_COUNT];
+    float4x4 _DirectionalShadowMatrices[MAX_DIRECTIONAL_SHADOW_COUNT * MAX_CASCADE_COUNT];
 CBUFFER_END 
 
 struct DirectionalShadowInfo

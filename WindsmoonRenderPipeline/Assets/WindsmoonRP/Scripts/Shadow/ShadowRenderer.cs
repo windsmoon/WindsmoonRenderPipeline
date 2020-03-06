@@ -8,6 +8,7 @@ namespace WindsmoonRP.Shadow
         #region constants
         private const string bufferName = "Shadows";
         private const int maxDirectionalShadowCount = 4;
+        private const int maxCascadeCount = 4;
         #endregion
         
         #region fields
@@ -17,7 +18,7 @@ namespace WindsmoonRP.Shadow
         private ShadowSettings shadowSettings;
         private DirectionalShadow[] directionalShadows = new DirectionalShadow[maxDirectionalShadowCount];
         private int currentDirectionalLightShadowCount;
-        private Matrix4x4[] directionalShadowMatrices = new Matrix4x4[maxDirectionalShadowCount];
+        private Matrix4x4[] directionalShadowMatrices = new Matrix4x4[maxDirectionalShadowCount * maxCascadeCount];
         #endregion
 
         #region methods
@@ -40,7 +41,7 @@ namespace WindsmoonRP.Shadow
             }
 
             directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex};
-            return new Vector2(light.shadowStrength, currentDirectionalLightShadowCount++);
+            return new Vector2(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++);
         }
 
         public void Render()
@@ -68,8 +69,10 @@ namespace WindsmoonRP.Shadow
             commandBuffer.ClearRenderTarget(true, false, Color.clear);
             commandBuffer.BeginSample(bufferName);
             ExecuteBuffer();
-            
-            int splitCount = currentDirectionalLightShadowCount <= 1 ? 1 : 2;
+
+            int tileCount = currentDirectionalLightShadowCount * shadowSettings.DirectionalShadowSetting.CascadeCount;
+            // todo : squared tile will waste texture space
+            int splitCount = tileCount <= 1 ? 1 : tileCount <= 4 ? 2 : 4; // max tile count is 4 x 4 = 16, now the tile is squared
             int tileSize = shadowMapSize / splitCount;
 
             for (int i = 0; i < currentDirectionalLightShadowCount; ++i)
@@ -86,6 +89,16 @@ namespace WindsmoonRP.Shadow
         {
             DirectionalShadow directionalShadow = directionalShadows[index];
             ShadowDrawingSettings shadowDrawingSettings = new ShadowDrawingSettings(cullingResults, directionalShadow.visibleLightIndex);
+
+            int cascadeCount = shadowSettings.DirectionalShadowSetting.CascadeCount;
+            int tileOffset = index * cascadeCount;
+            Vector3 cascadeRatios = shadowSettings.DirectionalShadowSetting.CascadeRatios;
+
+            for (int i = 0; i < cascadeCount; ++i)
+            {
+                
+            }
+            
             // note : the split data contains information about how shadow caster objects should be culled
             cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(directionalShadow.visibleLightIndex, 0, 1,
                 Vector3.zero, tileSize, 0f, out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);

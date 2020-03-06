@@ -19,3 +19,7 @@ MonoBehaviour:
     maxDistance: 100
     directionalShadowSetting:
       ShadowMapSize: 2048
+      CascadedCount: 4
+      CascadedRatio1: 0.1
+      CascadedRatio2: 0.25
+      CascadedRatio3: 0.5

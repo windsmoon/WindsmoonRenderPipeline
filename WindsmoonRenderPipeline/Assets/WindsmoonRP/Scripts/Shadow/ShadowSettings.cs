@@ -11,7 +11,8 @@ namespace WindsmoonRP.Shadow
         [Min(0f), SerializeField]
         private float maxDistance = 100f;
         [SerializeField]
-        private DirectionalShadowSetting directionalShadowSetting = new DirectionalShadowSetting() {ShadowMapSize = TextureSize._2048};
+        private DirectionalShadowSetting directionalShadowSetting = new DirectionalShadowSetting() {ShadowMapSize = TextureSize._2048, CascadeCount = 4,
+            CascadeRatio1 = 0.1f, CascadeRatio2 = 0.25f, CascadeRatio3 = 0.5f};
         #endregion
 
         #region properties
