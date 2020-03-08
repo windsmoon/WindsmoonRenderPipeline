@@ -12,6 +12,7 @@ CBUFFER_START(ShadowInfo)
     int _CascadeCount;
     float4 _CascadeCullingSpheres[MAX_CASCADE_COUNT];
     float4x4 _DirectionalShadowMatrices[MAX_DIRECTIONAL_SHADOW_COUNT * MAX_CASCADE_COUNT];
+    float _MaxShadowDistance;
 CBUFFER_END 
 
 struct DirectionalShadowInfo
@@ -26,9 +27,18 @@ struct ShadowInfo
     float strength;
 };
 
+// todo : add cascade keyword
 ShadowInfo GetShadowInfo(Surface surfaceWS)
 {
     ShadowInfo shadowInfo;
+    
+    // the outermost culling sphere doesn't end exactly at the max shadow distance but extends a bit beyond it
+    if (surfaceWS.depth >= _MaxShadowDistance)
+    {
+        shadowInfo.cascadeIndex = 0;
+        shadowInfo.strength = 0.0f;
+        return shadowInfo;
+    }
     
     for (int i = 0; i < _CascadeCount; ++i)
     {
@@ -41,7 +51,7 @@ ShadowInfo GetShadowInfo(Surface surfaceWS)
             return shadowInfo;
         }
     }
-
+    
     shadowInfo.cascadeIndex = 0;
     shadowInfo.strength = 0.0f;
     return shadowInfo;

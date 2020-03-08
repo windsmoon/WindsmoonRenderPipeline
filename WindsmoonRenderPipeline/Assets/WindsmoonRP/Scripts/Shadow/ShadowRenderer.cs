@@ -22,12 +22,12 @@ namespace WindsmoonRP.Shadow
         private Matrix4x4[] directionalShadowMatrices = new Matrix4x4[maxDirectionalShadowCount * maxCascadeCount];
         private static int cascadeCountPropertyID = Shader.PropertyToID("_CascadeCount");
         private static int cascadeCullingSpheresPropertyID = Shader.PropertyToID("_CascadeCullingSpheres");
+        private static int maxShadowDistancePropertyID = Shader.PropertyToID("_MaxShadowDistance");
         private static Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
         #endregion
 
         #region methods
-        public void 
-            Setup(ScriptableRenderContext renderContext, CullingResults cullingResults, ShadowSettings shadowSettings)
+        public void Setup(ScriptableRenderContext renderContext, CullingResults cullingResults, ShadowSettings shadowSettings)
         {
             this.renderContext = renderContext;
             this.cullingResults = cullingResults;
@@ -87,6 +87,7 @@ namespace WindsmoonRP.Shadow
             commandBuffer.SetGlobalInt(cascadeCountPropertyID, shadowSettings.DirectionalShadowSetting.CascadeCount);
             commandBuffer.SetGlobalVectorArray(cascadeCullingSpheresPropertyID, cascadeCullingSpheres);
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.DirectionalShadowMatrices, directionalShadowMatrices);
+            commandBuffer.SetGlobalFloat(maxShadowDistancePropertyID, shadowSettings.MaxDistance);
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
         }
@@ -107,8 +108,12 @@ namespace WindsmoonRP.Shadow
                     cascadeRatios, tileSize, 0f, out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
                 shadowDrawingSettings.splitData = shadowSplitData;
 
-                if (index == 0)
+                if (index == 0) // set culling spheres, all directional light use only one group of culling spheres
                 {
+                    // note :  as the shadow projections are orthographic and square they end up closely fitting their culling sphere, but also cover some space around them
+                    // that's why some shadows can be seen outside the culling regions
+                    // also the light direction doesn't matter to the sphere, so all directional lights end up using the same culling spheres
+                    // the camera is not at the sphere's center, but the surface of the sphere, all spheres will intersect at this point
                     Vector4 cullingSphere = shadowSplitData.cullingSphere; // w means sphere's radius
                     cullingSphere.w *= cullingSphere.w;
                     cascadeCullingSpheres[i] = cullingSphere;

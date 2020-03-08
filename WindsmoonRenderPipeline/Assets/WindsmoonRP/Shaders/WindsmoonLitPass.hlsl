@@ -67,6 +67,7 @@ float4 LitFragment(Varyings input) : SV_Target
 	
 	Surface surface;
 	surface.position = input.positionWS;
+	surface.depth = -TransformWorldToView(input.positionWS).z; // ?? why -z not +z
 	surface.normal = normalize(input.normalWS);
 	surface.viewDirection = normalize(_WorldSpaceCameraPos - input.positionWS);
 	surface.color = baseColor.rgb;
