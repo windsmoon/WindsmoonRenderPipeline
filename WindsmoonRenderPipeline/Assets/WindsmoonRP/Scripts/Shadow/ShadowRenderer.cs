@@ -22,7 +22,8 @@ namespace WindsmoonRP.Shadow
         private Matrix4x4[] directionalShadowMatrices = new Matrix4x4[maxDirectionalShadowCount * maxCascadeCount];
         private static int cascadeCountPropertyID = Shader.PropertyToID("_CascadeCount");
         private static int cascadeCullingSpheresPropertyID = Shader.PropertyToID("_CascadeCullingSpheres");
-        private static int maxShadowDistancePropertyID = Shader.PropertyToID("_MaxShadowDistance");
+//        private static int maxShadowDistancePropertyID = Shader.PropertyToID("_MaxShadowDistance");
+        private static int shadowDistanceFade = Shader.PropertyToID("_ShadowDistanceFade");
         private static Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
         #endregion
 
@@ -87,7 +88,8 @@ namespace WindsmoonRP.Shadow
             commandBuffer.SetGlobalInt(cascadeCountPropertyID, shadowSettings.DirectionalShadowSetting.CascadeCount);
             commandBuffer.SetGlobalVectorArray(cascadeCullingSpheresPropertyID, cascadeCullingSpheres);
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.DirectionalShadowMatrices, directionalShadowMatrices);
-            commandBuffer.SetGlobalFloat(maxShadowDistancePropertyID, shadowSettings.MaxDistance);
+//            commandBuffer.SetGlobalFloat(maxShadowDistancePropertyID, shadowSettings.MaxDistance);
+            commandBuffer.SetGlobalVector(shadowDistanceFade, new Vector4(1 / shadowSettings.MaxDistance, 1 / shadowSettings.DistanceFade));
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
         }

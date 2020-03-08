@@ -17,6 +17,7 @@ MonoBehaviour:
   useSPRBatcher: 0
   shadowSettings:
     maxDistance: 100
+    distanceFade: 0.1
     directionalShadowSetting:
       ShadowMapSize: 2048
       CascadeCount: 4
