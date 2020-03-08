@@ -16,19 +16,35 @@ CBUFFER_END
 
 struct DirectionalShadowInfo
 {
-    float shadowStrength;
+    float shadowStrength; // if surface is not in any culling sphere, global shadowStrength set to 0 to avoid any shadow 
     int tileIndex;
 };
 
 struct ShadowInfo
 {
     int cascadeIndex;
+    float strength;
 };
 
 ShadowInfo GetShadowInfo(Surface surfaceWS)
 {
     ShadowInfo shadowInfo;
+    
+    for (int i = 0; i < _CascadeCount; ++i)
+    {
+        float4 cullingSphere = _CascadeCullingSpheres[i];
+        
+        if (GetDistanceSquared(cullingSphere.xyz, surfaceWS.position) < cullingSphere.w)
+        {
+            shadowInfo.cascadeIndex = i;
+            shadowInfo.strength = 1.0f;
+            return shadowInfo;
+        }
+    }
+
     shadowInfo.cascadeIndex = 0;
+    shadowInfo.strength = 0.0f;
+    return shadowInfo;
 }
 
 float SampleDirectionalShadow(float3 positionShadowMap)

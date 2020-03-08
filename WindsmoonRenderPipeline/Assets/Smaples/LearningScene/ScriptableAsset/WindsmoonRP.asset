@@ -16,7 +16,7 @@ MonoBehaviour:
   useGPUInstancing: 1
   useSPRBatcher: 0
   shadowSettings:
-    maxDistance: 100
+    maxDistance: 108.56
     directionalShadowSetting:
       ShadowMapSize: 2048
       CascadeCount: 4

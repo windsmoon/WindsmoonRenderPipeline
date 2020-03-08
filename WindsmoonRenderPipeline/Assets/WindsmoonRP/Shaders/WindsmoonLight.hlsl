@@ -22,21 +22,23 @@ int GetDirectionalLightCount()
 	return _DirectionalLightCount;
 }
 
-DirectionalShadowInfo GetDirectionalShadowInfo(int index)
+DirectionalShadowInfo GetDirectionalShadowInfo(int index, ShadowInfo shadowInfo)
 {
     DirectionalShadowInfo info;
-    info.shadowStrength = _DirectionalShadowInfos[index].x;
-    info.tileIndex = _DirectionalShadowInfos[index].y;
+    info.shadowStrength = _DirectionalShadowInfos[index].x * shadowInfo.strength;
+    info.tileIndex = _DirectionalShadowInfos[index].y + shadowInfo.cascadeIndex;
     return info;
 }
 
-Light GetDirectionalLight(int index, Surface sufraceWS)
+Light GetDirectionalLight(int index, Surface sufraceWS, ShadowInfo shadowInfo)
 {
     Light light;
     light.direction = _DirectionalLightDirections[index].xyz;
     light.color = _DirectionalLightColors[index].rgb;
-    DirectionalShadowInfo directionalShadowInfo = GetDirectionalShadowInfo(index);
+    DirectionalShadowInfo directionalShadowInfo = GetDirectionalShadowInfo(index,shadowInfo);
     light.attenuation = GetDirectionalShadowAttenuation(directionalShadowInfo, sufraceWS);
+    // this method can be used to check surface is using which cascade culling sphere
+    //light.attenuation = shadowInfo.cascadeIndex * 0.25; 
     return light;
 }
 
