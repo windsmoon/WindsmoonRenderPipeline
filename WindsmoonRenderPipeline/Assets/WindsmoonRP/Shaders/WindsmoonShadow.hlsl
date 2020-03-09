@@ -28,7 +28,10 @@ struct ShadowInfo
     float strength;
 };
 
-float GetFadedShadowStrength(float depth, float scale, float fadeScale) // fadeScale is from 0 to 1 but not equal 0
+// fadeScale is from 0 to 1 but not equal 0
+// scale means 1 / maxDistancce
+// fadeScale control the begin point of fade
+float GetFadedShadowStrength(float depth, float scale, float fadeScale) 
 {
     // (1 - depth / maxDistance) / fadeScale
     // (1 - depth / maxDistance) means from 0 to 1, the shadow strength from 1 to 0 linearly
@@ -57,9 +60,15 @@ ShadowInfo GetShadowInfo(Surface surfaceWS)
     for (int i = 0; i < _CascadeCount; ++i)
     {
         float4 cullingSphere = _CascadeCullingSpheres[i];
-        
-        if (GetDistanceSquared(cullingSphere.xyz, surfaceWS.position) < cullingSphere.w)
+        float squaredDistance = GetDistanceSquared(cullingSphere.xyz, surfaceWS.position);
+        if (squaredDistance < cullingSphere.w)
         {
+            // todo : I think it is useless because thera has already distance fade 
+            if (i == _CascadeCount - 1)
+            {
+                shadowInfo.strength *= GetFadedShadowStrength(squaredDistance, 1 / cullingSphere.w, _ShadowDistanceFade.z);
+            }
+            
             shadowInfo.cascadeIndex = i;
             //shadowInfo.strength = 1.0f;
             return shadowInfo;

@@ -16,6 +16,8 @@ namespace WindsmoonRP.Shadow
         public float CascadeRatio2;
         [Range(0f, 1f)]
         public float CascadeRatio3;
+        [Range(0.001f, 1f)]
+        public float CascadeFade;
         #endregion
 
         #region properties

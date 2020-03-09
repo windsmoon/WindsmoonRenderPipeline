@@ -89,7 +89,8 @@ namespace WindsmoonRP.Shadow
             commandBuffer.SetGlobalVectorArray(cascadeCullingSpheresPropertyID, cascadeCullingSpheres);
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.DirectionalShadowMatrices, directionalShadowMatrices);
 //            commandBuffer.SetGlobalFloat(maxShadowDistancePropertyID, shadowSettings.MaxDistance);
-            commandBuffer.SetGlobalVector(shadowDistanceFade, new Vector4(1 / shadowSettings.MaxDistance, 1 / shadowSettings.DistanceFade));
+            float cascadefade = 1 - shadowSettings.DirectionalShadowSetting.CascadeFade;
+            commandBuffer.SetGlobalVector(shadowDistanceFade, new Vector4(1 / shadowSettings.MaxDistance, 1 / shadowSettings.DistanceFade, 1f / (1f - cascadefade * cascadefade)));
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
         }
