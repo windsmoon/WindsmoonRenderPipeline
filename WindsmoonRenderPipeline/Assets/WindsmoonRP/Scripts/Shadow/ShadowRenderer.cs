@@ -80,11 +80,18 @@ namespace WindsmoonRP.Shadow
             int splitCount = tileCount <= 1 ? 1 : tileCount <= 4 ? 2 : 4; // max tile count is 4 x 4 = 16, now the tile is squared
             int tileSize = shadowMapSize / splitCount;
 
+            // ?? : An alternative approach is to apply a slope-scale bias, which is done by using a nonzero value for the second argument of SetGlobalDepthBias.
+            // This value is used to scale the highest of the absolute clip-space depth derivative along the X and Y dimensions.
+            // So it is zero for surfaces that are lit head-on, it's 1 when the light hits at a 45° angle in at least one of the two dimensions, and approaches infinity when the dot product of the surface normal and light direction reaches zero.
+            // So the bias increases automatically when more is needed, but there's no upper bound. 
+            commandBuffer.SetGlobalDepthBias(0, 1f);
+            
             for (int i = 0; i < currentDirectionalLightShadowCount; ++i)
             {
                 RenderDirectionalShadow(i, splitCount, tileSize); // this methods also set global shader properties
             }
             
+            commandBuffer.SetGlobalDepthBias(0f, 0f);
             commandBuffer.SetGlobalInt(cascadeCountPropertyID, shadowSettings.DirectionalShadowSetting.CascadeCount);
             commandBuffer.SetGlobalVectorArray(cascadeCullingSpheresPropertyID, cascadeCullingSpheres);
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.DirectionalShadowMatrices, directionalShadowMatrices);

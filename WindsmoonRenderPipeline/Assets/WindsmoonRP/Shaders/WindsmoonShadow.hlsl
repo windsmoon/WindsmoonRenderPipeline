@@ -61,6 +61,7 @@ ShadowInfo GetShadowInfo(Surface surfaceWS)
     {
         float4 cullingSphere = _CascadeCullingSpheres[i];
         float squaredDistance = GetDistanceSquared(cullingSphere.xyz, surfaceWS.position);
+        
         if (squaredDistance < cullingSphere.w)
         {
             // todo : I think it is useless because thera has already distance fade 
