@@ -14,6 +14,7 @@ CBUFFER_START(ShadowInfo)
     float4x4 _DirectionalShadowMatrices[MAX_DIRECTIONAL_SHADOW_COUNT * MAX_CASCADE_COUNT];
     //float _MaxShadowDistance;
     float4 _ShadowDistanceFade; // x means 1/maxShadowDistance, y means 1/distanceFade
+    float4 _CascadeInfos[MAX_CASCADE_COUNT];
 CBUFFER_END 
 
 struct DirectionalShadowInfo
@@ -67,7 +68,7 @@ ShadowInfo GetShadowInfo(Surface surfaceWS)
             // todo : I think it is useless because thera has already distance fade 
             if (i == _CascadeCount - 1)
             {
-                shadowInfo.strength *= GetFadedShadowStrength(squaredDistance, 1 / cullingSphere.w, _ShadowDistanceFade.z);
+                shadowInfo.strength *= GetFadedShadowStrength(squaredDistance, _CascadeInfos[i].x, _ShadowDistanceFade.z);
             }
             
             shadowInfo.cascadeIndex = i;

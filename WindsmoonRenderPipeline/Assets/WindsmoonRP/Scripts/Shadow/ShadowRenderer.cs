@@ -24,7 +24,9 @@ namespace WindsmoonRP.Shadow
         private static int cascadeCullingSpheresPropertyID = Shader.PropertyToID("_CascadeCullingSpheres");
 //        private static int maxShadowDistancePropertyID = Shader.PropertyToID("_MaxShadowDistance");
         private static int shadowDistanceFadePropertyID = Shader.PropertyToID("_ShadowDistanceFade");
-        private static Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
+        private static int cascadeInfosPropertyID = Shader.PropertyToID("_CascadeInfos");
+        private Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
+        private Vector4[] cascadeInfos = new Vector4[maxCascadeCount];
         #endregion
 
         #region methods
@@ -94,6 +96,7 @@ namespace WindsmoonRP.Shadow
             commandBuffer.SetGlobalDepthBias(0f, 0f);
             commandBuffer.SetGlobalInt(cascadeCountPropertyID, shadowSettings.DirectionalShadowSetting.CascadeCount);
             commandBuffer.SetGlobalVectorArray(cascadeCullingSpheresPropertyID, cascadeCullingSpheres);
+            commandBuffer.SetGlobalVectorArray(cascadeInfosPropertyID, cascadeInfos);
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.DirectionalShadowMatrices, directionalShadowMatrices);
 //            commandBuffer.SetGlobalFloat(maxShadowDistancePropertyID, shadowSettings.MaxDistance);
             float cascadefade = 1 - shadowSettings.DirectionalShadowSetting.CascadeFade;
@@ -125,8 +128,7 @@ namespace WindsmoonRP.Shadow
                     // also the light direction doesn't matter to the sphere, so all directional lights end up using the same culling spheres
                     // the camera is not at the sphere's center, but the surface of the sphere, all spheres will intersect at this point
                     Vector4 cullingSphere = shadowSplitData.cullingSphere; // w means sphere's radius
-                    cullingSphere.w *= cullingSphere.w;
-                    cascadeCullingSpheres[i] = cullingSphere;
+                    SetCascadeInfo(i, cullingSphere, tileSize);
                 }
 
                 int tileIndex = tileOffset + i;
@@ -138,6 +140,13 @@ namespace WindsmoonRP.Shadow
                 ExecuteBuffer();
                 renderContext.DrawShadows(ref shadowDrawingSettings);
             }
+        }
+
+        private void SetCascadeInfo(int index, Vector4 cullingSphere, float tileSize)
+        {
+            cullingSphere.w *= cullingSphere.w;
+            cascadeInfos[index].x = 1f / cullingSphere.w;
+            cascadeCullingSpheres[index] = cullingSphere;
         }
 
         private void SetViewPort(int index, int split, float tileSize, out Vector2 offset)
