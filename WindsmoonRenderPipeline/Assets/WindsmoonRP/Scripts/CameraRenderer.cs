@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using WindsmoonRP.Shadow;
 
@@ -44,7 +45,7 @@ namespace WindsmoonRP
             
             #if UNITY_EDITOR || DEBUG
             SetCommandBufferName();
-            DrawSceneView();
+            DrawSceneView(); // draw it before culling or it may be culled
             #endif
             
             if (Cull(shadowSettings.MaxDistance) == false)
@@ -53,7 +54,7 @@ namespace WindsmoonRP
             }
             
             commandBuffer.BeginSample(commandBufferName);
-            ExecuteCommandBuffer(); // ?? why tutorial do this ? maybe begin sample must be execute before next sample
+            ExecuteCommandBuffer(); // ?? why do this ? maybe begin sample must be execute before next sample
             lighting.Setup(renderContext, cullingResults, shadowSettings);
             commandBuffer.EndSample(commandBufferName);
             Setup(shadowSettings);
@@ -165,7 +166,9 @@ namespace WindsmoonRP
         private void SetCommandBufferName()
         {
             #if UNITY_EDITOR || DEBUG
+            Profiler.BeginSample("Editor Only");
             commandBufferName = camera.name;
+            Profiler.EndSample();
             #else
             commandBufferName = defaultCommandBufferName;
             #endif

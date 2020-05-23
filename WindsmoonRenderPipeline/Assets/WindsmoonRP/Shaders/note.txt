@@ -1,0 +1,14 @@
+CBUFFER_START(LightInfo)
+	int _DirectionalLightCount;
+	float4 _DirectionalLightColors[MAX_DIRECTIONAL_LIGHT_COUNT];
+	float4 _DirectionalLightDirections[MAX_DIRECTIONAL_LIGHT_COUNT];
+	float3 _DirectionalShadowInfos[MAX_DIRECTIONAL_LIGHT_COUNT];
+CBUFFER_END
+
+cbuffer is not supported on all platform, so please use the macro like above
+cbuffer UnityPerMaterial {
+	float _BaseColor;
+};
+
+
+We get one batch even though we use four materials. That works because all their data gets cached on the GPU and each draw call only has to contain an offset to the correct memory location. The only restriction is that the memory layout must be the same per material, which is the case because we use the same shader for all of them, only containing a single color property each. Unity doesn't compare the exact memory layout of materials, it simply only batches draw calls that use the exact same shader variant.
