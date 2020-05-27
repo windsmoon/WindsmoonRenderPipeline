@@ -3,7 +3,7 @@
 
 #define MIN_REFLECTIVITY 0.04
 
-struct BRDFLight
+struct BRDF
 {
 	float3 diffuse;
 	float3 specular;
@@ -16,38 +16,38 @@ float OneMinusReflectivity(float metallic)
 	return range - metallic * range;
 }
 
-BRDFLight GetBRDFLight(Surface surface) 
+BRDF GetBRDF(Surface surface) 
 {
-	BRDFLight brdfLight;
+	BRDF brdf;
 	float oneMinusReflectivity = OneMinusReflectivity(surface.metallic);
-	brdfLight.diffuse = surface.color * oneMinusReflectivity;
+	brdf.diffuse = surface.color * oneMinusReflectivity;
 	
 	#if defined(PREMULTIPLY_ALPHA)
-		brdfLight.diffuse *= surface.alpha;
+		brdf.diffuse *= surface.alpha;
 	#endif
 	
 	//brdfLight.specular = 0.0;
-	brdfLight.specular = lerp(MIN_REFLECTIVITY, surface.color, surface.metallic);
+	brdf.specular = lerp(MIN_REFLECTIVITY, surface.color, surface.metallic);
 	float perceptualRoughness = PerceptualSmoothnessToPerceptualRoughness(surface.smoothness); // disne
-	brdfLight.roughness = PerceptualRoughnessToRoughness(perceptualRoughness);
+	brdf.roughness = PerceptualRoughnessToRoughness(perceptualRoughness);
 	//brdfLight.roughness = 1.0;
-	return brdfLight;
+	return brdf;
 }
 
-float GetSpecularStrength(Surface surface, BRDFLight brdfLight, Light light) 
+float GetSpecularStrength(Surface surface, BRDF brdf, Light light) 
 {
 	float3 h = SafeNormalize(light.direction + surface.viewDirection);
 	float nh2 = Square(saturate(dot(surface.normal, h)));
 	float lh2 = Square(saturate(dot(light.direction, h)));
-	float r2 = Square(brdfLight.roughness);
+	float r2 = Square(brdf.roughness);
 	float d2 = Square(nh2 * (r2 - 1.0) + 1.00001);
-	float normalization = brdfLight.roughness * 4.0 + 2.0;
+	float normalization = brdf.roughness * 4.0 + 2.0;
 	return r2 / (d2 * max(0.1, lh2) * normalization);
 }
 
-float3 GetDirectBRDFLight(Surface surface, BRDFLight brdfLight, Light light) 
+float3 GetDirectBRDF(Surface surface, BRDF brdf, Light light) 
 {
-	return GetSpecularStrength(surface, brdfLight, light) * brdfLight.specular + brdfLight.diffuse;
+	return GetSpecularStrength(surface, brdf, light) * brdf.specular + brdf.diffuse;
 }
 
 #endif

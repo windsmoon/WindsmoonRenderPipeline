@@ -27,7 +27,7 @@
             ZWrite [_ZWrite]
             
             HLSLPROGRAM
-            //#pragma target 3.5 ??
+            #pragma target 3.5 // for loops which are use a variable length
             #pragma multi_compile _ ALPHA_CLIPPING
             #pragma multi_compile _ PREMULTIPLY_ALPHA
             #pragma multi_compile_instancing
@@ -47,7 +47,7 @@
             ColorMask 0
             
             HLSLPROGRAM
-            //#pragma target 3.5 ??
+           #pragma target 3.5 // for loops which are use a variable length
             #pragma multi_compile _ ALPHA_CLIPPING
 			#pragma multi_compile_instancing
 			#pragma vertex ShadowCasterVertex

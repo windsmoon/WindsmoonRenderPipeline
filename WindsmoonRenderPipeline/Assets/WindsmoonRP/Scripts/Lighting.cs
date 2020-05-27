@@ -62,8 +62,8 @@ namespace WindsmoonRP
                 {
                     break;
                 }
-                
-                SetupDirectionalLight(directionalCount, ref visibleLight); // ?? sure to use directionalCount as index ?
+
+                SetupDirectionalLight(directionalCount, ref visibleLight); // ?? sure to use directionalCount as index ? may be directional light always comes first
                 ++directionalCount;
             }
             // Light light = RenderSettings.sun;
@@ -77,7 +77,7 @@ namespace WindsmoonRP
 
         private void SetupDirectionalLight(int index, ref VisibleLight visiblelight)
         {
-            directionalLightColors[index] = visiblelight.finalColor;
+            directionalLightColors[index] = visiblelight.finalColor; // final color already usedthe light's intensity
             directionalLightDirections[index] = -visiblelight.localToWorldMatrix.GetColumn(2); // ?? remeber to revise
             _DirectionalShadowInfos[index] = shadowRenderer.ReserveDirectionalShadows(visiblelight.light, index);
         }
