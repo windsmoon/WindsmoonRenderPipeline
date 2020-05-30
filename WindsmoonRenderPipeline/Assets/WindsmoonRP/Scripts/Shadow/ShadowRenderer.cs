@@ -132,7 +132,7 @@ namespace WindsmoonRP.Shadow
                 }
 
                 int tileIndex = tileOffset + i;
-                SetViewPort(tileIndex, splitCount, tileSize, out Vector2 offset);
+                SetShadowMapViewport(tileIndex, splitCount, tileSize, out Vector2 offset);
                 // Matrix4x4 vpMatrix = projectionMatrix * viewMatrix
                 directionalShadowMatrices[tileIndex] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, splitCount);
                 // directionalShadowMatrices[index] = projectionMatrix * viewMatrix;
@@ -149,7 +149,7 @@ namespace WindsmoonRP.Shadow
             cascadeCullingSpheres[index] = cullingSphere;
         }
 
-        private void SetViewPort(int index, int split, float tileSize, out Vector2 offset)
+        private void SetShadowMapViewport(int index, int split, float tileSize, out Vector2 offset)
         {
             // left to right then up to down / down to up
             offset = new Vector2(index % split, index / split);
