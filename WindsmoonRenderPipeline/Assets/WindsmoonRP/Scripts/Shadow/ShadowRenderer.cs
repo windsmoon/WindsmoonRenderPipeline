@@ -38,17 +38,17 @@ namespace WindsmoonRP.Shadow
             currentDirectionalLightShadowCount = 0;
         }
         
-        public Vector2 ReserveDirectionalShadows(Light light, int visibleLightIndex)
+        public Vector3 ReserveDirectionalShadows(Light light, int visibleLightIndex)
         {
             // GetShadowCasterBounds  return true if the light affects at least one shadow casting object in the Scene
             if (currentDirectionalLightShadowCount >= maxDirectionalShadowCount || light.shadows == LightShadows.None || light.shadowStrength <= 0f 
                 || cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds bouds) == false)
             {
-                return Vector2.zero;
+                return Vector3.zero;
             }
 
-            directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex};
-            return new Vector2(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++);
+            directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex, slopeScaleBias = light.shadowBias};
+            return new Vector3(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++, light.shadowNormalBias);
         }
 
         public void Render()
@@ -86,14 +86,14 @@ namespace WindsmoonRP.Shadow
             // This value is used to scale the highest of the absolute clip-space depth derivative along the X and Y dimensions.
             // So it is zero for surfaces that are lit head-on, it's 1 when the light hits at a 45° angle in at least one of the two dimensions, and approaches infinity when the dot product of the surface normal and light direction reaches zero.
             // So the bias increases automatically when more is needed, but there's no upper bound. 
-            commandBuffer.SetGlobalDepthBias(0f, 1f);
+            //commandBuffer.SetGlobalDepthBias(0f, 3f); // ??
             
             for (int i = 0; i < currentDirectionalLightShadowCount; ++i)
             {
                 RenderDirectionalShadow(i, splitCount, tileSize); // this methods also set global shader properties
             }
             
-            commandBuffer.SetGlobalDepthBias(0f, 0f);
+//            commandBuffer.SetGlobalDepthBias(0f, 0f);
             commandBuffer.SetGlobalInt(cascadeCountPropertyID, shadowSettings.DirectionalShadowSetting.CascadeCount);
             commandBuffer.SetGlobalVectorArray(cascadeCullingSpheresPropertyID, cascadeCullingSpheres);
             commandBuffer.SetGlobalVectorArray(cascadeInfosPropertyID, cascadeInfos);
@@ -137,15 +137,18 @@ namespace WindsmoonRP.Shadow
                 directionalShadowMatrices[tileIndex] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, splitCount);
                 // directionalShadowMatrices[index] = projectionMatrix * viewMatrix;
                 commandBuffer.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
+                commandBuffer.SetGlobalDepthBias(0f, directionalShadow.slopeScaleBias);
                 ExecuteBuffer();
                 renderContext.DrawShadows(ref shadowDrawingSettings);
+                commandBuffer.SetGlobalDepthBias(0f, 0f);
             }
         }
 
         private void SetCascadeInfo(int index, Vector4 cullingSphere, float tileSize)
         {
+            float texelSize = 2f * cullingSphere.w / tileSize;
             cullingSphere.w *= cullingSphere.w;
-            cascadeInfos[index].x = 1f / cullingSphere.w;
+            cascadeInfos[index] = new Vector4(1f / cullingSphere.w, texelSize * 1.4142136f);
             cascadeCullingSpheres[index] = cullingSphere;
         }
 
@@ -194,6 +197,7 @@ namespace WindsmoonRP.Shadow
         private struct DirectionalShadow
         {
             public int visibleLightIndex;
+            public float slopeScaleBias;
         }
         #endregion
     }

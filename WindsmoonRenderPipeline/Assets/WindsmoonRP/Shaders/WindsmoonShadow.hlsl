@@ -14,16 +14,17 @@ CBUFFER_START(ShadowInfo)
     float4x4 _DirectionalShadowMatrices[MAX_DIRECTIONAL_SHADOW_COUNT * MAX_CASCADE_COUNT];
     //float _MaxShadowDistance;
     float4 _ShadowDistanceFade; // x means 1/maxShadowDistance, y means 1/distanceFade
-    float4 _CascadeInfos[MAX_CASCADE_COUNT]; // x : 1 / (radius of cullingSphere)
+    float4 _CascadeInfos[MAX_CASCADE_COUNT]; // x : 1 / (radius of cullingSphere) ^ 2
 CBUFFER_END 
 
-struct DirectionalShadowInfo
+struct DirectionalShadowInfo // the info of the direcctional light
 {
     float shadowStrength; // if surface is not in any culling sphere, global shadowStrength set to 0 to avoid any shadow 
     int tileIndex;
+    float normalBias;
 };
 
-struct ShadowInfo
+struct ShadowInfo // the info of the fragment
 {
     int cascadeIndex;
     float strength;
@@ -65,7 +66,7 @@ ShadowInfo GetShadowInfo(Surface surfaceWS)
         
         if (squaredDistance < cullingSphere.w)
         {
-            // todo : I think it is useless because thera has already distance fade 
+            // todo : I think it is useless because there has already have distance fade 
             if (i == _CascadeCount - 1)
             {
                 shadowInfo.strength *= GetFadedShadowStrength(squaredDistance, _CascadeInfos[i].x, _ShadowDistanceFade.z);
@@ -87,16 +88,17 @@ float SampleDirectionalShadow(float3 positionShadowMap)
     return SAMPLE_TEXTURE2D_SHADOW(_DirectionalShadowMap, SHADOW_SAMPLER, positionShadowMap);
 }
 
-float GetDirectionalShadowAttenuation(DirectionalShadowInfo info, Surface surfaceWS)
+float GetDirectionalShadowAttenuation(DirectionalShadowInfo directionalShadowInfo, ShadowInfo shadowInfo, Surface surfaceWS)
 {
-    if (info.shadowStrength <= 0.0f) // todo : when strength is zero, this light should be discard in c# part 
+    if (directionalShadowInfo.shadowStrength <= 0.0f) // todo : when strength is zero, this light should be discard in c# part 
     {
 		return 1.0f;
 	}
 	
-    float3 positionShadowMap = mul(_DirectionalShadowMatrices[info.tileIndex], float4(surfaceWS.position, 1.0f));
+	float3 normalBias = surfaceWS.normal * _CascadeInfos[shadowInfo.cascadeIndex].y;
+    float3 positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex], float4(surfaceWS.position + directionalShadowInfo.normalBias * normalBias, 1.0f));
     float shadow = SampleDirectionalShadow(positionShadowMap);
-    return lerp(1.0f, shadow, info.shadowStrength); // ?? why directly use shadow map value than cmpare their depth
+    return lerp(1.0f, shadow, directionalShadowInfo.shadowStrength); // ?? why directly use shadow map value than cmpare their depth
 }
 
 #endif
