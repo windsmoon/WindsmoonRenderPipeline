@@ -37,7 +37,7 @@ Light GetDirectionalLight(int index, Surface sufraceWS, ShadowInfo shadowInfo)
     light.color = _DirectionalLightColors[index].rgb;
     DirectionalShadowInfo directionalShadowInfo = GetDirectionalShadowInfo(index, shadowInfo);
     light.attenuation = GetDirectionalShadowAttenuation(directionalShadowInfo, sufraceWS);
-    // this method can be used to check surface is using which cascade culling sphere
+    // debug : this method can be used to check surface is using which cascade culling sphere
     //light.attenuation = shadowInfo.cascadeIndex * 0.25; 
     return light;
 }

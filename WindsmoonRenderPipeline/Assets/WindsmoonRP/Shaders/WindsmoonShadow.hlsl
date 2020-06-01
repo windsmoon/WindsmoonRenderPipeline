@@ -14,7 +14,7 @@ CBUFFER_START(ShadowInfo)
     float4x4 _DirectionalShadowMatrices[MAX_DIRECTIONAL_SHADOW_COUNT * MAX_CASCADE_COUNT];
     //float _MaxShadowDistance;
     float4 _ShadowDistanceFade; // x means 1/maxShadowDistance, y means 1/distanceFade
-    float4 _CascadeInfos[MAX_CASCADE_COUNT];
+    float4 _CascadeInfos[MAX_CASCADE_COUNT]; // x : 1 / (radius of cullingSphere)
 CBUFFER_END 
 
 struct DirectionalShadowInfo

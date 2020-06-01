@@ -86,7 +86,7 @@ namespace WindsmoonRP.Shadow
             // This value is used to scale the highest of the absolute clip-space depth derivative along the X and Y dimensions.
             // So it is zero for surfaces that are lit head-on, it's 1 when the light hits at a 45° angle in at least one of the two dimensions, and approaches infinity when the dot product of the surface normal and light direction reaches zero.
             // So the bias increases automatically when more is needed, but there's no upper bound. 
-            commandBuffer.SetGlobalDepthBias(0, 1f);
+            commandBuffer.SetGlobalDepthBias(0f, 1f);
             
             for (int i = 0; i < currentDirectionalLightShadowCount; ++i)
             {
