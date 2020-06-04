@@ -47,7 +47,7 @@ namespace WindsmoonRP.Shadow
                 return Vector3.zero;
             }
 
-            directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex, slopeScaleBias = light.shadowBias};
+            directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex, slopeScaleBias = light.shadowBias, nearPlaneOffset = light.shadowNearPlane};
             return new Vector3(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++, light.shadowNormalBias);
         }
 
@@ -118,7 +118,7 @@ namespace WindsmoonRP.Shadow
             {
                 // note : the split data contains information about how shadow caster objects should be culled
                 cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(directionalShadow.visibleLightIndex, i, cascadeCount,
-                    cascadeRatios, tileSize, 0f, out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
+                    cascadeRatios, tileSize, directionalShadow.nearPlaneOffset, out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
                 shadowDrawingSettings.splitData = shadowSplitData;
 
                 if (index == 0) // set culling spheres, all directional light use only one group of culling spheres
@@ -198,6 +198,7 @@ namespace WindsmoonRP.Shadow
         {
             public int visibleLightIndex;
             public float slopeScaleBias;
+            public float nearPlaneOffset; // to solve shadow pancaking
         }
         #endregion
     }
