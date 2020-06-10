@@ -1,6 +1,19 @@
 #ifndef WINDSMOON_SHADOW_INCLUDED
 #define WINDSMOON_SHADOW_INCLUDED
 
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Shadow/ShadowSamplingTent.hlsl"
+
+#if defined(DIRECTIONAL_PCF3X3)
+	#define DIRECTIONAL_FILTER_SAMPLES 4
+	#define DIRECTIONAL_FILTER_SETUP SampleShadow_ComputeSamples_Tent_3x3
+#elif defined(DIRECTIONAL_PCF5X5)
+	#define DIRECTIONAL_FILTER_SAMPLES 9
+	#define DIRECTIONAL_FILTER_SETUP SampleShadow_ComputeSamples_Tent_5x5
+#elif defined(DIRECTIONAL_PCF7X7)
+	#define DIRECTIONAL_FILTER_SAMPLES 16
+	#define DIRECTIONAL_FILTER_SETUP SampleShadow_ComputeSamples_Tent_7x7
+#endif
+
 #define MAX_DIRECTIONAL_SHADOW_COUNT 4
 #define MAX_CASCADE_COUNT 4
 
@@ -15,6 +28,7 @@ CBUFFER_START(ShadowInfo)
     //float _MaxShadowDistance;
     float4 _ShadowDistanceFade; // x means 1/maxShadowDistance, y means 1/distanceFade
     float4 _CascadeInfos[MAX_CASCADE_COUNT]; // x : 1 / (radius of cullingSphere) ^ 2
+    float4 _DirectionalShadowMapSize;
 CBUFFER_END 
 
 struct DirectionalShadowInfo // the info of the direcctional light
@@ -88,6 +102,25 @@ float SampleDirectionalShadow(float3 positionShadowMap)
     return SAMPLE_TEXTURE2D_SHADOW(_DirectionalShadowMap, SHADOW_SAMPLER, positionShadowMap);
 }
 
+float FilterDirectionalShadow (float3 positionSTS) {
+	#if defined(DIRECTIONAL_FILTER_SETUP)
+		float weights[DIRECTIONAL_FILTER_SAMPLES];
+		float2 positions[DIRECTIONAL_FILTER_SAMPLES];
+		float4 size = _DirectionalShadowMapSize.yyxx;
+		DIRECTIONAL_FILTER_SETUP(size, positionSTS.xy, weights, positions);
+		float shadow = 0;
+		
+		for (int i = 0; i < DIRECTIONAL_FILTER_SAMPLES; i++) 
+		{
+			shadow += weights[i] * SampleDirectionalShadow(float3(positions[i].xy, positionSTS.z));
+		}
+		
+		return shadow;
+	#else
+		return SampleDirectionalShadow(positionSTS);
+	#endif
+}
+
 float GetDirectionalShadowAttenuation(DirectionalShadowInfo directionalShadowInfo, ShadowInfo shadowInfo, Surface surfaceWS)
 {
     if (directionalShadowInfo.shadowStrength <= 0.0f) // todo : when strength is zero, this light should be discard in c# part 
@@ -97,7 +130,7 @@ float GetDirectionalShadowAttenuation(DirectionalShadowInfo directionalShadowInf
 	
 	float3 normalBias = surfaceWS.normal * _CascadeInfos[shadowInfo.cascadeIndex].y;
     float3 positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex], float4(surfaceWS.position + directionalShadowInfo.normalBias * normalBias, 1.0f));
-    float shadow = SampleDirectionalShadow(positionShadowMap);
+    float shadow = FilterDirectionalShadow(positionShadowMap);
     return lerp(1.0f, shadow, directionalShadowInfo.shadowStrength); // ?? why directly use shadow map value than cmpare their depth
 }
 

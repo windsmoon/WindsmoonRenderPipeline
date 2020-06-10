@@ -25,6 +25,15 @@ namespace WindsmoonRP.Shadow
 //        private static int maxShadowDistancePropertyID = Shader.PropertyToID("_MaxShadowDistance");
         private static int shadowDistanceFadePropertyID = Shader.PropertyToID("_ShadowDistanceFade");
         private static int cascadeInfosPropertyID = Shader.PropertyToID("_CascadeInfos");
+        private static int directionalShadowMapSizePropertyID = Shader.PropertyToID("_DirectionalShadowMapSize");
+        
+        // macro in Shadow/ShadowSamplingTent.hlsl
+        private static string[] directionalPCFKeywords = { 
+            "DIRECTIONAL_PCF3X3",
+            "DIRECTIONAL_PCF5X5",
+            "DIRECTIONAL_PCF7X7",
+        };
+
         private Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
         private Vector4[] cascadeInfos = new Vector4[maxCascadeCount];
         #endregion
@@ -101,6 +110,8 @@ namespace WindsmoonRP.Shadow
 //            commandBuffer.SetGlobalFloat(maxShadowDistancePropertyID, shadowSettings.MaxDistance);
             float cascadefade = 1 - shadowSettings.DirectionalShadowSetting.CascadeFade;
             commandBuffer.SetGlobalVector(shadowDistanceFadePropertyID, new Vector4(1 / shadowSettings.MaxDistance, 1 / shadowSettings.DistanceFade, 1f / (1f - cascadefade * cascadefade)));
+            commandBuffer.SetGlobalVector(directionalShadowMapSizePropertyID, new Vector4(shadowMapSize, 1f / shadowMapSize));
+            SetDirectionalShadowKeyword();
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
         }
@@ -144,11 +155,39 @@ namespace WindsmoonRP.Shadow
             }
         }
 
+        private void SetDirectionalShadowKeyword()
+        {
+            int pcfIndex = (int) shadowSettings.DirectionalShadowSetting.PCFMode - 1;
+
+            for (int i = 0; i < directionalPCFKeywords.Length; ++i)
+            {
+                if (i == pcfIndex)
+                {
+                    commandBuffer.EnableShaderKeyword(directionalPCFKeywords[i]);
+                }
+
+                else
+                {
+                    commandBuffer.DisableShaderKeyword(directionalPCFKeywords[i]);
+                }
+            }
+        }
+
         private void SetCascadeInfo(int index, Vector4 cullingSphere, float tileSize)
         {
             float texelSize = 2f * cullingSphere.w / tileSize;
+            // ??
+            //Increasing the filter size makes shadows smoother, but also causes acne to appear again.
+            //We have to increase the normal bias to match the filter size.
+            //We can do this automatically by multiplying the texel size by one plus the filter mode in SetCascadeData.
+            float filterSize = texelSize * ((float)shadowSettings.DirectionalShadowSetting.PCFMode + 1f); // ??
+            
+            // ??
+            //Besides that, increasing the sample region also means that we can end up sampling outside of the cascade's culling sphere.
+            //We can avoid that by reducing the sphere's radius by the filter size before squaring it.
+            cullingSphere.w -= filterSize;
             cullingSphere.w *= cullingSphere.w;
-            cascadeInfos[index] = new Vector4(1f / cullingSphere.w, texelSize * 1.4142136f);
+            cascadeInfos[index] = new Vector4(1f / cullingSphere.w, filterSize * 1.4142136f);
             cascadeCullingSpheres[index] = cullingSphere;
         }
 
