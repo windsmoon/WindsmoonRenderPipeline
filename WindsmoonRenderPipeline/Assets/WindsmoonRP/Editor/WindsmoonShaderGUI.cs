@@ -37,6 +37,18 @@ namespace WindsmoonRP.Editor
         {
             set { SetProperty("_ZWrite", value ? 1f : 0f); }
         }
+
+        private ShadowMode ShadowMode
+        {
+            set
+            {
+                if (SetProperty("_Shadow_Mode", (float)value))
+                {
+                    SetKeyword("_SHADOW_MODE_CLIP", value == ShadowMode.Clip);
+                    SetKeyword("_SHADOW_MODE_DITHER", value == ShadowMode.Dither);
+                }
+            }
+        }
         
         private RenderQueue RenderQueue 
         {
@@ -118,6 +130,7 @@ namespace WindsmoonRP.Editor
                 DstBlend = BlendMode.Zero;
                 ZWrite = true;
                 RenderQueue = RenderQueue.Geometry;
+                ShadowMode = ShadowMode.On;
             }
         }
         
@@ -131,6 +144,7 @@ namespace WindsmoonRP.Editor
                 DstBlend = BlendMode.Zero;
                 ZWrite = true;
                 RenderQueue = RenderQueue.AlphaTest;
+                ShadowMode = ShadowMode.Clip;
             }
         }
         
@@ -144,6 +158,7 @@ namespace WindsmoonRP.Editor
                 DstBlend = BlendMode.OneMinusSrcAlpha;
                 ZWrite = false;
                 RenderQueue = RenderQueue.Transparent;
+                ShadowMode = ShadowMode.Dither;
             }
         }
         
@@ -157,6 +172,7 @@ namespace WindsmoonRP.Editor
                 DstBlend = BlendMode.OneMinusSrcAlpha;
                 ZWrite = false;
                 RenderQueue = RenderQueue.Geometry;
+                ShadowMode = ShadowMode.Dither;
             }
         }
         

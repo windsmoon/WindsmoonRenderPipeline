@@ -52,8 +52,11 @@ void ShadowCasterFragment(Varyings input)
     float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
     baseColor *= baseMap;
     
-    #if defined(ALPHA_CLIPPING)
-	    clip(baseColor.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
+	#if defined(_SHADOW_MODE_CLIP)
+		clip(baseColor.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
+	#elif defined(_SHADOW_MODE_DITHER)
+	    float dither = InterleavedGradientNoise(input.positionCS.xy, 0);
+	    clip(baseColor.a - dither);
 	#endif
 }
 

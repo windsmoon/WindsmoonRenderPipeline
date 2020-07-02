@@ -20,6 +20,8 @@ namespace WindsmoonRP.Shadow
         public float CascadeFade;
         [SerializeField]
         public PCFMode PCFMode;
+        [SerializeField] 
+        public CascadeBlendMode CascadeBlendMode;
         #endregion
 
         #region properties

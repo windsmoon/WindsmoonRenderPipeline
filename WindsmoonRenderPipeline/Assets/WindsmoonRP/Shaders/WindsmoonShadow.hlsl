@@ -41,6 +41,7 @@ struct DirectionalShadowInfo // the info of the direcctional light
 struct ShadowInfo // the info of the fragment
 {
     int cascadeIndex;
+    float cascadeBlend;
     float strength;
 };
 
@@ -71,6 +72,7 @@ ShadowInfo GetShadowInfo(Surface surfaceWS)
     //    return shadowInfo;
     //}
     
+    shadowInfo.cascadeBlend = 1.0;
     shadowInfo.strength = GetFadedShadowStrength(surfaceWS.depth, _ShadowDistanceFade.x, _ShadowDistanceFade.y);
     
     for (int i = 0; i < _CascadeCount; ++i)
@@ -81,19 +83,40 @@ ShadowInfo GetShadowInfo(Surface surfaceWS)
         if (squaredDistance < cullingSphere.w)
         {
             // todo : I think it is useless because there has already have distance fade 
+            float fade = GetFadedShadowStrength(squaredDistance, _CascadeInfos[i].x, _ShadowDistanceFade.z);
+            
             if (i == _CascadeCount - 1)
             {
-                shadowInfo.strength *= GetFadedShadowStrength(squaredDistance, _CascadeInfos[i].x, _ShadowDistanceFade.z);
+                // shadowInfo.strength *= GetFadedShadowStrength(squaredDistance, _CascadeInfos[i].x, _ShadowDistanceFade.z);
+                shadowInfo.strength *= fade;
             }
             
-            shadowInfo.cascadeIndex = i;
-            //shadowInfo.strength = 1.0f;
-            return shadowInfo;
+            else
+            {
+                shadowInfo.cascadeBlend = fade;
+            }
+            
+            break;
         }
     }
     
-    shadowInfo.cascadeIndex = 0;
-    shadowInfo.strength = 0.0f;
+    if (i == _CascadeCount)
+    {
+        shadowInfo.strength = 0.0;
+    }
+    
+    #if defined(CASCADE_BLEND_DITHER)
+		else if (shadowInfo.cascadeBlend < surfaceWS.dither) 
+		{
+			i += 1;
+		}
+	#endif
+	
+	#if !defined(CASCADE_BLEND_SOFT)
+		shadowInfo.cascadeBlend = 1.0;
+	#endif
+    
+    shadowInfo.cascadeIndex = i;
     return shadowInfo;
 }
 
@@ -121,16 +144,24 @@ float FilterDirectionalShadow (float3 positionSTS) {
 	#endif
 }
 
-float GetDirectionalShadowAttenuation(DirectionalShadowInfo directionalShadowInfo, ShadowInfo shadowInfo, Surface surfaceWS)
+float GetDirectionalShadowAttenuation(DirectionalShadowInfo directionalShadowInfo, ShadowInfo globalShadowInfo, Surface surfaceWS)
 {
     if (directionalShadowInfo.shadowStrength <= 0.0f) // todo : when strength is zero, this light should be discard in c# part 
     {
 		return 1.0f;
 	}
 	
-	float3 normalBias = surfaceWS.normal * _CascadeInfos[shadowInfo.cascadeIndex].y;
-    float3 positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex], float4(surfaceWS.position + directionalShadowInfo.normalBias * normalBias, 1.0f));
+	float3 normalBias = surfaceWS.normal * directionalShadowInfo.normalBias * _CascadeInfos[globalShadowInfo.cascadeIndex].y;
+    float3 positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex], float4(surfaceWS.position + normalBias, 1.0f));
     float shadow = FilterDirectionalShadow(positionShadowMap);
+    
+    if (globalShadowInfo.cascadeBlend < 1.0) // ??
+    {
+        normalBias = surfaceWS.normal * (directionalShadowInfo.normalBias * _CascadeInfos[globalShadowInfo.cascadeIndex + 1].y);
+        positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex + 1], float4(surfaceWS.position + normalBias, 1.0f));
+        shadow = lerp(FilterDirectionalShadow(positionShadowMap), shadow, globalShadowInfo.cascadeBlend);
+    }
+    
     return lerp(1.0f, shadow, directionalShadowInfo.shadowStrength); // ?? why directly use shadow map value than cmpare their depth
 }
 

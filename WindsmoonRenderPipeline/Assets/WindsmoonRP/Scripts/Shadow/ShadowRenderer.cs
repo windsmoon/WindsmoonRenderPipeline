@@ -28,10 +28,17 @@ namespace WindsmoonRP.Shadow
         private static int directionalShadowMapSizePropertyID = Shader.PropertyToID("_DirectionalShadowMapSize");
         
         // macro in Shadow/ShadowSamplingTent.hlsl
-        private static string[] directionalPCFKeywords = { 
+        private static string[] directionalPCFKeywords =
+        {
             "DIRECTIONAL_PCF3X3",
             "DIRECTIONAL_PCF5X5",
             "DIRECTIONAL_PCF7X7",
+        };
+
+        private static string[] cascadeBlendKeywords =
+        {
+            "CASCADE_BLEND_SOFT",
+            "CASCADE_BLEND_DITHER"
         };
 
         private Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
@@ -111,7 +118,9 @@ namespace WindsmoonRP.Shadow
             float cascadefade = 1 - shadowSettings.DirectionalShadowSetting.CascadeFade;
             commandBuffer.SetGlobalVector(shadowDistanceFadePropertyID, new Vector4(1 / shadowSettings.MaxDistance, 1 / shadowSettings.DistanceFade, 1f / (1f - cascadefade * cascadefade)));
             commandBuffer.SetGlobalVector(directionalShadowMapSizePropertyID, new Vector4(shadowMapSize, 1f / shadowMapSize));
-            SetDirectionalShadowKeyword();
+            // SetDirectionalShadowKeyword();
+            SetKeywords(directionalPCFKeywords, (int)shadowSettings.DirectionalShadowSetting.PCFMode - 1);
+            SetKeywords(cascadeBlendKeywords, (int)shadowSettings.DirectionalShadowSetting.CascadeBlendMode - 1);
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
         }
@@ -124,12 +133,14 @@ namespace WindsmoonRP.Shadow
             int cascadeCount = shadowSettings.DirectionalShadowSetting.CascadeCount;
             int tileOffset = index * cascadeCount;
             Vector3 cascadeRatios = shadowSettings.DirectionalShadowSetting.CascadeRatios;
-
+            float cascadeCullingFactor = Mathf.Max(0f, 0.8f - shadowSettings.DirectionalShadowSetting.CascadeFade); // control how much shadow casters will cast shadow in larger cascade
+            
             for (int i = 0; i < cascadeCount; ++i)
             {
                 // note : the split data contains information about how shadow caster objects should be culled
                 cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(directionalShadow.visibleLightIndex, i, cascadeCount,
                     cascadeRatios, tileSize, directionalShadow.nearPlaneOffset, out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
+                // shadowSplitData.shadowCascadeBlendCullingFactor = cascadeCullingFactor;
                 shadowDrawingSettings.splitData = shadowSplitData;
 
                 if (index == 0) // set culling spheres, all directional light use only one group of culling spheres
@@ -155,6 +166,22 @@ namespace WindsmoonRP.Shadow
             }
         }
 
+        private void SetKeywords(string[] keywords, int enableIndex)
+        {
+            for (int i = 0; i < keywords.Length; ++i)
+            {
+                if (i == enableIndex)
+                {
+                    commandBuffer.EnableShaderKeyword(keywords[i]);
+                }
+
+                else
+                {
+                    commandBuffer.DisableShaderKeyword(keywords[i]);
+                }
+            }
+        }
+        
         private void SetDirectionalShadowKeyword()
         {
             int pcfIndex = (int) shadowSettings.DirectionalShadowSetting.PCFMode - 1;

@@ -20,6 +20,9 @@ float3 GetLighting(Surface surfaceWS, BRDF brdf)
 		color += GetLighting(surfaceWS, GetDirectionalLight(i, surfaceWS, shadowInfo), brdf);
 	}
 	
+	// debug : this method can be used to check surface is using which cascade culling sphere
+	//float cascadeColor = shadowInfo.cascadeIndex * 0.25 + 0.25;
+	//return cascadeColor.rrr;
 	return color;
 }
 

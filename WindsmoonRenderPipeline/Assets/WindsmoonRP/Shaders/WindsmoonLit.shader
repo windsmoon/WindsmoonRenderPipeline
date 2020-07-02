@@ -12,6 +12,7 @@
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Src Blend", Float) = 1
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("Dst Blend", Float) = 0
 		[Enum(Off, 0, On, 1)] _ZWrite("Z Write", Float) = 1
+		[KeywordEnum(On, Clip, Dither, Off)] _Shadow_Mode("Shadow Mode", Float) = 0
     }
     
     SubShader
@@ -31,6 +32,7 @@
             #pragma multi_compile _ ALPHA_CLIPPING
             #pragma multi_compile _ PREMULTIPLY_ALPHA
             #pragma multi_compile _ DIRECTIONAL_PCF3X3 DIRECTIONAL_PCF5X5 DIRECTIONAL_PCF7X7
+            #pragma multi_compile _ CASCADE_BLEND_SOFT CASCADE_BLEND_DITHER
             #pragma multi_compile_instancing
             #pragma vertex LitVertex
             #pragma fragment LitFragment
@@ -48,8 +50,9 @@
             ColorMask 0
             
             HLSLPROGRAM
-           #pragma target 3.5 // for loops which are use a variable length
-            #pragma multi_compile _ ALPHA_CLIPPING
+            #pragma target 3.5 // for loops which are use a variable length
+//            #pragma multi_compile _ ALPHA_CLIPPING
+            #pragma multi_compile _ _SHADOW_MODE_CLIP _SHADOW_MODE_DITHER
 			#pragma multi_compile_instancing
 			#pragma vertex ShadowCasterVertex
 			#pragma fragment ShadowCasterFragment

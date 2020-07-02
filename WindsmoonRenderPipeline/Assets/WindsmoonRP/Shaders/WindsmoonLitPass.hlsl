@@ -74,6 +74,7 @@ float4 LitFragment(Varyings input) : SV_Target
 	surface.alpha = baseColor.a;
 	surface.metallic = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Metallic);
 	surface.smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Smoothness);
+	surface.dither = InterleavedGradientNoise(input.positionCS.xy, 0);
 	BRDF brdf = GetBRDF(surface);
 	return float4(GetLighting(surface, brdf), surface.alpha);
 }
