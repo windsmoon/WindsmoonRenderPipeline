@@ -57,6 +57,7 @@ void ShadowCasterFragment(Varyings input)
 	#elif defined(_SHADOW_MODE_DITHER)
 	    float dither = InterleavedGradientNoise(input.positionCS.xy, 0);
 	    clip(baseColor.a - dither);
+	    // note : because the resulting pattern is noisy it suffers a lot more from temporal artifacts when the shadow matrix changes, which can make the shadows appear to tremble.
 	#endif
 }
 

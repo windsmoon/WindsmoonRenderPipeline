@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Lit
   m_Shader: {fileID: 4800000, guid: ca037da60c36b5747bc91dba73d69bdc, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: RECEIVE_SHADOWS
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -74,6 +74,8 @@ Material:
     - _Parallax: 0.02
     - _PremulAlpha: 0
     - _PremultiplyAlpha: 0
+    - _ReceiveShadows: 1
+    - _Shadow_Mode: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

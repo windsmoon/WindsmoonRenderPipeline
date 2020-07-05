@@ -13,6 +13,7 @@
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("Dst Blend", Float) = 0
 		[Enum(Off, 0, On, 1)] _ZWrite("Z Write", Float) = 1
 		[KeywordEnum(On, Clip, Dither, Off)] _Shadow_Mode("Shadow Mode", Float) = 0
+		[Toggle(RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
     }
     
     SubShader
@@ -33,6 +34,7 @@
             #pragma multi_compile _ PREMULTIPLY_ALPHA
             #pragma multi_compile _ DIRECTIONAL_PCF3X3 DIRECTIONAL_PCF5X5 DIRECTIONAL_PCF7X7
             #pragma multi_compile _ CASCADE_BLEND_SOFT CASCADE_BLEND_DITHER
+            #pragma multi_compile _ RECEIVE_SHADOWS
             #pragma multi_compile_instancing
             #pragma vertex LitVertex
             #pragma fragment LitFragment

@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -65,6 +66,7 @@ namespace WindsmoonRP.Editor
         #region methods
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
+            EditorGUI.BeginChangeCheck(); // todo : optimal
             base.OnGUI(materialEditor, properties);
             editor = materialEditor;
             materials = materialEditor.targets;
@@ -73,6 +75,11 @@ namespace WindsmoonRP.Editor
             SetClippingAlpha();
             SetFade();
             SetTransparent();
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                SetShadowCasterPass();
+            }
         }
 
         private bool SetProperty(string name, float value)
@@ -173,6 +180,23 @@ namespace WindsmoonRP.Editor
                 ZWrite = false;
                 RenderQueue = RenderQueue.Geometry;
                 ShadowMode = ShadowMode.Dither;
+            }
+        }
+        
+        void SetShadowCasterPass() 
+        {
+            MaterialProperty shadowMode = FindProperty("_Shadow_Mode", properties, false);
+            
+            if (shadowMode == null || shadowMode.hasMixedValue) 
+            {
+                return;
+            }
+            
+            bool isEnable = shadowMode.floatValue < (float)ShadowMode.Off;
+            
+            foreach (Material material in materials) 
+            {
+                material.SetShaderPassEnabled("ShadowCaster", isEnable);
             }
         }
         

@@ -9,6 +9,7 @@
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Src Blend", Float) = 1
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("Dst Blend", Float) = 0
 		[Enum(Off, 0, On, 1)] _ZWrite("Z Write", Float) = 1
+		[KeywordEnum(On, Clip, Dither, Off)] _Shadow_Mode("Shadow Mode", Float) = 0
     }
     
     SubShader
@@ -25,6 +26,26 @@
             #pragma vertex UnlitVertex
             #pragma fragment UnlitFragment
             #include "WindsmoonUnlit.hlsl"
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            Tags
+            {
+                "LightMode" = "ShadowCaster"
+            }
+            
+            ColorMask 0
+            
+            HLSLPROGRAM
+            #pragma target 3.5 // for loops which are use a variable length
+//            #pragma multi_compile _ ALPHA_CLIPPING
+            #pragma multi_compile _ _SHADOW_MODE_CLIP _SHADOW_MODE_DITHER
+			#pragma multi_compile_instancing
+			#pragma vertex ShadowCasterVertex
+			#pragma fragment ShadowCasterFragment
+			#include "WindsmoonShadowCasterPass.hlsl"
             ENDHLSL
         }
     }

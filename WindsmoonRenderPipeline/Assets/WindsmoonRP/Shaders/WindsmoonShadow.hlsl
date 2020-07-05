@@ -146,23 +146,27 @@ float FilterDirectionalShadow (float3 positionSTS) {
 
 float GetDirectionalShadowAttenuation(DirectionalShadowInfo directionalShadowInfo, ShadowInfo globalShadowInfo, Surface surfaceWS)
 {
-    if (directionalShadowInfo.shadowStrength <= 0.0f) // todo : when strength is zero, this light should be discard in c# part 
-    {
-		return 1.0f;
-	}
-	
-	float3 normalBias = surfaceWS.normal * directionalShadowInfo.normalBias * _CascadeInfos[globalShadowInfo.cascadeIndex].y;
-    float3 positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex], float4(surfaceWS.position + normalBias, 1.0f));
-    float shadow = FilterDirectionalShadow(positionShadowMap);
-    
-    if (globalShadowInfo.cascadeBlend < 1.0) // ??
-    {
-        normalBias = surfaceWS.normal * (directionalShadowInfo.normalBias * _CascadeInfos[globalShadowInfo.cascadeIndex + 1].y);
-        positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex + 1], float4(surfaceWS.position + normalBias, 1.0f));
-        shadow = lerp(FilterDirectionalShadow(positionShadowMap), shadow, globalShadowInfo.cascadeBlend);
-    }
-    
-    return lerp(1.0f, shadow, directionalShadowInfo.shadowStrength); // ?? why directly use shadow map value than cmpare their depth
+    #if !defined(RECEIVE_SHADOWS)
+        return 1.0f;
+    #else
+        if (directionalShadowInfo.shadowStrength <= 0.0f) // todo : when strength is zero, this light should be discard in c# part 
+        {
+	    	return 1.0f;
+	    }
+	    
+	    float3 normalBias = surfaceWS.normal * directionalShadowInfo.normalBias * _CascadeInfos[globalShadowInfo.cascadeIndex].y;
+        float3 positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex], float4(surfaceWS.position + normalBias, 1.0f));
+        float shadow = FilterDirectionalShadow(positionShadowMap);
+        
+        if (globalShadowInfo.cascadeBlend < 1.0) // ??
+        {
+            normalBias = surfaceWS.normal * (directionalShadowInfo.normalBias * _CascadeInfos[globalShadowInfo.cascadeIndex + 1].y);
+            positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex + 1], float4(surfaceWS.position + normalBias, 1.0f));
+            shadow = lerp(FilterDirectionalShadow(positionShadowMap), shadow, globalShadowInfo.cascadeBlend);
+        }
+        
+        return lerp(1.0f, shadow, directionalShadowInfo.shadowStrength); // ?? why directly use shadow map value than cmpare their depth
+    #endif
 }
 
 #endif
