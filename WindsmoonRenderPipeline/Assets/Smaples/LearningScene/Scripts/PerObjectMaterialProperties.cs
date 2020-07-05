@@ -44,5 +44,17 @@ namespace WindsmoonRP.Samples.LearningScene
             GetComponent<Renderer>().SetPropertyBlock(materialPripertyBlock);
         }
         #endregion
+
+        #region methods
+        [ContextMenu("Random")]
+        private void Random()
+        {
+            baseColor = UnityEngine.Random.ColorHSV();
+            cutoff = UnityEngine.Random.Range(0f, 1f);
+            metallic = UnityEngine.Random.Range(0f, 1f);
+            smoothness = UnityEngine.Random.Range(0f, 1f);
+            OnValidate();
+        }
+        #endregion
     }
 }
