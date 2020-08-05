@@ -35,7 +35,6 @@
             #pragma multi_compile _ DIRECTIONAL_PCF3X3 DIRECTIONAL_PCF5X5 DIRECTIONAL_PCF7X7
             #pragma multi_compile _ CASCADE_BLEND_SOFT CASCADE_BLEND_DITHER
             #pragma multi_compile _ RECEIVE_SHADOWS
-            #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_instancing
             #pragma vertex LitVertex
             #pragma fragment LitFragment

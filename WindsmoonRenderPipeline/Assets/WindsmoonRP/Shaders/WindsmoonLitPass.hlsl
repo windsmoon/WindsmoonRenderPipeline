@@ -6,7 +6,6 @@
 #include "WindsmoonShadow.hlsl"
 #include "WindsmoonLight.hlsl"
 #include "WindsmoonBRDF.hlsl"
-#include "WindsmoonGI.hlsl"
 #include "WindsmoonLighting.hlsl"
 
 //CBUFFER_START(UnityPerMaterial)
@@ -29,7 +28,6 @@ struct Attribute
     float3 positionOS : POSITION;
     float3 normalOS : NORMAL;
     float2 baseUV : TEXCOORD0;
-    LIGHT_MAP_ATTRIBUTE_INFO
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -39,7 +37,6 @@ struct Varyings
     float3 positionWS : VAR_POSITION;
     float3 normalWS : VAR_NORMAL;
     float2 baseUV : VAR_BASE_UV;
-    LIGHT_MAP_VARYINGS_INFO
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -48,7 +45,6 @@ Varyings LitVertex(Attribute input)
     Varyings output;
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
-    TRANSFER_LIGHT_MAP_INFO(input, output);
     //float3 worldPos = TransformObjectToWorld(input.positionOS);
     output.positionWS = TransformObjectToWorld(input.positionOS);
     output.positionCS = TransformWorldToHClip(output.positionWS);
@@ -80,8 +76,6 @@ float4 LitFragment(Varyings input) : SV_Target
 	surface.smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Smoothness);
 	surface.dither = InterleavedGradientNoise(input.positionCS.xy, 0);
 	BRDF brdf = GetBRDF(surface);
-	GI gi = GetGI(GET_LIGHT_MAP_UV(input));
-	float3 color = GetLighting(surface, brdf, gi);
-	return float4(color, surface.alpha);
+	return float4(GetLighting(surface, brdf), surface.alpha);
 }
 #endif

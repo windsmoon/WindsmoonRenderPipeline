@@ -96,9 +96,8 @@ namespace WindsmoonRP
         private void DrawVisibleObjects(bool useDynamicBatching, bool useGPUInstancing)
         {
             SortingSettings sortingSettings = new SortingSettings(camera) {criteria = SortingCriteria.CommonOpaque};
-            // Use PerObjectData.Lightmaps then unity will now render lightmapped objects with a shader variant that has the LIGHTMAP_ON keyword.
             DrawingSettings drawingSettings = new DrawingSettings(unlitShaderTagID, sortingSettings)
-                {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing, perObjectData = PerObjectData.Lightmaps};
+                {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing};
             drawingSettings.SetShaderPassName(1, litShaderTagID);
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
