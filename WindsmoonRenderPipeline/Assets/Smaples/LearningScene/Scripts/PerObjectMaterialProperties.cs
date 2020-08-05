@@ -55,6 +55,16 @@ namespace WindsmoonRP.Samples.LearningScene
             smoothness = UnityEngine.Random.Range(0f, 1f);
             OnValidate();
         }
+
+        [ContextMenu("Reset")]
+        private void Reset()
+        {
+            baseColor = Color.white;
+            cutoff = 0.5f;
+            metallic = 0f;
+            smoothness = 0.5f;
+            GetComponent<Renderer>().SetPropertyBlock(null);
+        }
         #endregion
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028381, g: 0.22571406, b: 0.30692294, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -167,10 +167,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.15468504, g: 0.82077837, b: 0.014090769, a: 1}
-  cutoff: 0.01835835
-  metallic: 0.4302302
-  smoothness: 0.012041688
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &13496618
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -277,10 +277,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.26377845, g: 0.6853166, b: 0.2469811, a: 1}
-  cutoff: 0.032032013
-  metallic: 0.778016
-  smoothness: 0.44187087
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &56065060
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -387,10 +387,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.05081652, g: 0.04281512, b: 0.055605777, a: 1}
-  cutoff: 0.26034087
-  metallic: 0.42050737
-  smoothness: 0.70325565
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &97062663
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -497,10 +497,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.6398155, g: 0.52091444, b: 0.7664499, a: 1}
-  cutoff: 0.20309293
-  metallic: 0.27511603
-  smoothness: 0.49335665
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &124779633
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -607,10 +607,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.4439577, g: 0.9546435, b: 0.95787776, a: 1}
-  cutoff: 0.40760368
-  metallic: 0.67519164
-  smoothness: 0.8026638
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &129332679
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -717,10 +717,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.040821742, g: 0.05017806, b: 0.044434357, a: 1}
-  cutoff: 0.26377863
-  metallic: 0.8403357
-  smoothness: 0.1358428
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &144727105
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -827,10 +827,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.078119315, g: 0.08157123, b: 0.080829345, a: 1}
-  cutoff: 0.6295867
-  metallic: 0.23359573
-  smoothness: 0.13631034
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &163520183
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -937,10 +937,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.62776, g: 0.12704824, b: 0.6281442, a: 1}
-  cutoff: 0.6340561
-  metallic: 0.011106014
-  smoothness: 0.17474115
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &183028446
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1033,10 +1033,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.01872195, g: 0.693595, b: 0.7256908, a: 1}
-  cutoff: 0.35522765
-  metallic: 0.49877626
-  smoothness: 0.98905885
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &207770570
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1157,10 +1157,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.077971585, g: 0.07067746, b: 0.06152041, a: 1}
-  cutoff: 0.68646777
-  metallic: 0.5372605
-  smoothness: 0.20500171
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &278641536
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1267,10 +1267,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.17987962, g: 0.19210173, b: 0.19218197, a: 1}
-  cutoff: 0.2871738
-  metallic: 0.78601885
-  smoothness: 0.039717913
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &293864719
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1377,10 +1377,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.2082993, g: 0.71743816, b: 0.3320197, a: 1}
-  cutoff: 0.7332064
-  metallic: 0.6273453
-  smoothness: 0.58590347
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &359132332
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1487,10 +1487,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.5287995, g: 0.069897585, b: 0.4162469, a: 1}
-  cutoff: 0.7783402
-  metallic: 0.28699332
-  smoothness: 0.8139169
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &421942128
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1597,10 +1597,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.7987714, g: 0.5502719, b: 0.7348659, a: 1}
-  cutoff: 0.99216664
-  metallic: 0.7619605
-  smoothness: 0.65744376
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &434618982
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1707,10 +1707,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.050751098, g: 0.045758523, b: 0.0360956, a: 1}
-  cutoff: 0.603838
-  metallic: 0.0037196875
-  smoothness: 0.5967379
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &435293670
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1817,10 +1817,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.30203193, g: 0.33648294, b: 0.368619, a: 1}
-  cutoff: 0.8956493
-  metallic: 0.7640873
-  smoothness: 0.8939278
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &447070330
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1913,10 +1913,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.6080263, g: 0.5681664, b: 0.595217, a: 1}
-  cutoff: 0.53436357
-  metallic: 0.33611912
-  smoothness: 0.71837676
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &480932857
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2037,10 +2037,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.28089207, g: 0.17958976, b: 0.32308224, a: 1}
-  cutoff: 0.029215693
-  metallic: 0.74250925
-  smoothness: 0.17380023
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &489256475
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2147,10 +2147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.17088188, g: 0.20796946, b: 0.18489747, a: 1}
-  cutoff: 0.16858673
-  metallic: 0.8860258
-  smoothness: 0.17094934
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &498221827
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2257,10 +2257,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.028306335, g: 0.9545605, b: 0.93287706, a: 1}
-  cutoff: 0.6209368
-  metallic: 0.0540843
-  smoothness: 0.23923838
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &516283132
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2353,10 +2353,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.062365443, g: 0.3803755, b: 0.82535326, a: 1}
-  cutoff: 0.058587313
-  metallic: 0.097856045
-  smoothness: 0.32117027
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &522747470
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2463,10 +2463,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.5025136, g: 0.604152, b: 0.53432304, a: 1}
-  cutoff: 0.2843476
-  metallic: 0.9369576
-  smoothness: 0.44979364
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &601399967
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2587,10 +2587,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.5245748, g: 0.5024365, b: 0.5844099, a: 1}
-  cutoff: 0.75171626
-  metallic: 0.36591142
-  smoothness: 0.8960173
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &611878011
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2683,10 +2683,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.12939367, g: 0.1680925, b: 0.10214728, a: 1}
-  cutoff: 0.7174647
-  metallic: 0.84300184
-  smoothness: 0.76725626
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &655743969
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2807,10 +2807,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.04159477, g: 0.05167032, b: 0.008894215, a: 1}
-  cutoff: 0.99768126
-  metallic: 0.9148742
-  smoothness: 0.0148665905
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &682462451
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2903,10 +2903,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.18105102, g: 0.17582701, b: 0.27070478, a: 1}
-  cutoff: 0.1425519
-  metallic: 0.1125381
-  smoothness: 0.17528653
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &697529248
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3119,10 +3119,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.068161584, g: 0.17933117, b: 0.29607525, a: 1}
-  cutoff: 0.60649806
-  metallic: 0.10453153
-  smoothness: 0.33010703
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &718353923
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3229,10 +3229,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.09267343, g: 0.16684164, b: 0.13844803, a: 1}
-  cutoff: 0.92630816
-  metallic: 0.7328446
-  smoothness: 0.8973141
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &763286112
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3325,10 +3325,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.4279619, g: 0.22897011, b: 0.14044406, a: 1}
-  cutoff: 0.9996923
-  metallic: 0.43343908
-  smoothness: 0.20745516
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &807289263
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3449,10 +3449,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.21579483, g: 0.11328272, b: 0.06833573, a: 1}
-  cutoff: 0.8703754
-  metallic: 0.14105177
-  smoothness: 0.33732086
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &807455511
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3559,10 +3559,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.93809134, g: 0.9394117, b: 0.9900217, a: 1}
-  cutoff: 0.5711165
-  metallic: 0.10464549
-  smoothness: 0.08414817
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &818408674
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3669,10 +3669,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.74011856, g: 0.88947225, b: 0.00950589, a: 1}
-  cutoff: 0.8348701
-  metallic: 0.108484626
-  smoothness: 0.84194267
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &850817440
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3779,10 +3779,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.054381847, g: 0.075491436, b: 0.07417746, a: 1}
-  cutoff: 0.7652153
-  metallic: 0.27609473
-  smoothness: 0.3989187
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &856509088
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3889,10 +3889,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.4908976, g: 0.8351259, b: 0.42272574, a: 1}
-  cutoff: 0.92185354
-  metallic: 0.50897914
-  smoothness: 0.5058221
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &859762737
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3999,10 +3999,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.17149007, g: 0.10510951, b: 0.20386782, a: 1}
-  cutoff: 0.5121427
-  metallic: 0.53560525
-  smoothness: 0.7451428
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &901141092
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4109,10 +4109,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.6338131, g: 0.6312538, b: 0.67623323, a: 1}
-  cutoff: 0.6905378
-  metallic: 0.25878567
-  smoothness: 0.90135026
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &904368223
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4205,10 +4205,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.6266772, g: 0.31944606, b: 0.70659226, a: 1}
-  cutoff: 0.68206203
-  metallic: 0.72249365
-  smoothness: 0.8216262
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &912227126
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4315,10 +4315,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.29315212, g: 0.24740995, b: 0.1336561, a: 1}
-  cutoff: 0.032251477
-  metallic: 0.49317855
-  smoothness: 0.23194563
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &913442892
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4439,10 +4439,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.2828164, g: 0.6427883, b: 0.8858695, a: 1}
-  cutoff: 0.7189671
-  metallic: 0.06421113
-  smoothness: 0.8030257
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &921198028
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4632,10 +4632,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.9368503, g: 0.1386926, b: 0.86515, a: 1}
-  cutoff: 0.92801666
-  metallic: 0.21942234
-  smoothness: 0.7144742
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &977074008
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4742,10 +4742,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.69417614, g: 0.33013928, b: 0.37821853, a: 1}
-  cutoff: 0.63739824
-  metallic: 0.37975544
-  smoothness: 0.90885305
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1020299219
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4945,10 +4945,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.07389149, g: 0.081246264, b: 0.07501769, a: 1}
-  cutoff: 0.07498324
-  metallic: 0.48335022
-  smoothness: 0.8139986
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &1098207118
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5069,10 +5069,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.6071736, g: 0.18288213, b: 0.5457402, a: 1}
-  cutoff: 0.7557018
-  metallic: 0.4068355
-  smoothness: 0.30588013
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1117054698
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5179,10 +5179,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.3841008, g: 0.4390455, b: 0.87514675, a: 1}
-  cutoff: 0.4892884
-  metallic: 0.8470479
-  smoothness: 0.20921421
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1170426002
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5289,10 +5289,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.10486919, g: 0.21862844, b: 0.14971578, a: 1}
-  cutoff: 0.95875704
-  metallic: 0.9138392
-  smoothness: 0.096361995
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1180910134
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5399,10 +5399,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.18567635, g: 0.12564576, b: 0.1493083, a: 1}
-  cutoff: 0.6761044
-  metallic: 0.78111994
-  smoothness: 0.27280492
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1231376838
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5509,10 +5509,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.91976666, g: 0.48816273, b: 0.818358, a: 1}
-  cutoff: 0.17641675
-  metallic: 0.12299049
-  smoothness: 0.42921096
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &1280365181
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5619,10 +5619,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.25789112, g: 0.11603469, b: 0.98859584, a: 1}
-  cutoff: 0.23412049
-  metallic: 0.51880044
-  smoothness: 0.10703635
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1335465613
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5729,10 +5729,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.11425912, g: 0.13223578, b: 0.1173968, a: 1}
-  cutoff: 0.56348854
-  metallic: 0.16422474
-  smoothness: 0.20951402
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1337068857
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5839,10 +5839,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.24127215, g: 0.138032, b: 0.4494483, a: 1}
-  cutoff: 0.6997503
-  metallic: 0.63814795
-  smoothness: 0.62970495
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &1397499705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5949,10 +5949,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.022667116, g: 0.6952153, b: 0.67211425, a: 1}
-  cutoff: 0.66230524
-  metallic: 0.7970879
-  smoothness: 0.12703776
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1403377215
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6045,10 +6045,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.032584075, g: 0.02068817, b: 0.028872982, a: 1}
-  cutoff: 0.86862683
-  metallic: 0.37170094
-  smoothness: 0.86932707
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &1414653308
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6169,10 +6169,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.5768883, g: 0.61257225, b: 0.70451945, a: 1}
-  cutoff: 0.20880318
-  metallic: 0.47369975
-  smoothness: 0.35263795
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1428339885
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6279,10 +6279,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.033446986, g: 0.6772283, b: 0.26328695, a: 1}
-  cutoff: 0.5470031
-  metallic: 0.1140821
-  smoothness: 0.04504454
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1467523221
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6389,10 +6389,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.63806516, g: 0.1569229, b: 0.4864, a: 1}
-  cutoff: 0.81480753
-  metallic: 0.94846797
-  smoothness: 0.929719
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1492045088
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6499,10 +6499,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.6045236, g: 0.2992055, b: 0.9453026, a: 1}
-  cutoff: 0.7007414
-  metallic: 0.24099827
-  smoothness: 0.9403105
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1528906240
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6609,10 +6609,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.080690354, g: 0.108123496, b: 0.11952473, a: 1}
-  cutoff: 0.09116948
-  metallic: 0.5735974
-  smoothness: 0.46864885
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1603599159
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6719,10 +6719,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.77488625, g: 0.38225463, b: 0.70057887, a: 1}
-  cutoff: 0.22684991
-  metallic: 0.26249176
-  smoothness: 0.42904574
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1609865732
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6829,10 +6829,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.22161599, g: 0.20016755, b: 0.25084093, a: 1}
-  cutoff: 0.3616236
-  metallic: 0.07464111
-  smoothness: 0.08632231
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1612007460
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6997,14 +6997,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1632775354}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12b34fac330b345eea0c6df7126deddc, type: 3}
+  m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.1477839, g: 0.764151, b: 0.15177192, a: 1}
-  alphaCutoff: 0.5
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
   metallic: 0
   smoothness: 0.5
-  emissionColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &1645389705
 GameObject:
   m_ObjectHideFlags: 0
@@ -7051,10 +7050,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.7638273, g: 0.86589336, b: 0.81966925, a: 1}
-  cutoff: 0.61617225
-  metallic: 0.47669882
-  smoothness: 0.44245023
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1645389708
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7161,10 +7160,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.55298406, g: 0.62748426, b: 0.52479446, a: 1}
-  cutoff: 0.89612734
-  metallic: 0.77680707
-  smoothness: 0.67842734
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1653347230
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7271,10 +7270,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.33975923, g: 0.8220564, b: 0.5986609, a: 1}
-  cutoff: 0.74561715
-  metallic: 0.064412
-  smoothness: 0.633515
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1695304137
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7381,10 +7380,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.61809665, g: 0.75406086, b: 0.52177113, a: 1}
-  cutoff: 0.47697467
-  metallic: 0.8379425
-  smoothness: 0.29687947
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1720865118
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7491,10 +7490,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.2872603, g: 0.3246576, b: 0.29039118, a: 1}
-  cutoff: 0.9935355
-  metallic: 0.90428627
-  smoothness: 0.31159598
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1734926731
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7601,10 +7600,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.78510916, g: 0.77918494, b: 0.7864201, a: 1}
-  cutoff: 0.48699623
-  metallic: 0.59271544
-  smoothness: 0.46969885
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1782004220
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7711,10 +7710,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.91813684, g: 0.7767369, b: 0.9042812, a: 1}
-  cutoff: 0.626794
-  metallic: 0.2936439
-  smoothness: 0.5182372
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1818151700
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7821,10 +7820,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.21332932, g: 0.2568076, b: 0.4839551, a: 1}
-  cutoff: 0.7033001
-  metallic: 0.662097
-  smoothness: 0.12502539
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1822808731
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7931,10 +7930,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.109651834, g: 0.6326713, b: 0.21135254, a: 1}
-  cutoff: 0.17761445
-  metallic: 0.31452054
-  smoothness: 0.33838314
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1856745837
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8027,10 +8026,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.13824095, g: 0.11953301, b: 0.49576408, a: 1}
-  cutoff: 0.10779524
-  metallic: 0.85354245
-  smoothness: 0.91931796
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &1857278379
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8151,10 +8150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.24233249, g: 0.20950502, b: 0.1955128, a: 1}
-  cutoff: 0.10617578
-  metallic: 0.22055769
-  smoothness: 0.33630806
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &1886352575
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8261,10 +8260,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.20120074, g: 0.23102382, b: 0.23087277, a: 1}
-  cutoff: 0.55745834
-  metallic: 0.08246791
-  smoothness: 0.59056705
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1933946947
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8371,10 +8370,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.32452357, g: 0.6255196, b: 0.54872996, a: 1}
-  cutoff: 0.9446776
-  metallic: 0.8437356
-  smoothness: 0.7076497
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &1965230374
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8467,10 +8466,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.31016445, g: 0.6118798, b: 0.9120592, a: 1}
-  cutoff: 0.6312455
-  metallic: 0.31438667
-  smoothness: 0.93194544
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &2035396380
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8591,10 +8590,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.3957604, g: 0.9460782, b: 0.22632796, a: 1}
-  cutoff: 0.4384511
-  metallic: 0.9921427
-  smoothness: 0.8944694
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &2036625972
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8701,10 +8700,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.007868916, g: 0.003869955, b: 0.014183881, a: 1}
-  cutoff: 0.10207057
-  metallic: 0.77699363
-  smoothness: 0.96145
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!135 &2061920351
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8811,10 +8810,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.118143, g: 0.33875695, b: 0.26618034, a: 1}
-  cutoff: 0.36172253
-  metallic: 0.2901823
-  smoothness: 0.3330266
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &2093693657
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8921,10 +8920,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 0.37961262, g: 0.39665455, b: 0.28225675, a: 1}
-  cutoff: 0.6844429
-  metallic: 0.30911058
-  smoothness: 0.23689198
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!65 &2120848151
 BoxCollider:
   m_ObjectHideFlags: 0
