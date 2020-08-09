@@ -6,6 +6,9 @@
 TEXTURE2D(unity_Lightmap);
 SAMPLER(samplerunity_Lightmap);
 
+TEXTURE3D_FLOAT(unity_ProbeVolumeSH);
+SAMPLER(samplerunity_ProbeVolumeSH);
+
 #if defined(LIGHTMAP_ON)
 	#define GI_ATTRIBUTE_DATA float2 lightMapUV : TEXCOORD1;
 	
@@ -42,20 +45,34 @@ float3 SampleLightMap(float2 lightMapUV)
 	#endif
 }
 
-float3 SampleLightProbes(Surface surfaceWS)
+float3 SampleLightProbes(Surface surfaceWS) // ?? just know how to use
 {
     #if defined(LIGHTMAP_ON)
         return 0.0;
     #else
-        float4 coefficients[7];
-		coefficients[0] = unity_SHAr;
-		coefficients[1] = unity_SHAg;
-		coefficients[2] = unity_SHAb;
-		coefficients[3] = unity_SHBr;
-		coefficients[4] = unity_SHBg;
-		coefficients[5] = unity_SHBb;
-		coefficients[6] = unity_SHC;
-		return max(0.0, SampleSH9(coefficients, surfaceWS.normal));
+        if (unity_ProbeVolumeParams.x) // 1 means use LPPV, L1 spherical harmonics, less precise
+        {
+			return SampleProbeVolumeSH4(
+				TEXTURE3D_ARGS(unity_ProbeVolumeSH, samplerunity_ProbeVolumeSH),
+				surfaceWS.position, surfaceWS.normal,
+				unity_ProbeVolumeWorldToObject,
+				unity_ProbeVolumeParams.y, unity_ProbeVolumeParams.z,
+				unity_ProbeVolumeMin.xyz, unity_ProbeVolumeSizeInv.xyz
+			);
+		}
+		
+		else // may be L2 spherical harmonics
+		{
+		    float4 coefficients[7];
+		    coefficients[0] = unity_SHAr;
+		    coefficients[1] = unity_SHAg;
+		    coefficients[2] = unity_SHAb;
+		    coefficients[3] = unity_SHBr;
+		    coefficients[4] = unity_SHBg;
+		    coefficients[5] = unity_SHBb;
+		    coefficients[6] = unity_SHC;
+		    return max(0.0, SampleSH9(coefficients, surfaceWS.normal));
+		}
     #endif
 }
 

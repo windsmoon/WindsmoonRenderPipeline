@@ -18,6 +18,11 @@
     
     SubShader
     {
+        HLSLINCLUDE
+            #include "WindsmoonCommon.hlsl"
+            #include "WindsmoonLitInput.hlsl"
+        ENDHLSL
+        
         Pass
         {
             Tags

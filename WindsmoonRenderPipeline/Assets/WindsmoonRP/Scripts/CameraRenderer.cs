@@ -97,7 +97,8 @@ namespace WindsmoonRP
         {
             SortingSettings sortingSettings = new SortingSettings(camera) {criteria = SortingCriteria.CommonOpaque};
             DrawingSettings drawingSettings = new DrawingSettings(unlitShaderTagID, sortingSettings)
-                {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing, perObjectData = PerObjectData.Lightmaps | PerObjectData.LightProbe}; // enable LIGHTMAP_ON
+                {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing, 
+                    perObjectData = PerObjectData.Lightmaps | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume}; // enable LIGHTMAP_ON
             drawingSettings.SetShaderPassName(1, litShaderTagID);
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);

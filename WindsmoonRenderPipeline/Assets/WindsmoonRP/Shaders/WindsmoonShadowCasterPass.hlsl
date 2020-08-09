@@ -1,16 +1,16 @@
 #ifndef WINDSMOON_SHADOW_PASS_CASTER
 #define WINDSMOON_SHADOW_PASS_CASTER
 
-#include "WindsmoonCommon.hlsl"
+//#include "WindsmoonCommon.hlsl"
 
-TEXTURE2D(_BaseMap);
-SAMPLER(sampler_BaseMap);
+//TEXTURE2D(_BaseMap);
+//SAMPLER(sampler_BaseMap);
 
-UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
-    UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
-    UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
-	UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff)
-UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
+//UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
+//    UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
+//    UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
+//	UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff)
+//UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 struct Attributes
 {
@@ -40,20 +40,22 @@ Varyings ShadowCasterVertex(Attributes input)
         output.positionCS.z = max(output.positionCS.z, output.positionCS.w * UNITY_NEAR_CLIP_VALUE);    
     #endif
     
-    float4 baseST = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
-    output.baseUV = input.baseUV * baseST.xy + baseST.zw;
+    //float4 baseST = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    //output.baseUV = input.baseUV * baseST.xy + baseST.zw;
+    output.baseUV = TransformBaseUV(input.baseUV);
     return output;
 }
 
 void ShadowCasterFragment(Varyings input)
 {
     UNITY_SETUP_INSTANCE_ID(input);
-    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
-    float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-    baseColor *= baseMap;
+    //float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
+    //float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+    //baseColor *= baseMap;
+    float4 baseColor = GetBaseColor(input.baseUV);
     
 	#if defined(_SHADOW_MODE_CLIP)
-		clip(baseColor.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
+		clip(baseColor.a - GetCutoff(input.baseUV));
 	#elif defined(_SHADOW_MODE_DITHER)
 	    float dither = InterleavedGradientNoise(input.positionCS.xy, 0);
 	    clip(baseColor.a - dither);
