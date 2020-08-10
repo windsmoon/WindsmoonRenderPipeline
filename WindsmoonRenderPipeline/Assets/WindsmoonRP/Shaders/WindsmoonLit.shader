@@ -19,8 +19,8 @@
     SubShader
     {
         HLSLINCLUDE
-            #include "WindsmoonCommon.hlsl"
-            #include "WindsmoonLitInput.hlsl"
+        #include "WindsmoonCommon.hlsl"
+        #include "WindsmoonLitInput.hlsl"
         ENDHLSL
         
         Pass
@@ -44,6 +44,7 @@
             #pragma multi_compile_instancing
             #pragma vertex LitVertex
             #pragma fragment LitFragment
+            
             #include "WindsmoonLitPass.hlsl"
             ENDHLSL
         }
@@ -64,8 +65,27 @@
 			#pragma multi_compile_instancing
 			#pragma vertex ShadowCasterVertex
 			#pragma fragment ShadowCasterFragment
+			
 			#include "WindsmoonShadowCasterPass.hlsl"
             ENDHLSL
+        }
+        
+        Pass
+        {
+            Tags
+            {
+                "LightMode" = "Meta"
+            }
+            
+            Cull Off
+            
+            HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex MetaVertex
+			#pragma fragment MetaFragment
+			
+			#include "WindsmoonMetaPass.hlsl"
+			ENDHLSL
         }
     }
     

@@ -1,20 +1,18 @@
 ﻿#ifndef WINDSMOON_UNLIT_INCLUDED
 #define WINDSMOON_UNLIT_INCLUDED
 
-#include "WindsmoonCommon.hlsl"
-
 //CBUFFER_START(UnityPerMaterial)
   //  float4 _BaseColor;
 //CBUFFER_END
 
-TEXTURE2D(_BaseMap);
-SAMPLER(sampler_BaseMap);
+//TEXTURE2D(_BaseMap);
+//SAMPLER(sampler_BaseMap);
 
-UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
-    UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
-	UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
-	UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff)
-UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
+//UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
+//    UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
+//	UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
+//	UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff)
+//UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 struct Attribute
 {

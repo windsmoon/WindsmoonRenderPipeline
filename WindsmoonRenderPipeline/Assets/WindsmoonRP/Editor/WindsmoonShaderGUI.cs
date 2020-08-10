@@ -16,7 +16,7 @@ namespace WindsmoonRP.Editor
         #region properties
         private bool ClippingAlpha 
         {
-            set { SetToggleKeyword("_AlphaClipping", "_CLIPPING", value); }
+            set { SetToggleKeyword("_AlphaClipping", "ALPHA_CLIPPING", value); }
         }
 
         private bool PremultiplyAlpha 
