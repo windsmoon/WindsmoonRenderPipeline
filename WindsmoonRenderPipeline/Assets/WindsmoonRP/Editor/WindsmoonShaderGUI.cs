@@ -81,10 +81,33 @@ namespace WindsmoonRP.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 SetShadowCasterPass();
+                CopyLightMapProperties();
             }
         }
-
-        private void BakeEmission()
+        
+        void CopyLightMapProperties() // light map use _MainTex and _Color property
+        {
+            MaterialProperty mainTex = FindProperty("_MainTex", properties, false);
+            MaterialProperty baseMap = FindProperty("_BaseMap", properties, false);
+            
+            if (mainTex != null && baseMap != null) 
+            {
+                mainTex.textureValue = baseMap.textureValue;
+                mainTex.textureScaleAndOffset = baseMap.textureScaleAndOffset;
+            }
+            
+            MaterialProperty color = FindProperty("_Color", properties, false);
+            MaterialProperty baseColor = FindProperty("_BaseColor", properties, false);
+            
+            if (color != null && baseColor != null) 
+            {
+                color.colorValue = baseColor.colorValue;
+            }
+        }
+        
+        // if the emission of material is black, light mapper does not consider the emission
+        // so we need tell light mapper to consider the per-instance emission property
+        private void BakeEmission() 
         {
             EditorGUI.BeginChangeCheck();
             editor.LightmapEmissionProperty();
@@ -194,7 +217,7 @@ namespace WindsmoonRP.Editor
                 SrcBlend = BlendMode.One;
                 DstBlend = BlendMode.OneMinusSrcAlpha;
                 ZWrite = false;
-                RenderQueue = RenderQueue.Geometry;
+                RenderQueue = RenderQueue.Transparent;
                 ShadowMode = ShadowMode.Dither;
             }
         }

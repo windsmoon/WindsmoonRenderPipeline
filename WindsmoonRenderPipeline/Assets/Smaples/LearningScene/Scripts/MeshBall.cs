@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
 namespace WindsmoonRP.Samples.LearningScene
@@ -40,7 +41,8 @@ namespace WindsmoonRP.Samples.LearningScene
         
         private void Update()
         {
-            Graphics.DrawMeshInstanced(mesh, 0, material, matrices, meshCount, materialPropertyBlock);
+            Graphics.DrawMeshInstanced(mesh, 0, material, matrices, meshCount, materialPropertyBlock,
+                ShadowCastingMode.On, true, 0, null, LightProbeUsage.CustomProvided);
         }
         #endregion
         
@@ -66,6 +68,17 @@ namespace WindsmoonRP.Samples.LearningScene
             materialPropertyBlock.SetVectorArray(baseColorPropertyID, baseColors);
             materialPropertyBlock.SetFloatArray(metallicPropertyID, metallics);
             materialPropertyBlock.SetFloatArray(smoothnessPropertyID, smoothnesses);
+            
+            Vector3[] positions = new Vector3[meshCount];
+            
+            for (int i = 0; i < matrices.Length; i++)
+            {
+                positions[i] = matrices[i].GetColumn(3);
+            }
+            
+            SphericalHarmonicsL2[] lightProbes = new SphericalHarmonicsL2[meshCount];
+            LightProbes.CalculateInterpolatedLightAndOcclusionProbes(positions, lightProbes, null);
+            materialPropertyBlock.CopySHCoefficientArraysFrom(lightProbes);
         }
         #endregion
     }

@@ -35,6 +35,8 @@ Varyings MetaVertex(Attributes input)
     return output;
 }
 
+// transparency and alpha test is determined by render queue, and have not to handled in meta fragment
+// emission, transparency and alpha test can only be considered for material, per-instance properties are ignored
 float4 MetaFragment(Varyings input) : SV_Target
 {
     float4 baseColor = GetBaseColor(input.baseUV);

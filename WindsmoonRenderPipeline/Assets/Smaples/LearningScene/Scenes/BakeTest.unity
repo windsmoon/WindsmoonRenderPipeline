@@ -2715,7 +2715,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.82454383, g: 0.875115, b: 1.0212406, a: 1.3}
-  emissionColor: {r: 1.546195, g: 1.0126611, b: 0.9218385, a: 2}
+  emissionColor: {r: 1.5219094, g: 1.4085758, b: 1.2871468, a: 2}
   cutoff: 0.06459105
   metallic: 0.13806057
   smoothness: 0.8042474
@@ -3861,7 +3861,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.7791301, g: 0.5098579, b: 0.72197855, a: 1.3}
-  emissionColor: {r: 0.8534491, g: 0.79217815, b: 0.8851558, a: 2}
+  emissionColor: {r: 1.7098039, g: 1.5843138, b: 1.772549, a: 2}
   cutoff: 0.9937707
   metallic: 0.30958313
   smoothness: 0.13215482
@@ -3956,7 +3956,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &705507994
 Light:
   m_ObjectHideFlags: 0
@@ -4008,7 +4008,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -4495,7 +4495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.45336044, g: 0.5707313, b: 0.48933876, a: 1.3}
-  emissionColor: {r: 0.9699354, g: 0.8835375, b: 0.9453187, a: 2}
+  emissionColor: {r: 3.031433, g: 0.23775947, b: 2.270603, a: 2}
   cutoff: 0.38334864
   metallic: 0.81815267
   smoothness: 0.5885795
@@ -6670,7 +6670,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.585122, g: 0.588351, b: 0.49225438, a: 1.3}
-  emissionColor: {r: 0.6765462, g: 0.72071534, b: 0.7883364, a: 2}
+  emissionColor: {r: 0.7294118, g: 1.2235295, b: 2, a: 2}
   cutoff: 0.6854702
   metallic: 0.1347425
   smoothness: 0.478056
@@ -10808,7 +10808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.6183469, g: 0.6062536, b: 0.5945436, a: 1.3}
-  emissionColor: {r: 0.85851693, g: 0.90198326, b: 0.8602432, a: 2}
+  emissionColor: {r: 1.9730586, g: 2.072162, b: 1.9730586, a: 2}
   cutoff: 0.9021834
   metallic: 0.67149675
   smoothness: 0.740252
@@ -11206,6 +11206,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1933946944}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1937624583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937624585}
+  - component: {fileID: 1937624584}
+  m_Layer: 0
+  m_Name: MeshBall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1937624584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937624583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5ca13aec53df44e8183412d63c26b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  material: {fileID: 2100000, guid: a64fa326d707f904188eac304c8224a6, type: 2}
+  meshCount: 1023
+  radius: 10
+--- !u!4 &1937624585
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937624583}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5815115, y: 5.596308, z: -1.5304775}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1946380230
 GameObject:
   m_ObjectHideFlags: 0
@@ -11905,7 +11952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc1b090b0d3aa343982e75e8ec7d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  baseColor: {r: 1, g: 1, b: 1, a: 0.9843137}
   emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
   metallic: 0
@@ -11941,7 +11988,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cc3a226148ea84670b6daf8ad8ef7345, type: 2}
+  - {fileID: 2100000, guid: 2a670f00801f4484da5f95e87daa86f0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
