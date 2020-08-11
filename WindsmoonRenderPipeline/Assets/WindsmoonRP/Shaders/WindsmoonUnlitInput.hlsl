@@ -23,6 +23,11 @@ float4 GetBaseColor(float2 uv)
     return baseMap * color;
 }
 
+float3 GetEmission(float2 uv) 
+{
+	return GetBaseColor(uv).rgb;
+}
+
 float GetCutoff(float2 uv)
 {
     return UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);

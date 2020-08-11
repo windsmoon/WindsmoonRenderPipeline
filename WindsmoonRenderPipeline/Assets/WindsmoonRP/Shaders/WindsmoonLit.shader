@@ -4,6 +4,8 @@
     {
         _BaseMap("Base Texture", 2D) = "white" {}
         _BaseColor("Base Color", Color) = (0.5, 0.5, 0.5, 1.0)
+        [NoScaleOffset] _EmissionMap("Emmision Map", 2D) = "white" {}
+        [HDR] _EmisiionColor("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
         _Cutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         [Toggle(ALPHA_CLIPPING)] _AlphaClipping ("Alpha Clipping", Float) = 0
         [Toggle(PREMULTIPLY_ALPHA)] _PremultiplyAlpha ("Premultiply Alpha", Float) = 0

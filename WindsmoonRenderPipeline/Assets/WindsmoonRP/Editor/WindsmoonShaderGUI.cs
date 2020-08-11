@@ -71,6 +71,8 @@ namespace WindsmoonRP.Editor
             editor = materialEditor;
             materials = materialEditor.targets;
             this.properties = properties;
+            BakeEmission();            
+            
             SetOpaque();
             SetClippingAlpha();
             SetFade();
@@ -79,6 +81,20 @@ namespace WindsmoonRP.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 SetShadowCasterPass();
+            }
+        }
+
+        private void BakeEmission()
+        {
+            EditorGUI.BeginChangeCheck();
+            editor.LightmapEmissionProperty();
+            
+            if (EditorGUI.EndChangeCheck()) 
+            {
+                foreach (Material material in editor.targets) 
+                {
+                    material.globalIlluminationFlags &= ~MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+                }
             }
         }
 

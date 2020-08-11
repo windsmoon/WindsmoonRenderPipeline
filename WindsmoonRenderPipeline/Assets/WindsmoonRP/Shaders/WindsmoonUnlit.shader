@@ -3,7 +3,7 @@
     Properties
     {
         _BaseMap("Base Texture", 2D) = "white" {}
-        _BaseColor("Base Color", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HDR] _BaseColor("Base Color", Color) = (1.0, 1.0, 1.0, 1.0)
         [Toggle(ALPHA_CLIPPING)] _alphaClipping ("Alpha Clipping", Float) = 0
         _Cutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Src Blend", Float) = 1

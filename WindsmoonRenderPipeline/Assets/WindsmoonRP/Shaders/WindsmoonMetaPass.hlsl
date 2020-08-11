@@ -53,6 +53,11 @@ float4 MetaFragment(Varyings input) : SV_Target
         meta.rgb = min(PositivePow(meta.rgb, unity_OneOverOutputBoost), unity_MaxOutputValue); // ??
     }
     
+    else if (unity_MetaFragmentControl.y) // request emission
+    {
+        meta = float4(GetEmission(input.baseUV), 1.0);
+    }
+    
     return meta;
 }
 

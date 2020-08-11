@@ -82,6 +82,6 @@ float4 LitFragment(Varyings input) : SV_Target
 	surface.dither = InterleavedGradientNoise(input.positionCS.xy, 0);
 	BRDF brdf = GetBRDF(surface);
 	GI gi = GetGI(GI_FRAGMENT_DATA(input), surface);
-	return float4(GetLighting(surface, brdf, gi), surface.alpha);
+	return float4(GetLighting(surface, brdf, gi) + GetEmission(input.baseUV), surface.alpha);
 }
 #endif

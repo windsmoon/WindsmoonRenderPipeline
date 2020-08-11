@@ -2,11 +2,13 @@
 #define WINDSMOON_LIT_INPUT_INCLUDED
 
 TEXTURE2D(_BaseMap);
+TEXTURE2D(_EmissionMap);
 SAMPLER(sampler_BaseMap);
 
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
 	UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
+	UNITY_DEFINE_INSTANCED_PROP(float4, _EmissionColor)
 	UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff)
 	UNITY_DEFINE_INSTANCED_PROP(float, _Metallic)
 	UNITY_DEFINE_INSTANCED_PROP(float, _Smoothness)
@@ -23,6 +25,13 @@ float4 GetBaseColor(float2 uv)
     float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
     float4 color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
     return baseMap * color;
+}
+
+float3 GetEmission(float2 uv)
+{
+    float4 emissionMap = SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, uv);
+    float4 emissionColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _EmissionColor);
+    return emissionMap.rgb * emissionColor.rgb;
 }
 
 float GetCutoff(float2 uv)
