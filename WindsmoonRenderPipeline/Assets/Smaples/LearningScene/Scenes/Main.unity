@@ -228,7 +228,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.45579463, g: 1, b: 0.10849059, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &112787874
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,7 +339,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0, g: 1, b: 0.9218221, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &170760715
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +450,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.5660378, g: 0.16440696, b: 0, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &188308943
 GameObject:
   m_ObjectHideFlags: 0
@@ -552,7 +561,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.8584906, g: 0, b: 0, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &361864809
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,7 +707,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 1, g: 0.11550176, b: 0, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &485731694
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,7 +818,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0, g: 0.49056602, b: 0.2935675, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &498744005
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,7 +929,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0, g: 0.6886792, b: 0.2635063, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &501087787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1019,7 +1040,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0, g: 1, b: 0.084820986, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &683926447
 GameObject:
   m_ObjectHideFlags: 0
@@ -1337,7 +1361,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 1, g: 0.56320345, b: 0.3443396, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &1096403397
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,7 +1507,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.25943398, g: 0.9362068, b: 1, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &1143124063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1588,7 +1618,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0, g: 0.0632872, b: 0.6320754, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &1203118644
 GameObject:
   m_ObjectHideFlags: 0
@@ -1696,7 +1729,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.8679245, g: 0.41479605, b: 0.36436453, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &1366601915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,7 +1840,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.5378489, g: 1, b: 0.16509432, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &1614977349
 GameObject:
   m_ObjectHideFlags: 0
@@ -1912,7 +1951,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.45109472, g: 0.45228326, b: 0.8773585, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5
 --- !u!1 &1922784499
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,7 +1964,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1922784501}
-  - component: {fileID: 1922784500}
   - component: {fileID: 1922784502}
   m_Layer: 0
   m_Name: MeshBall
@@ -1931,22 +1972,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1922784500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1922784499}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da5ca13aec53df44e8183412d63c26b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  material: {fileID: 2100000, guid: 0ec50ccd8298bfd499f59041cc51e0cb, type: 2}
-  meshCount: 1023
-  radius: 6
 --- !u!4 &1922784501
 Transform:
   m_ObjectHideFlags: 0
@@ -2084,4 +2109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0, g: 0.17110817, b: 0.9716981, a: 1}
+  emissionColor: {r: 0, g: 0, b: 0, a: 1}
   cutoff: 0.5
+  metallic: 0
+  smoothness: 0.5

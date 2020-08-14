@@ -21,6 +21,8 @@ namespace WindsmoonRP.Samples.LearningScene
         private int meshCount = 1023;
         [SerializeField] 
         private int radius = 10;
+        [SerializeField]
+        private LightProbeProxyVolume llpv = null;
         private Matrix4x4[] matrices;
         private Vector4[] baseColors;
         private float[] metallics;
@@ -42,7 +44,8 @@ namespace WindsmoonRP.Samples.LearningScene
         private void Update()
         {
             Graphics.DrawMeshInstanced(mesh, 0, material, matrices, meshCount, materialPropertyBlock,
-                ShadowCastingMode.On, true, 0, null, LightProbeUsage.CustomProvided);
+                ShadowCastingMode.On, true, 0, null, llpv ? LightProbeUsage.UseProxyVolume : LightProbeUsage.CustomProvided, llpv);
+            // Graphics.DrawMeshInstanced(mesh, 0, material, matrices, meshCount, materialPropertyBlock);
         }
         #endregion
         
@@ -68,17 +71,20 @@ namespace WindsmoonRP.Samples.LearningScene
             materialPropertyBlock.SetVectorArray(baseColorPropertyID, baseColors);
             materialPropertyBlock.SetFloatArray(metallicPropertyID, metallics);
             materialPropertyBlock.SetFloatArray(smoothnessPropertyID, smoothnesses);
-            
-            Vector3[] positions = new Vector3[meshCount];
-            
-            for (int i = 0; i < matrices.Length; i++)
+
+            if (!llpv)
             {
-                positions[i] = matrices[i].GetColumn(3);
-            }
+                Vector3[] positions = new Vector3[meshCount];
             
-            SphericalHarmonicsL2[] lightProbes = new SphericalHarmonicsL2[meshCount];
-            LightProbes.CalculateInterpolatedLightAndOcclusionProbes(positions, lightProbes, null);
-            materialPropertyBlock.CopySHCoefficientArraysFrom(lightProbes);
+                for (int i = 0; i < matrices.Length; i++)
+                {
+                    positions[i] = matrices[i].GetColumn(3);
+                }
+            
+                SphericalHarmonicsL2[] lightProbes = new SphericalHarmonicsL2[meshCount];
+                LightProbes.CalculateInterpolatedLightAndOcclusionProbes(positions, lightProbes, null); // consider the environment light
+                materialPropertyBlock.CopySHCoefficientArraysFrom(lightProbes);
+            }
         }
         #endregion
     }
