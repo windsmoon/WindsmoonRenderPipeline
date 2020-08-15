@@ -12,12 +12,15 @@ float3 GetLighting(Surface surface, Light light, BRDF brdfLight)
 float3 GetLighting(Surface surfaceWS, BRDF brdf, GI gi) 
 {
 	//return GetIncomingLight(surface, GetDirectionalLight()) * surface.color;
-	ShadowInfo shadowInfo = GetShadowInfo(surfaceWS);
+	ShadowData shadowData = GetShadowData(surfaceWS);
+	shadowData.shadowMask = gi.shadowMask;
+	return gi.shadowMask.shadows.rgb; // debug
+	
 	float3 color = gi.diffuse * brdf.diffuse;
 	
 	for (int i = 0; i < GetDirectionalLightCount(); i++) 
 	{
-		color += GetLighting(surfaceWS, GetDirectionalLight(i, surfaceWS, shadowInfo), brdf);
+		color += GetLighting(surfaceWS, GetDirectionalLight(i, surfaceWS, shadowData), brdf);
 	}
 	
 	// debug : this method can be used to check surface is using which cascade culling sphere

@@ -40,9 +40,15 @@ namespace WindsmoonRP.Shadow
             "CASCADE_BLEND_SOFT",
             "CASCADE_BLEND_DITHER"
         };
-
+        
+        private static string[] shadowMaskKeywords = 
+        {
+            "SHADOW_MASK_DISTANCE"
+        };
+        
         private Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
         private Vector4[] cascadeInfos = new Vector4[maxCascadeCount];
+        private bool useShadowMask;
         #endregion
 
         #region methods
@@ -52,6 +58,7 @@ namespace WindsmoonRP.Shadow
             this.cullingResults = cullingResults;
             this.shadowSettings = shadowSettings;
             currentDirectionalLightShadowCount = 0;
+            useShadowMask = false;
         }
         
         public Vector3 ReserveDirectionalShadows(Light light, int visibleLightIndex)
@@ -63,6 +70,13 @@ namespace WindsmoonRP.Shadow
                 return Vector3.zero;
             }
 
+            LightBakingOutput lightBakingOutput = light.bakingOutput;
+                
+            if (lightBakingOutput.lightmapBakeType == LightmapBakeType.Mixed && lightBakingOutput.mixedLightingMode == MixedLightingMode.Shadowmask)
+            {
+                useShadowMask = true;
+            }
+            
             directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex, slopeScaleBias = light.shadowBias, nearPlaneOffset = light.shadowNearPlane};
             return new Vector3(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++, light.shadowNormalBias);
         }
@@ -73,6 +87,11 @@ namespace WindsmoonRP.Shadow
             {
                 RenderDirectionalShadow();
             }
+            
+            commandBuffer.BeginSample(bufferName);
+            SetKeywords(shadowMaskKeywords, useShadowMask ? 0 : -1);
+            commandBuffer.EndSample(bufferName);
+            ExecuteBuffer();
         }
 
         public void Cleanup()
