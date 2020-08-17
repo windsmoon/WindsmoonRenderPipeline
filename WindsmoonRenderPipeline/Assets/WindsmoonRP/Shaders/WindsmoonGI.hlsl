@@ -49,7 +49,7 @@ float3 SampleLightMap(float2 lightMapUV)
 	#endif
 }
 
-float4 SampleBakedShadows (float2 lightMapUV) 
+float4 SampleBakedShadows(float2 lightMapUV) 
 {
 	#if defined(LIGHTMAP_ON)
 		return SAMPLE_TEXTURE2D(unity_ShadowMask, samplerunity_ShadowMask, lightMapUV);

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Net.Configuration;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
@@ -99,7 +100,8 @@ namespace WindsmoonRP
             // Lightmaps enable LIGHTMAP_ON, ShadowMask enable shadow mask texture, OcclusionProbe enable unity_ProbesOcclusion
             DrawingSettings drawingSettings = new DrawingSettings(unlitShaderTagID, sortingSettings)
                 {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing, 
-                    perObjectData = PerObjectData.Lightmaps | PerObjectData.ShadowMask | PerObjectData.OcclusionProbe | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume};
+                    perObjectData = PerObjectData.Lightmaps | PerObjectData.ShadowMask | PerObjectData.OcclusionProbe | PerObjectData.OcclusionProbeProxyVolume 
+                                    | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume};
             drawingSettings.SetShaderPassName(1, litShaderTagID);
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);

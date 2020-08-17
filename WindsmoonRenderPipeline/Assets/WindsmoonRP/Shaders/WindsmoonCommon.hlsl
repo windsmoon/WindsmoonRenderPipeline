@@ -24,6 +24,11 @@ float4 TransformWorldToHClip(float3 positionWS)
 #define UNITY_MATRIX_VP unity_MatrixVP
 #define UNITY_MATRIX_P glstate_matrix_projection
 
+// the occlusion data of light probe can get instanced automatically, but UnityInstancing only does this when SHADOWS_SHADOWMASK is defined (from catlike)
+#if defined(_SHADOW_MASK_DISTANCE)
+	#define SHADOWS_SHADOWMASK
+#endif
+
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 
