@@ -45,6 +45,12 @@ float GetSpecularStrength(Surface surface, BRDF brdf, Light light)
 	return r2 / (d2 * max(0.1, lh2) * normalization);
 }
 
+float3 IndirectBRDF(Surface surface, BRDF brdf, float3 diffuse, float3 specular)
+{
+	float3 reflection = specular * brdf.specular;
+	return diffuse * brdf.diffuse + reflection;
+}
+
 float3 GetDirectBRDF(Surface surface, BRDF brdf, Light light) 
 {
 	return GetSpecularStrength(surface, brdf, light) * brdf.specular + brdf.diffuse;
