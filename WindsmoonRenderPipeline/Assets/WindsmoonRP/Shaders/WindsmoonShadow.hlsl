@@ -23,6 +23,7 @@ SAMPLER_CMP(SHADOW_SAMPLER); // ?? note : use a special SAMPLER_CMP macro to def
 
 struct ShadowMask 
 {
+	bool useAlwaysShadowMask;
 	bool useDistanceShadowMask;
 	float4 shadows;
 };
@@ -37,7 +38,7 @@ CBUFFER_START(ShadowInfo)
     float4 _DirectionalShadowMapSize;
 CBUFFER_END 
 
-struct DirectionalShadowInfo // the info of the direcctional light
+struct DirectionalShadowData // the info of the direcctional light
 {
     float shadowStrength; // if surface is not in any culling sphere, global shadowStrength set to 0 to avoid any shadow 
     int tileIndex;
@@ -67,6 +68,7 @@ float GetFadedShadowStrength(float depth, float scale, float fadeScale)
 ShadowData GetShadowData(Surface surfaceWS)
 {
     ShadowData shadowData;
+	shadowData.shadowMask.useAlwaysShadowMask = false;
     shadowData.shadowMask.useDistanceShadowMask = false;
 	shadowData.shadowMask.shadows = 1.0;
     
@@ -131,7 +133,7 @@ ShadowData GetShadowData(Surface surfaceWS)
 
 float SampleDirectionalShadow(float3 positionShadowMap)
 {
-    return SAMPLE_TEXTURE2D_SHADOW(_DirectionalShadowMap, SHADOW_SAMPLER, positionShadowMap);
+    return SAMPLE_TEXTURE2D_SHADOW(_DirectionalShadowMap, SHADOW_SAMPLER, positionShadowMap); // ?? why directly use shadow map value than cmpare their depth
 }
 
 float FilterDirectionalShadow (float3 positionSTS) {
@@ -153,29 +155,79 @@ float FilterDirectionalShadow (float3 positionSTS) {
 	#endif
 }
 
-float GetDirectionalShadowAttenuation(DirectionalShadowInfo directionalShadowInfo, ShadowData globalShadowData, Surface surfaceWS)
+float GetCascadedShadow(DirectionalShadowData directionalShadowData, ShadowData globalShadowData, Surface surfaceWS)
+{
+	float3 normalBias = surfaceWS.normal * directionalShadowData.normalBias * _CascadeInfos[globalShadowData.cascadeIndex].y;
+	float3 positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowData.tileIndex], float4(surfaceWS.position + normalBias, 1.0f));
+	float shadow = FilterDirectionalShadow(positionShadowMap);
+        
+	if (globalShadowData.cascadeBlend < 1.0) // ??
+	{
+		normalBias = surfaceWS.normal * (directionalShadowData.normalBias * _CascadeInfos[globalShadowData.cascadeIndex + 1].y);
+		positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowData.tileIndex + 1], float4(surfaceWS.position + normalBias, 1.0f));
+		shadow = lerp(FilterDirectionalShadow(positionShadowMap), shadow, globalShadowData.cascadeBlend);
+	}
+
+	return shadow;
+}
+
+float GetBakedShadow(ShadowMask shadowMask)
+{
+	float shadow = 1.0;
+	
+	if (shadowMask.useDistanceShadowMask || shadowMask.useAlwaysShadowMask)
+	{
+		shadow = shadowMask.shadows.r;
+	}
+	
+	return shadow;
+}
+
+float GetBakedShadow(ShadowMask shadowMask, float lightShadowStrength)
+{
+	if (shadowMask.useDistanceShadowMask || shadowMask.useAlwaysShadowMask)
+	{
+		return lerp(1.0, GetBakedShadow(shadowMask), lightShadowStrength); // ?? the baked shadow is not consider the shadow strength of the light
+	}
+	
+	return 1.0;
+}
+
+float MixBakedAndRealtimeShadows(ShadowData globalShadowData, float shadow, float lightStrength)
+{
+	float bakedShadow = GetBakedShadow(globalShadowData.shadowMask);
+	//bakedShadow = 1; // debug
+
+	if (globalShadowData.shadowMask.useAlwaysShadowMask)
+	{
+		shadow = lerp(1.0, shadow, globalShadowData.strength);
+		shadow = min(bakedShadow, shadow);
+		return lerp(1.0, shadow, lightStrength);
+	}
+	
+	if (globalShadowData.shadowMask.useDistanceShadowMask)
+	{
+		shadow = lerp(bakedShadow, shadow, globalShadowData.strength);
+		return lerp(1.0, shadow, lightStrength);
+	}
+
+	return lerp(1.0, shadow, lightStrength * globalShadowData.strength);
+}
+
+float GetDirectionalShadowAttenuation(DirectionalShadowData directionalShadowData, ShadowData globalShadowData, Surface surfaceWS)
 {
     #if !defined(RECEIVE_SHADOWS)
         return 1.0f;
     #else
-        if (directionalShadowInfo.shadowStrength <= 0.0f) // todo : when strength is zero, this light should be discard in c# part 
+        if (directionalShadowData.shadowStrength * globalShadowData.strength <= 0.0f) // todo : when strength is less then zero, this light should be discard in c# part 
         {
-	    	return 1.0f;
+        	// if there has no realt time shadow, then use the baked shadow
+        	return GetBakedShadow(globalShadowData.shadowMask, abs(directionalShadowData.shadowStrength));
 	    }
 	    
-	    float3 normalBias = surfaceWS.normal * directionalShadowInfo.normalBias * _CascadeInfos[globalShadowData.cascadeIndex].y;
-        float3 positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex], float4(surfaceWS.position + normalBias, 1.0f));
-        float shadow = FilterDirectionalShadow(positionShadowMap);
-        
-        if (globalShadowData.cascadeBlend < 1.0) // ??
-        {
-            normalBias = surfaceWS.normal * (directionalShadowInfo.normalBias * _CascadeInfos[globalShadowData.cascadeIndex + 1].y);
-            positionShadowMap = mul(_DirectionalShadowMatrices[directionalShadowInfo.tileIndex + 1], float4(surfaceWS.position + normalBias, 1.0f));
-            shadow = lerp(FilterDirectionalShadow(positionShadowMap), shadow, globalShadowData.cascadeBlend);
-        }
-        
-        return lerp(1.0f, shadow, directionalShadowInfo.shadowStrength); // ?? why directly use shadow map value than cmpare their depth
-    #endif
+	    float shadow = GetCascadedShadow(directionalShadowData, globalShadowData, surfaceWS);
+		return MixBakedAndRealtimeShadows(globalShadowData, shadow, directionalShadowData.shadowStrength);
+	#endif
 }
 
 #endif

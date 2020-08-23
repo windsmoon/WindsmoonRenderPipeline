@@ -82,8 +82,10 @@ namespace WindsmoonRP.Samples.LearningScene
                 }
             
                 SphericalHarmonicsL2[] lightProbes = new SphericalHarmonicsL2[meshCount];
-                LightProbes.CalculateInterpolatedLightAndOcclusionProbes(positions, lightProbes, null); // consider the environment light
+                Vector4[] occlusionProbes = new Vector4[meshCount];
+                LightProbes.CalculateInterpolatedLightAndOcclusionProbes(positions, lightProbes, occlusionProbes); // consider the environment light
                 materialPropertyBlock.CopySHCoefficientArraysFrom(lightProbes);
+                materialPropertyBlock.CopyProbeOcclusionArrayFrom(occlusionProbes);
             }
         }
         #endregion

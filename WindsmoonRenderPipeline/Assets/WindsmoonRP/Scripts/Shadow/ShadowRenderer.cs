@@ -43,6 +43,7 @@ namespace WindsmoonRP.Shadow
         
         private static string[] shadowMaskKeywords = 
         {
+            "SHADOW_MASK_ALWAYS",
             "SHADOW_MASK_DISTANCE"
         };
         
@@ -63,22 +64,27 @@ namespace WindsmoonRP.Shadow
         
         public Vector3 ReserveDirectionalShadows(Light light, int visibleLightIndex)
         {
-            // GetShadowCasterBounds  return true if the light affects at least one shadow casting object in the Scene
-            if (currentDirectionalLightShadowCount >= maxDirectionalShadowCount || light.shadows == LightShadows.None || light.shadowStrength <= 0f 
-                || cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds bouds) == false)
+            if (currentDirectionalLightShadowCount < maxDirectionalShadowCount && light.shadows != LightShadows.None && light.shadowStrength > 0f) 
             {
-                return Vector3.zero;
-            }
-
-            LightBakingOutput lightBakingOutput = light.bakingOutput;
+                LightBakingOutput lightBakingOutput = light.bakingOutput;
                 
-            if (lightBakingOutput.lightmapBakeType == LightmapBakeType.Mixed && lightBakingOutput.mixedLightingMode == MixedLightingMode.Shadowmask)
-            {
-                useShadowMask = true;
+                if (lightBakingOutput.lightmapBakeType == LightmapBakeType.Mixed && lightBakingOutput.mixedLightingMode == MixedLightingMode.Shadowmask)
+                {
+                    useShadowMask = true;
+                }
+                
+                if (!cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds b)) 
+                {
+                    // the shadow strength of light is negative, see GetDirectionalShadowAttenuation in WindsmoonShadow.hlsl
+                    // if the stength is positive, the shader may be handle the shadow as realtime shadow
+                    return new Vector3(-light.shadowStrength, 0f, 0);
+                }
+                
+                directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex, slopeScaleBias = light.shadowBias, nearPlaneOffset = light.shadowNearPlane};
+                return new Vector3(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++, light.shadowNormalBias);
             }
             
-            directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex, slopeScaleBias = light.shadowBias, nearPlaneOffset = light.shadowNearPlane};
-            return new Vector3(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++, light.shadowNormalBias);
+            return new Vector3(0f, 0f, 0f);
         }
 
         public void Render()
@@ -89,7 +95,7 @@ namespace WindsmoonRP.Shadow
             }
             
             commandBuffer.BeginSample(bufferName);
-            SetKeywords(shadowMaskKeywords, useShadowMask ? 0 : -1);
+            SetKeywords(shadowMaskKeywords, useShadowMask ? QualitySettings.shadowmaskMode == ShadowmaskMode.Shadowmask ? 0 : 1 : -1);
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
         }
