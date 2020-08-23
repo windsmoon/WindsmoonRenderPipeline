@@ -49,6 +49,7 @@ Varyings ShadowCasterVertex(Attributes input)
 void ShadowCasterFragment(Varyings input)
 {
     UNITY_SETUP_INSTANCE_ID(input);
+    ClipForLOD(input.positionCS.xy, unity_LODFade.x);
     //float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
     //float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
     //baseColor *= baseMap;

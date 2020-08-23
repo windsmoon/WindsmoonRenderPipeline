@@ -46,6 +46,7 @@
             #pragma multi_compile _ SHADOW_MASK_ALWAYS  SHADOW_MASK_DISTANCE
             #pragma multi_compile _ RECEIVE_SHADOWS
             #pragma multi_compile _ LIGHTMAP_ON
+            #pragma multi_compile _ LOD_FADE_CROSSFADE
             #pragma multi_compile_instancing
             #pragma vertex LitVertex
             #pragma fragment LitFragment
@@ -67,7 +68,8 @@
             #pragma target 3.5 // for loops which are use a variable length
 //            #pragma multi_compile _ ALPHA_CLIPPING
             #pragma multi_compile _ _SHADOW_MODE_CLIP _SHADOW_MODE_DITHER
-			#pragma multi_compile_instancing
+            #pragma multi_compile _ LOD_FADE_CROSSFADE
+            #pragma multi_compile_instancing
 			#pragma vertex ShadowCasterVertex
 			#pragma fragment ShadowCasterFragment
 			
