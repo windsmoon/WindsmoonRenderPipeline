@@ -62,29 +62,36 @@ namespace WindsmoonRP.Shadow
             useShadowMask = false;
         }
         
-        public Vector3 ReserveDirectionalShadows(Light light, int visibleLightIndex)
+        public Vector4 ReserveDirectionalShadows(Light light, int visibleLightIndex)
         {
             if (currentDirectionalLightShadowCount < maxDirectionalShadowCount && light.shadows != LightShadows.None && light.shadowStrength > 0f) 
             {
+                float maskChannel;
                 LightBakingOutput lightBakingOutput = light.bakingOutput;
                 
                 if (lightBakingOutput.lightmapBakeType == LightmapBakeType.Mixed && lightBakingOutput.mixedLightingMode == MixedLightingMode.Shadowmask)
                 {
                     useShadowMask = true;
+                    maskChannel = lightBakingOutput.occlusionMaskChannel; // can not use the light index because it may be changed in runtime
+                }
+
+                else
+                {
+                    maskChannel = -1;
                 }
                 
                 if (!cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds b)) 
                 {
                     // the shadow strength of light is negative, see GetDirectionalShadowAttenuation in WindsmoonShadow.hlsl
                     // if the stength is positive, the shader may be handle the shadow as realtime shadow
-                    return new Vector3(-light.shadowStrength, 0f, 0);
+                    return new Vector4(-light.shadowStrength, 0f, 0, maskChannel);
                 }
                 
                 directionalShadows[currentDirectionalLightShadowCount] = new DirectionalShadow(){visibleLightIndex = visibleLightIndex, slopeScaleBias = light.shadowBias, nearPlaneOffset = light.shadowNearPlane};
-                return new Vector3(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++, light.shadowNormalBias);
+                return new Vector4(light.shadowStrength, shadowSettings.DirectionalShadowSetting.CascadeCount * currentDirectionalLightShadowCount++, light.shadowNormalBias, maskChannel);
             }
             
-            return new Vector3(0f, 0f, 0f);
+            return new Vector4(0f, 0f, 0f, -1);
         }
 
         public void Render()

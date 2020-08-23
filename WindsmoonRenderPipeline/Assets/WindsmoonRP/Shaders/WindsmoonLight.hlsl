@@ -7,7 +7,7 @@ CBUFFER_START(LightInfo)
 	int _DirectionalLightCount;
 	float4 _DirectionalLightColors[MAX_DIRECTIONAL_LIGHT_COUNT];
 	float4 _DirectionalLightDirections[MAX_DIRECTIONAL_LIGHT_COUNT];
-	float3 _DirectionalShadowInfos[MAX_DIRECTIONAL_LIGHT_COUNT];
+	float4 _DirectionalShadowInfos[MAX_DIRECTIONAL_LIGHT_COUNT];
 CBUFFER_END
 
 struct Light
@@ -28,6 +28,7 @@ DirectionalShadowData GetDirectionalShadowData(int index, ShadowData shadowData)
     data.shadowStrength = _DirectionalShadowInfos[index].x;
     data.tileIndex = _DirectionalShadowInfos[index].y + shadowData.cascadeIndex;
     data.normalBias = _DirectionalShadowInfos[index].z;
+    data.shadowMaskChannel = _DirectionalShadowInfos[index].w;
     return data;
 }
 

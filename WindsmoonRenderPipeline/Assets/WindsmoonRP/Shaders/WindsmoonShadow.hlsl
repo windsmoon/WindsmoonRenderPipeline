@@ -43,6 +43,7 @@ struct DirectionalShadowData // the info of the direcctional light
     float shadowStrength; // if surface is not in any culling sphere, global shadowStrength set to 0 to avoid any shadow 
     int tileIndex;
     float normalBias;
+	int shadowMaskChannel;
 };
 
 struct ShadowData // the info of the fragment
@@ -171,31 +172,34 @@ float GetCascadedShadow(DirectionalShadowData directionalShadowData, ShadowData 
 	return shadow;
 }
 
-float GetBakedShadow(ShadowMask shadowMask)
+float GetBakedShadow(ShadowMask shadowMask, int maskChannel)
 {
 	float shadow = 1.0;
 	
 	if (shadowMask.useDistanceShadowMask || shadowMask.useAlwaysShadowMask)
 	{
-		shadow = shadowMask.shadows.r;
+		if (maskChannel > 0)
+		{
+			shadow = shadowMask.shadows[maskChannel];
+		}
 	}
 	
 	return shadow;
 }
 
-float GetBakedShadow(ShadowMask shadowMask, float lightShadowStrength)
+float GetBakedShadow(ShadowMask shadowMask, int maskChannel, float lightShadowStrength)
 {
 	if (shadowMask.useDistanceShadowMask || shadowMask.useAlwaysShadowMask)
 	{
-		return lerp(1.0, GetBakedShadow(shadowMask), lightShadowStrength); // ?? the baked shadow is not consider the shadow strength of the light
+		return lerp(1.0, GetBakedShadow(shadowMask, maskChannel), lightShadowStrength); // ?? the baked shadow is not consider the shadow strength of the light
 	}
 	
 	return 1.0;
 }
 
-float MixBakedAndRealtimeShadows(ShadowData globalShadowData, float shadow, float lightStrength)
+float MixBakedAndRealtimeShadows(ShadowData globalShadowData, float shadow, int maskChannel, float lightStrength)
 {
-	float bakedShadow = GetBakedShadow(globalShadowData.shadowMask);
+	float bakedShadow = GetBakedShadow(globalShadowData.shadowMask, maskChannel);
 	//bakedShadow = 1; // debug
 
 	if (globalShadowData.shadowMask.useAlwaysShadowMask)
@@ -222,11 +226,11 @@ float GetDirectionalShadowAttenuation(DirectionalShadowData directionalShadowDat
         if (directionalShadowData.shadowStrength * globalShadowData.strength <= 0.0f) // todo : when strength is less then zero, this light should be discard in c# part 
         {
         	// if there has no realt time shadow, then use the baked shadow
-        	return GetBakedShadow(globalShadowData.shadowMask, abs(directionalShadowData.shadowStrength));
+        	return GetBakedShadow(globalShadowData.shadowMask, directionalShadowData.shadowMaskChannel, abs(directionalShadowData.shadowStrength));
 	    }
 	    
 	    float shadow = GetCascadedShadow(directionalShadowData, globalShadowData, surfaceWS);
-		return MixBakedAndRealtimeShadows(globalShadowData, shadow, directionalShadowData.shadowStrength);
+		return MixBakedAndRealtimeShadows(globalShadowData, shadow, directionalShadowData.shadowMaskChannel, directionalShadowData.shadowStrength);
 	#endif
 }
 
