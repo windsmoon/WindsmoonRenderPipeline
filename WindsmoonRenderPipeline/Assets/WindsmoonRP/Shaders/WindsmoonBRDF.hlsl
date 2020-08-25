@@ -9,6 +9,7 @@ struct BRDF
 	float3 specular;
 	float roughness;
 	float perceptualRoughness;
+	float fresnel;
 };
 
 float OneMinusReflectivity(float metallic) 
@@ -33,6 +34,12 @@ BRDF GetBRDF(Surface surface)
 	brdf.perceptualRoughness = PerceptualSmoothnessToPerceptualRoughness(surface.smoothness); // disne
 	brdf.roughness = PerceptualRoughnessToRoughness(brdf.perceptualRoughness);	
 	//brdfLight.roughness = 1.0;
+
+	// We use a variant Schlick's approximation for Fresnel.
+	// It replaces the specular BRDF color with solid white in the ideal case, but roughness can prevent reflections from showing up.
+	// We arrive at the final color by adding the surface smoothness and reflectivity together, with a maximum of 1.
+	// (from catlike)
+	brdf.fresnel = saturate(surface.smoothness + 1.0 - oneMinusReflectivity);
 	return brdf;
 }
 
@@ -49,7 +56,9 @@ float GetSpecularStrength(Surface surface, BRDF brdf, Light light)
 
 float3 GetIndirectBRDF(Surface surface, BRDF brdf, float3 diffuse, float3 specular)
 {
-	float3 reflection = specular * brdf.specular;
+	float fresnelStrength = surface.fresnelStrength * Pow4(1.0 - saturate(dot(surface.normal, surface.viewDirection)));
+	// float3 reflection = specular * brdf.specular;
+	float3 reflection = specular * lerp(brdf.specular, brdf.fresnel, fresnelStrength);
 	reflection /= brdf.roughness * brdf.roughness + 1.0; // when roughness is 0, nothing happend, but if the roughness is 1, the reflection will be halved
 	return diffuse * brdf.diffuse + reflection;
 }
