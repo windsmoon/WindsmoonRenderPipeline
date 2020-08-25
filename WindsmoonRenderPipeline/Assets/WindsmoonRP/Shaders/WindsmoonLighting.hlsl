@@ -16,7 +16,8 @@ float3 GetLighting(Surface surfaceWS, BRDF brdf, GI gi)
 	shadowData.shadowMask = gi.shadowMask;
 	//return gi.shadowMask.shadows.rgb; // debug
 	
-	float3 color = gi.diffuse * brdf.diffuse;
+	// todo : gi.diffuse can be replaced to gi, then the diffuse and specular will all be caculated in the brdf.hlsl
+	float3 color = GetIndirectBRDF(surfaceWS, brdf, gi.diffuse, gi.specular);
 	
 	for (int i = 0; i < GetDirectionalLightCount(); i++) 
 	{

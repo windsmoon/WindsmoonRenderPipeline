@@ -101,7 +101,7 @@ namespace WindsmoonRP
             DrawingSettings drawingSettings = new DrawingSettings(unlitShaderTagID, sortingSettings)
                 {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing, 
                     perObjectData = PerObjectData.Lightmaps | PerObjectData.ShadowMask | PerObjectData.OcclusionProbe | PerObjectData.OcclusionProbeProxyVolume 
-                                    | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume};
+                                    | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.ReflectionProbes};
             drawingSettings.SetShaderPassName(1, litShaderTagID);
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
