@@ -72,7 +72,6 @@ namespace WindsmoonRP.Editor
             materials = materialEditor.targets;
             this.properties = properties;
             BakeEmission();            
-            
             SetOpaque();
             SetClippingAlpha();
             SetFade();

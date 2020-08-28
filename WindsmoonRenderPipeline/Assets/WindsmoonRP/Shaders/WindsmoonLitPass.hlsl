@@ -39,6 +39,7 @@ struct Varyings
     float3 positionWS : VAR_POSITION;
     float3 normalWS : VAR_NORMAL;
     float2 baseUV : VAR_BASE_UV;
+	float2 detailUV : VAR_DETAIL_UV;
     GI_VARYINGS_DATA
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -55,6 +56,7 @@ Varyings LitVertex(Attribute input)
     output.normalWS = TransformObjectToWorldNormal(input.normalOS);
     //float4 baseST = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
 	output.baseUV = TransformBaseUV(input.baseUV);
+	output.detailUV = TransformDetailUV(input.baseUV);
     return output;
 }
 
@@ -66,7 +68,7 @@ float4 LitFragment(Varyings input) : SV_Target
     //float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
 	//float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
 	//baseColor *= baseMap;
-	float4 baseColor = GetBaseColor(input.baseUV);
+	float4 baseColor = GetBaseColor(input.baseUV, input.detailUV);
 
 	#if defined(ALPHA_CLIPPING)
 	    clip(baseColor.a - GetCutoff(input.baseUV));
@@ -80,6 +82,7 @@ float4 LitFragment(Varyings input) : SV_Target
 	surface.color = baseColor.rgb;
 	surface.alpha = baseColor.a;
 	surface.metallic = GetMetallic(input.baseUV);
+	surface.occlusion = GetOcclusion(input.baseUV);
 	surface.smoothness = GetSmoothness(input.baseUV);
 	surface.fresnelStrength = GetFresnel(input.baseUV);
 	surface.dither = InterleavedGradientNoise(input.positionCS.xy, 0);

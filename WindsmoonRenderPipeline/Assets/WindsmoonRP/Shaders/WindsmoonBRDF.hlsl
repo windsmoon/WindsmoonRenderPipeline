@@ -60,7 +60,7 @@ float3 GetIndirectBRDF(Surface surface, BRDF brdf, float3 diffuse, float3 specul
 	// float3 reflection = specular * brdf.specular;
 	float3 reflection = specular * lerp(brdf.specular, brdf.fresnel, fresnelStrength);
 	reflection /= brdf.roughness * brdf.roughness + 1.0; // when roughness is 0, nothing happend, but if the roughness is 1, the reflection will be halved
-	return diffuse * brdf.diffuse + reflection;
+	return (diffuse * brdf.diffuse + reflection) * surface.occlusion; // ambient occlusion only affect the indirect light
 }
 
 float3 GetDirectBRDF(Surface surface, BRDF brdf, Light light) 

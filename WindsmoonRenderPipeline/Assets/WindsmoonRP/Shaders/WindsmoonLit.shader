@@ -3,15 +3,18 @@
     Properties
     {
         _BaseMap("Base Texture", 2D) = "white" {}
-        _BaseColor("Base Color", Color) = (0.5, 0.5, 0.5, 1.0)
-        [NoScaleOffset] _EmissionMap("Emmision Map", 2D) = "white" {}
-        [HDR] _EmisiionColor("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
+        _BaseColor("Base Color", Color) = (1.0, 1.0, 1.0, 1.0)
         _Cutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         [Toggle(ALPHA_CLIPPING)] _AlphaClipping ("Alpha Clipping", Float) = 0
         [Toggle(PREMULTIPLY_ALPHA)] _PremultiplyAlpha ("Premultiply Alpha", Float) = 0
+		[NoScaleOffset] _MaskMap("Mask Map (MODS)", 2D) = "white" {}
         _Metallic("Metallic", Range(0, 1)) = 0
+		_Occlusion("Occlusion", Range(0, 1)) = 0
 		_Smoothness("Smoothness", Range(0, 1)) = 0.5
 		_Fresnel("Fresnel", Range(0, 1)) = 1
+		[NoScaleOffset] _EmissionMap("Emmision Map", 2D) = "white" {}
+        [HDR] _EmissionColor("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
+		_DetailMap("Detail Map", 2D) = "linearGrey" {}
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Src Blend", Float) = 1
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("Dst Blend", Float) = 0
 		[Enum(Off, 0, On, 1)] _ZWrite("Z Write", Float) = 1
