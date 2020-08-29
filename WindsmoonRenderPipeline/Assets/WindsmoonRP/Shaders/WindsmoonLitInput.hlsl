@@ -4,6 +4,7 @@
 TEXTURE2D(_BaseMap);
 TEXTURE2D(_EmissionMap);
 TEXTURE2D(_MaskMap);
+TEXTURE2D(_NormalMap);
 SAMPLER(sampler_BaseMap);
 
 TEXTURE2D(_DetailMap);
@@ -21,6 +22,7 @@ UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float4, _EmissionColor)
     UNITY_DEFINE_INSTANCED_PROP(float, _DetailAlbedo)
     UNITY_DEFINE_INSTANCED_PROP(float, _DetailSmoothness)
+    UNITY_DEFINE_INSTANCED_PROP(float, _NormalScale)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 #define INPUT_PROP(name) UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, name)
@@ -95,7 +97,6 @@ float GetSmoothness(float2 uv, float2 detailUV = 0.0)
 {
     float smoothness = INPUT_PROP(_Smoothness);
     smoothness *= GetMask(uv).a;
-
     float detail = GetDetail(detailUV).b * INPUT_PROP(_DetailSmoothness);
     float detailMask = GetMask(uv).b;
     smoothness = lerp(smoothness, detail < 0.0 ? 0.0 : 1.0, abs(detail) * detailMask);
@@ -105,6 +106,13 @@ float GetSmoothness(float2 uv, float2 detailUV = 0.0)
 float GetFresnel(float2 uv)
 {
     return INPUT_PROP(_Fresnel);
+}
+
+float3 GetNormalTS(float2 uv) {
+    float4 normalMap = SAMPLE_TEXTURE2D(_NormalMap, sampler_BaseMap, uv);
+    float scale = INPUT_PROP(_NormalScale);
+    float3 normal = DecodeNormal(normalMap, scale);
+    return normal;
 }
 
 float3 GetEmission(float2 uv)

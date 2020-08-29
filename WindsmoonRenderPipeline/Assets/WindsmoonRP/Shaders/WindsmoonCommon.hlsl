@@ -31,6 +31,7 @@ float4 TransformWorldToHClip(float3 positionWS)
 
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Packing.hlsl"
 
 float Square (float v) 
 {
@@ -48,6 +49,15 @@ void ClipForLOD(float2 positionCS, float fadeFactor)
     #if defined(LOD_FADE_CROSSFADE)
         float dither = InterleavedGradientNoise(positionCS.xy, 0); // todo : may be use the surface.dither
         clip(fadeFactor + (fadeFactor < 0.0 ? dither : -dither)); // the level of next lod has the negative factor in fading
+    #endif
+}
+
+float3 DecodeNormal(float4 sample, float scale) {
+    
+    #if defined(UNITY_NO_DXT5nm)
+        return UnpackNormalRGB(sample, scale);
+    #else
+        return UnpackNormalmapRGorAG(sample, scale);
     #endif
 }
 
