@@ -83,7 +83,7 @@ float4 LitFragment(Varyings input) : SV_Target
 	surface.alpha = baseColor.a;
 	surface.metallic = GetMetallic(input.baseUV);
 	surface.occlusion = GetOcclusion(input.baseUV);
-	surface.smoothness = GetSmoothness(input.baseUV);
+	surface.smoothness = GetSmoothness(input.baseUV, input.detailUV);
 	surface.fresnelStrength = GetFresnel(input.baseUV);
 	surface.dither = InterleavedGradientNoise(input.positionCS.xy, 0);
 	BRDF brdf = GetBRDF(surface);

@@ -19,6 +19,8 @@ UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
 	UNITY_DEFINE_INSTANCED_PROP(float, _Smoothness)
     UNITY_DEFINE_INSTANCED_PROP(float, _Fresnel)
     UNITY_DEFINE_INSTANCED_PROP(float4, _EmissionColor)
+    UNITY_DEFINE_INSTANCED_PROP(float, _DetailAlbedo)
+    UNITY_DEFINE_INSTANCED_PROP(float, _DetailSmoothness)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 #define INPUT_PROP(name) UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, name)
@@ -44,24 +46,25 @@ float4 GetDetail (float2 uv)
     return detailMap;
 }
 
+float4 GetMask(float2 uv)
+{
+    return SAMPLE_TEXTURE2D(_MaskMap, sampler_BaseMap, uv);
+}
+
 float4 GetBaseColor(float2 uv, float2 detailUV = 0.0)
 {
     float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
     float4 color = INPUT_PROP(_BaseColor);
 
-    float detail = GetDetail(detailUV).r;
+    float detail = GetDetail(detailUV).r * INPUT_PROP(_DetailAlbedo);
+    float detailMask = GetMask(uv).b;
     //map += detail;
     // baseMap.rgb = lerp(baseMap.rgb, detail < 0.0 ? 0.0 : 1.0, abs(detail)); // the base map will be darker or brighter
 
-
-    baseMap.rgb = lerp(sqrt(baseMap.rgb), detail < 0.0 ? 0.0 : 1.0, abs(detail)); // the base map will be darker or brighter
+    // ?? why do the sqrt in https://catlikecoding.com/unity/tutorials/custom-srp/complex-maps
+    baseMap.rgb = lerp(sqrt(baseMap.rgb), detail < 0.0 ? 0.0 : 1.0, abs(detail) * detailMask); // the base map will be darker or brighter
     baseMap.rgb *= baseMap.rgb;
     return baseMap * color;
-}
-
-float4 GetMask(float2 uv)
-{
-    return SAMPLE_TEXTURE2D(_MaskMap, sampler_BaseMap, uv);
 }
 
 float GetCutoff(float2 uv)
@@ -88,10 +91,14 @@ float GetOcclusion(float2 uv)
     return occlusion;
 }
 
-float GetSmoothness(float2 uv)
+float GetSmoothness(float2 uv, float2 detailUV = 0.0)
 {
     float smoothness = INPUT_PROP(_Smoothness);
     smoothness *= GetMask(uv).a;
+
+    float detail = GetDetail(detailUV).b * INPUT_PROP(_DetailSmoothness);
+    float detailMask = GetMask(uv).b;
+    smoothness = lerp(smoothness, detail < 0.0 ? 0.0 : 1.0, abs(detail) * detailMask);
     return smoothness;
 }
 

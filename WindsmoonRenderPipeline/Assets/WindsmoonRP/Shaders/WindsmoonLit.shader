@@ -15,6 +15,8 @@
 		[NoScaleOffset] _EmissionMap("Emmision Map", 2D) = "white" {}
         [HDR] _EmissionColor("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
 		_DetailMap("Detail Map", 2D) = "linearGrey" {}
+		_DetailAlbedo("Detail Albedo", Range(0, 1)) = 1
+		_DetailSmoothness("Detail Smoothness", Range(0, 1)) = 1
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Src Blend", Float) = 1
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("Dst Blend", Float) = 0
 		[Enum(Off, 0, On, 1)] _ZWrite("Z Write", Float) = 1
