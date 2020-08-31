@@ -12,6 +12,7 @@
 		_Occlusion("Occlusion", Range(0, 1)) = 0
 		_Smoothness("Smoothness", Range(0, 1)) = 0.5
 		_Fresnel("Fresnel", Range(0, 1)) = 1
+		[Toggle(NORMAL_MAP)] _NormalMapToggle ("Use Normal Map", Float) = 0
 		[NoScaleOffset] _NormalMap("Normal Map", 2D) = "bump" {}
 		_NormalScale("Normal Scale", Range(0, 1)) = 1
 		[NoScaleOffset] _EmissionMap("Emmision Map", 2D) = "white" {}
@@ -57,6 +58,7 @@
             #pragma multi_compile _ RECEIVE_SHADOWS
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile _ LOD_FADE_CROSSFADE
+            #pragma multi_compile _ NORMAL_MAP
             #pragma multi_compile_instancing
             #pragma vertex LitVertex
             #pragma fragment LitFragment
