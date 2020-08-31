@@ -8,6 +8,7 @@ TEXTURE2D(_NormalMap);
 SAMPLER(sampler_BaseMap);
 
 TEXTURE2D(_DetailMap);
+TEXTURE2D(_DetailNormalMap);
 SAMPLER(sampler_DetailMap);
 
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
@@ -23,6 +24,7 @@ UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float, _DetailAlbedo)
     UNITY_DEFINE_INSTANCED_PROP(float, _DetailSmoothness)
     UNITY_DEFINE_INSTANCED_PROP(float, _NormalScale)
+    UNITY_DEFINE_INSTANCED_PROP(float, _DetailNormalScale)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 #define INPUT_PROP(name) UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, name)
@@ -108,10 +110,17 @@ float GetFresnel(float2 uv)
     return INPUT_PROP(_Fresnel);
 }
 
-float3 GetNormalTS(float2 uv) {
+float3 GetNormalTS(float2 uv, float2 detailUV = 0.0)
+{
     float4 normalMap = SAMPLE_TEXTURE2D(_NormalMap, sampler_BaseMap, uv);
     float scale = INPUT_PROP(_NormalScale);
     float3 normal = DecodeNormal(normalMap, scale);
+
+    normalMap = SAMPLE_TEXTURE2D(_DetailNormalMap, sampler_DetailMap, detailUV);
+    scale = INPUT_PROP(_DetailNormalScale) * GetMask(uv).b;
+    float3 detail = DecodeNormal(normalMap, scale);
+    normal = BlendNormalRNM(normal, detail);
+    
     return normal;
 }
 

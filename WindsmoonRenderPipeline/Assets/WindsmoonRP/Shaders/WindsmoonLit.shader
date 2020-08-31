@@ -12,13 +12,15 @@
 		_Occlusion("Occlusion", Range(0, 1)) = 0
 		_Smoothness("Smoothness", Range(0, 1)) = 0.5
 		_Fresnel("Fresnel", Range(0, 1)) = 1
-		[NoScaleOffset] _NormalMap("Normals", 2D) = "bump" {}
+		[NoScaleOffset] _NormalMap("Normal Map", 2D) = "bump" {}
 		_NormalScale("Normal Scale", Range(0, 1)) = 1
 		[NoScaleOffset] _EmissionMap("Emmision Map", 2D) = "white" {}
         [HDR] _EmissionColor("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
 		_DetailMap("Detail Map", 2D) = "linearGrey" {}
+		[NoScaleOffset] _DetailNormalMap("Detail Normal Map", 2D) = "bump" {}
 		_DetailAlbedo("Detail Albedo", Range(0, 1)) = 1
 		_DetailSmoothness("Detail Smoothness", Range(0, 1)) = 1
+		_DetailNormalScale("Detail Normal Scale", Range(0, 1)) = 1
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Src Blend", Float) = 1
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("Dst Blend", Float) = 0
 		[Enum(Off, 0, On, 1)] _ZWrite("Z Write", Float) = 1
