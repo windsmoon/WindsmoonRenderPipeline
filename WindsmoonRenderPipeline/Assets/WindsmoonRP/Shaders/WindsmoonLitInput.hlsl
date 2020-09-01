@@ -29,6 +29,12 @@ UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 #define INPUT_PROP(name) UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, name)
 
+struct InputConfig
+{
+    float2 uv;
+    float2 detailUV;
+};
+
 float2 TransformBaseUV(float2 baseUV)
 {
     float4 baseST = INPUT_PROP(_BaseMap_ST);
@@ -41,27 +47,35 @@ float2 TransformDetailUV (float2 detailUV)
     return detailUV * detailST.xy + detailST.zw;
 }
 
-float4 GetDetail (float2 uv)
+InputConfig GetInputConfig(float2 uv, float2 detailUV = 0.0)
 {
-    float4 detailMap = SAMPLE_TEXTURE2D(_DetailMap, sampler_DetailMap, uv);
+    InputConfig config;
+    config.uv = uv;
+    config.detailUV = detailUV;
+    return config;
+}
+
+float4 GetDetail(InputConfig config)
+{
+    float4 detailMap = SAMPLE_TEXTURE2D(_DetailMap, sampler_DetailMap, config.detailUV);
     // do this for the caculation latter, the detail value can be used as lerp t.
     // when the detailMap is less than 0, it means the value will be darker, otherwise the value will be brighter
     detailMap = detailMap * 2 - 1;
     return detailMap;
 }
 
-float4 GetMask(float2 uv)
+float4 GetMask(InputConfig config)
 {
-    return SAMPLE_TEXTURE2D(_MaskMap, sampler_BaseMap, uv);
+    return SAMPLE_TEXTURE2D(_MaskMap, sampler_BaseMap, config.uv);
 }
 
-float4 GetBaseColor(float2 uv, float2 detailUV = 0.0)
+float4 GetBaseColor(InputConfig config)
 {
-    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, config.uv);
     float4 color = INPUT_PROP(_BaseColor);
 
-    float detail = GetDetail(detailUV).r * INPUT_PROP(_DetailAlbedo);
-    float detailMask = GetMask(uv).b;
+    float detail = GetDetail(config).r * INPUT_PROP(_DetailAlbedo);
+    float detailMask = GetMask(config).b;
     //map += detail;
     // baseMap.rgb = lerp(baseMap.rgb, detail < 0.0 ? 0.0 : 1.0, abs(detail)); // the base map will be darker or brighter
 
@@ -71,62 +85,62 @@ float4 GetBaseColor(float2 uv, float2 detailUV = 0.0)
     return baseMap * color;
 }
 
-float GetCutoff(float2 uv)
+float GetCutoff()
 {
     return INPUT_PROP(_Cutoff);
 }
 
-float GetMetallic(float2 uv)
+float GetMetallic(InputConfig config)
 {
     float metallic = INPUT_PROP(_Metallic);
-    metallic *= GetMask(uv).r;
+    metallic *= GetMask(config).r;
     return metallic;
 }
 
-float GetOcclusion(float2 uv)
+float GetOcclusion(InputConfig config)
 {
     // debug :
     // return 1.0;
     // return GetMask(uv).g;
 
     float strength = INPUT_PROP(_Occlusion);
-    float occlusion = GetMask(uv).g;
+    float occlusion = GetMask(config).g;
     occlusion = lerp(occlusion, 1.0, strength);
     return occlusion;
 }
 
-float GetSmoothness(float2 uv, float2 detailUV = 0.0)
+float GetSmoothness(InputConfig config)
 {
     float smoothness = INPUT_PROP(_Smoothness);
-    smoothness *= GetMask(uv).a;
-    float detail = GetDetail(detailUV).b * INPUT_PROP(_DetailSmoothness);
-    float detailMask = GetMask(uv).b;
+    smoothness *= GetMask(config).a;
+    float detail = GetDetail(config).b * INPUT_PROP(_DetailSmoothness);
+    float detailMask = GetMask(config).b;
     smoothness = lerp(smoothness, detail < 0.0 ? 0.0 : 1.0, abs(detail) * detailMask);
     return smoothness;
 }
 
-float GetFresnel(float2 uv)
+float GetFresnel(InputConfig config)
 {
     return INPUT_PROP(_Fresnel);
 }
 
-float3 GetNormalTS(float2 uv, float2 detailUV = 0.0)
+float3 GetNormalTS(InputConfig config)
 {
-    float4 normalMap = SAMPLE_TEXTURE2D(_NormalMap, sampler_BaseMap, uv);
+    float4 normalMap = SAMPLE_TEXTURE2D(_NormalMap, sampler_BaseMap, config.uv);
     float scale = INPUT_PROP(_NormalScale);
     float3 normal = DecodeNormal(normalMap, scale);
 
-    normalMap = SAMPLE_TEXTURE2D(_DetailNormalMap, sampler_DetailMap, detailUV);
-    scale = INPUT_PROP(_DetailNormalScale) * GetMask(uv).b;
+    normalMap = SAMPLE_TEXTURE2D(_DetailNormalMap, sampler_DetailMap, config.detailUV);
+    scale = INPUT_PROP(_DetailNormalScale) * GetMask(config).b;
     float3 detail = DecodeNormal(normalMap, scale);
     normal = BlendNormalRNM(normal, detail);
     
     return normal;
 }
 
-float3 GetEmission(float2 uv)
+float3 GetEmission(InputConfig config)
 {
-    float4 emissionMap = SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, uv);
+    float4 emissionMap = SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, config.uv);
     float4 emissionColor = INPUT_PROP(_EmissionColor);
     return emissionMap.rgb * emissionColor.rgb;
 }

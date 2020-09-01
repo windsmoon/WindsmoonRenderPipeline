@@ -53,10 +53,11 @@ void ShadowCasterFragment(Varyings input)
     //float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
     //float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
     //baseColor *= baseMap;
-    float4 baseColor = GetBaseColor(input.baseUV);
+    InputConfig config = GetInputConfig(input.baseUV);
+    float4 baseColor = GetBaseColor(config);
     
 	#if defined(_SHADOW_MODE_CLIP)
-		clip(baseColor.a - GetCutoff(input.baseUV));
+		clip(baseColor.a - GetCutoff(config));
 	#elif defined(_SHADOW_MODE_DITHER)
 	    float dither = InterleavedGradientNoise(input.positionCS.xy, 0);
 	    clip(baseColor.a - dither);

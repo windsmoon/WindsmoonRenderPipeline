@@ -83,7 +83,8 @@ float4 LitFragment(Varyings input) : SV_Target
     //float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
 	//float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
 	//baseColor *= baseMap;
-	float4 baseColor = GetBaseColor(input.baseUV, input.detailUV);
+	InputConfig config = GetInputConfig(input.baseUV, input.detailUV);
+	float4 baseColor = GetBaseColor(config);
 
 	#if defined(ALPHA_CLIPPING)
 	    clip(baseColor.a - GetCutoff(input.baseUV));
@@ -94,7 +95,7 @@ float4 LitFragment(Varyings input) : SV_Target
 	surface.depth = -TransformWorldToView(input.positionWS).z;
 
 	#if defined(NORMAL_MAP)
-		surface.normal = GetWorldNormalFromTangent(GetNormalTS(input.baseUV, input.detailUV), input.normalWS, input.tangentWS);
+		surface.normal = GetWorldNormalFromTangent(GetNormalTS(config), input.normalWS, input.tangentWS);
 	#else
 		surface.normal = normalize(input.normalWS);
 	#endif
@@ -103,13 +104,13 @@ float4 LitFragment(Varyings input) : SV_Target
 	surface.viewDirection = normalize(_WorldSpaceCameraPos - input.positionWS);
 	surface.color = baseColor.rgb;
 	surface.alpha = baseColor.a;
-	surface.metallic = GetMetallic(input.baseUV);
-	surface.occlusion = GetOcclusion(input.baseUV);
-	surface.smoothness = GetSmoothness(input.baseUV, input.detailUV);
-	surface.fresnelStrength = GetFresnel(input.baseUV);
+	surface.metallic = GetMetallic(config);
+	surface.occlusion = GetOcclusion(config);
+	surface.smoothness = GetSmoothness(config);
+	surface.fresnelStrength = GetFresnel(config);
 	surface.dither = InterleavedGradientNoise(input.positionCS.xy, 0);
 	BRDF brdf = GetBRDF(surface);
 	GI gi = GetGI(GI_FRAGMENT_DATA(input), surface, brdf);
-	return float4(GetLighting(surface, brdf, gi) + GetEmission(input.baseUV), surface.alpha);
+	return float4(GetLighting(surface, brdf, gi) + GetEmission(config), surface.alpha);
 }
 #endif

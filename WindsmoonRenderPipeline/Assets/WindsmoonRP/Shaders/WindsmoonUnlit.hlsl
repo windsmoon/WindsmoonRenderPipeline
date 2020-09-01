@@ -43,7 +43,8 @@ Varyings UnlitVertex(Attribute input)
 float4 UnlitFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
-    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
+	InputConfig config = GetInputConfig(input.baseUV);
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, config.uv);
 	float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
 	float4 color = baseMap * baseColor;
 	

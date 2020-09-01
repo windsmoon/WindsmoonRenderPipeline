@@ -77,7 +77,7 @@ Material:
     - _Cutoff: 0.114
     - _DetailAlbedo: 0.2
     - _DetailNormalMapScale: 1
-    - _DetailNormalScale: 1
+    - _DetailNormalScale: 0.971
     - _DetailSmoothness: 0.537
     - _DstBlend: 0
     - _Fresnel: 1
