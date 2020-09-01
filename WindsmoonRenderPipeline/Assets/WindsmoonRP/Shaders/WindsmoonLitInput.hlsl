@@ -33,6 +33,7 @@ struct InputConfig
 {
     float2 uv;
     float2 detailUV;
+    // bool useMask;
 };
 
 float2 TransformBaseUV(float2 baseUV)
@@ -52,21 +53,31 @@ InputConfig GetInputConfig(float2 uv, float2 detailUV = 0.0)
     InputConfig config;
     config.uv = uv;
     config.detailUV = detailUV;
+    // config.useMask = false;
     return config;
 }
 
+// todo : when USE_DETAIL is disabled, there should be no sample for detail map, even return 0 is incorrect
 float4 GetDetail(InputConfig config)
 {
-    float4 detailMap = SAMPLE_TEXTURE2D(_DetailMap, sampler_DetailMap, config.detailUV);
-    // do this for the caculation latter, the detail value can be used as lerp t.
-    // when the detailMap is less than 0, it means the value will be darker, otherwise the value will be brighter
-    detailMap = detailMap * 2 - 1;
-    return detailMap;
+    #if defined(DETAIL_MAP)
+        float4 detailMap = SAMPLE_TEXTURE2D(_DetailMap, sampler_DetailMap, config.detailUV);
+        // do this for the caculation latter, the detail value can be used as lerp t.
+        // when the detailMap is less than 0, it means the value will be darker, otherwise the value will be brighter
+        detailMap = detailMap * 2 - 1;
+        return detailMap;
+    #else
+        return 0.0;
+    #endif
 }
 
 float4 GetMask(InputConfig config)
 {
-    return SAMPLE_TEXTURE2D(_MaskMap, sampler_BaseMap, config.uv);
+    #if defined(MASK_MAP)
+        return SAMPLE_TEXTURE2D(_MaskMap, sampler_BaseMap, config.uv);
+    #else
+        return 1.0;
+    #endif
 }
 
 float4 GetBaseColor(InputConfig config)
@@ -74,14 +85,14 @@ float4 GetBaseColor(InputConfig config)
     float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, config.uv);
     float4 color = INPUT_PROP(_BaseColor);
 
-    float detail = GetDetail(config).r * INPUT_PROP(_DetailAlbedo);
-    float detailMask = GetMask(config).b;
-    //map += detail;
-    // baseMap.rgb = lerp(baseMap.rgb, detail < 0.0 ? 0.0 : 1.0, abs(detail)); // the base map will be darker or brighter
-
-    // ?? why do the sqrt in https://catlikecoding.com/unity/tutorials/custom-srp/complex-maps
-    baseMap.rgb = lerp(sqrt(baseMap.rgb), detail < 0.0 ? 0.0 : 1.0, abs(detail) * detailMask); // the base map will be darker or brighter
-    baseMap.rgb *= baseMap.rgb;
+    #if defined(DETAIL_MAP)
+        float detail = GetDetail(config).r * INPUT_PROP(_DetailAlbedo);
+        float detailMask = GetMask(config).b;
+        // ?? why do the sqrt in https://catlikecoding.com/unity/tutorials/custom-srp/complex-maps
+        baseMap.rgb = lerp(sqrt(baseMap.rgb), detail < 0.0 ? 0.0 : 1.0, abs(detail) * detailMask); // the base map will be darker or brighter
+        baseMap.rgb *= baseMap.rgb;
+    #endif
+    
     return baseMap * color;
 }
 
@@ -113,9 +124,13 @@ float GetSmoothness(InputConfig config)
 {
     float smoothness = INPUT_PROP(_Smoothness);
     smoothness *= GetMask(config).a;
-    float detail = GetDetail(config).b * INPUT_PROP(_DetailSmoothness);
-    float detailMask = GetMask(config).b;
-    smoothness = lerp(smoothness, detail < 0.0 ? 0.0 : 1.0, abs(detail) * detailMask);
+
+    #if defined(DETAIL_MAP)
+        float detail = GetDetail(config).b * INPUT_PROP(_DetailSmoothness);
+        float detailMask = GetMask(config).b;
+        smoothness = lerp(smoothness, detail < 0.0 ? 0.0 : 1.0, abs(detail) * detailMask);
+    #endif
+
     return smoothness;
 }
 
@@ -130,10 +145,12 @@ float3 GetNormalTS(InputConfig config)
     float scale = INPUT_PROP(_NormalScale);
     float3 normal = DecodeNormal(normalMap, scale);
 
-    normalMap = SAMPLE_TEXTURE2D(_DetailNormalMap, sampler_DetailMap, config.detailUV);
-    scale = INPUT_PROP(_DetailNormalScale) * GetMask(config).b;
-    float3 detail = DecodeNormal(normalMap, scale);
-    normal = BlendNormalRNM(normal, detail);
+    #if defined(DETAIL_MAP)
+        normalMap = SAMPLE_TEXTURE2D(_DetailNormalMap, sampler_DetailMap, config.detailUV);
+        scale = INPUT_PROP(_DetailNormalScale) * GetMask(config).b;
+        float3 detail = DecodeNormal(normalMap, scale);
+        normal = BlendNormalRNM(normal, detail);
+    #endif
     
     return normal;
 }

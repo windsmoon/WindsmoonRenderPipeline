@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Circuitry
   m_Shader: {fileID: 4800000, guid: ca037da60c36b5747bc91dba73d69bdc, type: 3}
-  m_ShaderKeywords: NORMAL_MAP RECEIVE_SHADOWS _SHADOW_MODE_ON
+  m_ShaderKeywords: DETAIL_MAP MASK_MAP NORMAL_MAP RECEIVE_SHADOWS _SHADOW_MODE_ON
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -75,15 +75,17 @@ Material:
     - _AlphaClipping: 0
     - _BumpScale: 1
     - _Cutoff: 0.114
-    - _DetailAlbedo: 0.2
+    - _DetailAlbedo: 0.87
+    - _DetailMapToggle: 1
     - _DetailNormalMapScale: 1
-    - _DetailNormalScale: 0.971
-    - _DetailSmoothness: 0.537
+    - _DetailNormalScale: 1
+    - _DetailSmoothness: 0.526
     - _DstBlend: 0
     - _Fresnel: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MaskMapToggle: 1
     - _Metallic: 1
     - _Mode: 0
     - _NormalMapToggle: 1

@@ -49,7 +49,11 @@ struct Varyings
 	#endif
 
 	float2 baseUV : VAR_BASE_UV;
-	float2 detailUV : VAR_DETAIL_UV;
+
+	#if defined(DETAIL_MAP)
+		float2 detailUV : VAR_DETAIL_UV;
+	#endif
+	
     GI_VARYINGS_DATA
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -71,8 +75,12 @@ Varyings LitVertex(Attribute input)
 
 	//float4 baseST = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
 	output.baseUV = TransformBaseUV(input.baseUV);
-	output.detailUV = TransformDetailUV(input.baseUV);
-    return output;
+
+	#if defined(DETAIL_MAP)
+		output.detailUV = TransformDetailUV(input.baseUV);
+	#endif
+	
+	return output;
 }
 
 float4 LitFragment(Varyings input) : SV_Target
@@ -83,7 +91,12 @@ float4 LitFragment(Varyings input) : SV_Target
     //float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
 	//float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
 	//baseColor *= baseMap;
-	InputConfig config = GetInputConfig(input.baseUV, input.detailUV);
+	#if defined(DETAIL_MAP)
+		InputConfig config = GetInputConfig(input.baseUV, input.detailUV);
+	#else
+		InputConfig config = GetInputConfig(input.baseUV);
+	#endif
+	
 	float4 baseColor = GetBaseColor(config);
 
 	#if defined(ALPHA_CLIPPING)
