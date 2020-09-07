@@ -100,7 +100,7 @@ float4 LitFragment(Varyings input) : SV_Target
 	float4 baseColor = GetBaseColor(config);
 
 	#if defined(ALPHA_CLIPPING)
-	    clip(baseColor.a - GetCutoff(input.baseUV));
+	    clip(baseColor.a - GetCutoff(config));
 	#endif
 	
 	Surface surface;

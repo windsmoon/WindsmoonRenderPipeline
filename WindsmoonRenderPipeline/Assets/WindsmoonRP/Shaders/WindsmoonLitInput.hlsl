@@ -96,7 +96,7 @@ float4 GetBaseColor(InputConfig config)
     return baseMap * color;
 }
 
-float GetCutoff()
+float GetCutoff(InputConfig config)
 {
     return INPUT_PROP(_Cutoff);
 }
