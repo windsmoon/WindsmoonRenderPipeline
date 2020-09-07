@@ -51,7 +51,7 @@ namespace WindsmoonRP.Samples.LearningScene
 
         #region methods
         [ContextMenu("Random")]
-        private void Random()
+        public void Random()
         {
             baseColor = UnityEngine.Random.ColorHSV() + new Color(0.3f, 0.3f, 0.3f, 0.3f);
             emissionColor = UnityEngine.Random.ColorHSV() + new Color(0.6f, 0.6f, 0.6f, 1f);
