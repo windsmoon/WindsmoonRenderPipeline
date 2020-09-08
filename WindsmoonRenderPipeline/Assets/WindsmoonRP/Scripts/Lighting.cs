@@ -28,9 +28,13 @@ namespace WindsmoonRP
         private static int otherLightColorsPropertyID = Shader.PropertyToID("_OtherLightColors");
         private static int otherLightPositionsProoertyID = Shader.PropertyToID("_OtherLightPositions");
         private static int otherLightCountPropertyID = Shader.PropertyToID("_OtherLightCount");
+        private static int otherLightDirectionsPropertyID = Shader.PropertyToID("_OtherLightDirections");
+        private static int otherLightSpotAnglesPropertyID = Shader.PropertyToID("_OtherLightSpotAngles");
             
         private static Vector4[] otherLightColors = new Vector4[maxOtherLightCount];
         private static Vector4[] otherLightPositions = new Vector4[maxOtherLightCount];
+        private static Vector4[] otherLightDirections = new Vector4[maxOtherLightCount];
+        private static Vector4[] otherLightSpotAngles = new Vector4[maxOtherLightCount];
 
         private CullingResults cullingResults;
         private ShadowRenderer shadowRenderer = new ShadowRenderer();
@@ -64,19 +68,6 @@ namespace WindsmoonRP
             {
                 VisibleLight visibleLight = visibleLights[i];
 
-                // if (visibleLight.lightType != LightType.Directional)
-                // {
-                //     continue;
-                // }
-                //
-                // if (directionalLightCount >= maxDirectionalLightCount)
-                // {
-                //     break;
-                // }
-                //
-                // SetupDirectionalLight(directionalLightCount, ref visibleLight); // ?? sure to use directionalCount as index ? may be directional light always comes first
-                // ++directionalLightCount;
-
                 switch (visibleLight.lightType)
                 {
                     case LightType.Directional:
@@ -94,6 +85,16 @@ namespace WindsmoonRP
                         if (otherLightCount < maxOtherLightCount)
                         {
                             SetupPointLight(otherLightCount++, ref visibleLight);
+                        }
+                        
+                        break;
+                    }
+
+                    case LightType.Spot:
+                    {
+                        if (otherLightCount < maxOtherLightCount)
+                        {
+                            SetupSpotLight(otherLightCount++, ref visibleLight);
                         }
                         
                         break;
@@ -119,6 +120,8 @@ namespace WindsmoonRP
             {
                 commandBuffer.SetGlobalVectorArray(otherLightColorsPropertyID, otherLightColors);
                 commandBuffer.SetGlobalVectorArray(otherLightPositionsProoertyID, otherLightPositions);
+                commandBuffer.SetGlobalVectorArray(otherLightDirectionsPropertyID, otherLightDirections);
+                commandBuffer.SetGlobalVectorArray(otherLightSpotAnglesPropertyID, otherLightSpotAngles);
             }
         }
 
@@ -129,10 +132,28 @@ namespace WindsmoonRP
             _DirectionalShadowInfos[index] = shadowRenderer.ReserveDirectionalShadows(visiblelight.light, index);
         }
         
-        void SetupPointLight (int index, ref VisibleLight visibleLight) 
+        private void SetupPointLight (int index, ref VisibleLight visibleLight) 
         {
             otherLightColors[index] = visibleLight.finalColor;
-            otherLightPositions[index] = visibleLight.localToWorldMatrix.GetColumn(3);
+            Vector4 position = visibleLight.localToWorldMatrix.GetColumn(3);
+            position.w = 1f / Mathf.Max(visibleLight.range * visibleLight.range, 0.00001f);
+            otherLightPositions[index] = position;
+            otherLightDirections[index] = Vector4.zero;
+        }
+        
+        private void SetupSpotLight(int index, ref VisibleLight visibleLight) 
+        {
+            otherLightColors[index] = visibleLight.finalColor;
+            Vector4 position = visibleLight.localToWorldMatrix.GetColumn(3);
+            position.w = 1f / Mathf.Max(visibleLight.range * visibleLight.range, 0.00001f);
+            otherLightPositions[index] = position;
+            otherLightDirections[index] = -visibleLight.localToWorldMatrix.GetColumn(2); // ?? remeber to revise
+            
+            Light light = visibleLight.light;
+            float innerCos = Mathf.Cos(Mathf.Deg2Rad * 0.5f * light.innerSpotAngle);
+            float outerCos = Mathf.Cos(Mathf.Deg2Rad * 0.5f * visibleLight.spotAngle);
+            float angleRangeInv = 1f / Mathf.Max(innerCos - outerCos, 0.001f);
+            otherLightSpotAngles[index] = new Vector4(angleRangeInv, -outerCos * angleRangeInv);
         }
         #endregion
     }

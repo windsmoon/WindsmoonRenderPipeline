@@ -13,6 +13,7 @@ CBUFFER_START(LightInfo)
     int _OtherLightCount;
     float4 _OtherLightColors[MAX_OTHER_LIGHT_COUNT];
     float4 _OtherLightPositions[MAX_OTHER_LIGHT_COUNT];
+    float4 _OtherLightDirections[MAX_OTHER_LIGHT_COUNT];
 CBUFFER_END
 
 struct Light
@@ -60,7 +61,12 @@ Light GetOtherLight(int index, Surface surfaceWS, ShadowData shadowData)
     light.color = _OtherLightColors[index].rgb;
     float3 ray = _OtherLightPositions[index].xyz - surfaceWS.position;
     light.direction = normalize(ray);
-    light.attenuation = 1.0;
+    float distanceSqrt = max(dot(ray, ray), 0.00001);
+    float rangeAttenuation = Square(saturate(1.0 - Square(distanceSqrt * _OtherLightPositions[index].w)));
+    float spotAttenuation = saturate(dot(_OtherLightDirections[index].xyz, light.direction));
+    // spotAttenuation = 1;
+    light.attenuation = spotAttenuation * rangeAttenuation / distanceSqrt; // ?? why divided by distanceSqrt
+    // light.attenuation = rangeAttenuation;
     return light;
 }
 
