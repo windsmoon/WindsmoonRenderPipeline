@@ -27,6 +27,14 @@ float3 GetLighting(Surface surfaceWS, BRDF brdf, GI gi)
 	// debug : this method can be used to check surface is using which cascade culling sphere
 	//float cascadeColor = shadowInfo.cascadeIndex * 0.25 + 0.25;
 	//return cascadeColor.rrr;
+
+	// if the variable is the same as the loop above, there could have error in some cases
+	for (int j = 0; j < GetOtherLightCount(); j++)
+	{
+		Light light = GetOtherLight(j, surfaceWS, shadowData);
+		color += GetLighting(surfaceWS, light, brdf);
+	}
+	
 	return color;
 }
 
