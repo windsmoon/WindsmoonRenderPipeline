@@ -14,6 +14,7 @@ CBUFFER_START(LightInfo)
     float4 _OtherLightColors[MAX_OTHER_LIGHT_COUNT];
     float4 _OtherLightPositions[MAX_OTHER_LIGHT_COUNT];
     float4 _OtherLightDirections[MAX_OTHER_LIGHT_COUNT];
+    float4 _OtherLightSpotAngles[MAX_OTHER_LIGHT_COUNT];
 CBUFFER_END
 
 struct Light
@@ -55,6 +56,7 @@ Light GetDirectionalLight(int index, Surface sufraceWS, ShadowData shadowData)
     return light;
 }
 
+// todo : seperate the point light and the spot light
 Light GetOtherLight(int index, Surface surfaceWS, ShadowData shadowData)
 {
     Light light;
@@ -63,10 +65,11 @@ Light GetOtherLight(int index, Surface surfaceWS, ShadowData shadowData)
     light.direction = normalize(ray);
     float distanceSqrt = max(dot(ray, ray), 0.00001);
     float rangeAttenuation = Square(saturate(1.0 - Square(distanceSqrt * _OtherLightPositions[index].w)));
-    float spotAttenuation = saturate(dot(_OtherLightDirections[index].xyz, light.direction));
-    // spotAttenuation = 1;
+
+    float4 spotAngle = _OtherLightSpotAngles[index];
+    float spotAttenuation = Square(saturate(dot(_OtherLightDirections[index].xyz, light.direction) * spotAngle.x + spotAngle.y)); // if this is the point light, the spotAngle.y is 1, so the spotAttenuation is 1
+    
     light.attenuation = spotAttenuation * rangeAttenuation / distanceSqrt; // ?? why divided by distanceSqrt
-    // light.attenuation = rangeAttenuation;
     return light;
 }
 

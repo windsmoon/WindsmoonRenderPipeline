@@ -139,6 +139,7 @@ namespace WindsmoonRP
             position.w = 1f / Mathf.Max(visibleLight.range * visibleLight.range, 0.00001f);
             otherLightPositions[index] = position;
             otherLightDirections[index] = Vector4.zero;
+            otherLightSpotAngles[index] = new Vector4(0f, 1f);
         }
         
         private void SetupSpotLight(int index, ref VisibleLight visibleLight) 
