@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 using WindsmoonRP.Shadow;
+using Unity.Collections;
+using UnityEngine.Experimental.GlobalIllumination;
 
 namespace WindsmoonRP
 {
@@ -11,6 +13,66 @@ namespace WindsmoonRP
         private bool useDynamicBatching;
         private bool useGPUInstancing;
         private ShadowSettings shadowSettings;
+
+#if UNITY_EDITOR
+        private static Lightmapping.RequestLightsDelegate requestLightDelegate =
+            (Light[] lights, NativeArray<LightDataGI> output) =>
+            {
+                
+                for (int i = 0; i < lights.Length; ++i)
+                {
+                    Light light = lights[i];
+                    LightDataGI lightDataGI = new LightDataGI();
+                    
+                    switch (light.type)
+                    {
+                        case UnityEngine.LightType.Directional:
+                        {
+                            var directionalLight = new DirectionalLight();
+                            LightmapperUtils.Extract(light, ref directionalLight);
+                            lightDataGI.Init(ref directionalLight);
+                            break;
+                        }
+
+                        case UnityEngine.LightType.Point:
+                        {
+                            var pointLight = new PointLight();
+                            LightmapperUtils.Extract(light, ref pointLight);
+                            lightDataGI.Init(ref pointLight);
+                            break;
+                        }
+
+                        case UnityEngine.LightType.Spot:
+                        {
+                            var spotLight = new SpotLight();
+                            LightmapperUtils.Extract(light, ref spotLight);
+                            spotLight.innerConeAngle = light.innerSpotAngle * Mathf.Deg2Rad;
+                            spotLight.angularFalloff = AngularFalloffType.AnalyticAndInnerAngle;
+                            lightDataGI.Init(ref spotLight);
+                            break;
+                        }
+
+                        case UnityEngine.LightType.Area:
+                        {
+                            var rectangleLight = new RectangleLight();
+                            rectangleLight.mode = LightMode.Baked;
+                            LightmapperUtils.Extract(light, ref rectangleLight);
+                            lightDataGI.Init(ref rectangleLight);
+                            break;
+                        }
+                        
+                        default:
+                        {
+                            lightDataGI.InitNoBake(light.GetInstanceID());
+                            break;
+                        }
+                    }
+                    
+                    lightDataGI.falloff = FalloffType.InverseSquared;
+                    output[i] = lightDataGI;
+                }
+            };
+#endif
         #endregion
         
         #region constructors
@@ -21,6 +83,10 @@ namespace WindsmoonRP
             GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
             GraphicsSettings.lightsUseLinearIntensity = true;
             this.shadowSettings = shadowSettings;
+            
+#if UNITY_EDITOR
+            Lightmapping.SetDelegate(requestLightDelegate);            
+#endif
         }
         #endregion
         
@@ -32,6 +98,13 @@ namespace WindsmoonRP
                 cameraRenderer.Render(renderContex, camera, useDynamicBatching, useGPUInstancing, shadowSettings);
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            Lightmapping.ResetDelegate();
+        }
+
         #endregion
     }
 }
