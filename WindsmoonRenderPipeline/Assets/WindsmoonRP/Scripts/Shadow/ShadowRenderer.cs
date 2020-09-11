@@ -94,6 +94,22 @@ namespace WindsmoonRP.Shadow
             return new Vector4(0f, 0f, 0f, -1);
         }
 
+        public Vector4 ReserveOtherShadows(Light light, int visibleLightIndex)
+        {
+            if (light.shadows != LightShadows.None && light.shadowStrength > 0)
+            {
+                LightBakingOutput lightBakingOutput = light.bakingOutput;
+
+                if (lightBakingOutput.lightmapBakeType == LightmapBakeType.Mixed && lightBakingOutput.mixedLightingMode == MixedLightingMode.Shadowmask)
+                {
+                    useShadowMask = true;
+                    return new Vector4(light.shadowStrength, 0f, 0f, lightBakingOutput.occlusionMaskChannel);
+                }
+            }
+            
+            return new Vector4(0f, 0f, 0f, -1f);
+        }
+
         public void Render()
         {
             if (currentDirectionalLightShadowCount > 0)
@@ -214,23 +230,23 @@ namespace WindsmoonRP.Shadow
             }
         }
         
-        private void SetDirectionalShadowKeyword()
-        {
-            int pcfIndex = (int) shadowSettings.DirectionalShadowSetting.PCFMode - 1;
-
-            for (int i = 0; i < directionalPCFKeywords.Length; ++i)
-            {
-                if (i == pcfIndex)
-                {
-                    commandBuffer.EnableShaderKeyword(directionalPCFKeywords[i]);
-                }
-
-                else
-                {
-                    commandBuffer.DisableShaderKeyword(directionalPCFKeywords[i]);
-                }
-            }
-        }
+        // private void SetDirectionalShadowKeyword()
+        // {
+        //     int pcfIndex = (int) shadowSettings.DirectionalShadowSetting.PCFMode - 1;
+        //
+        //     for (int i = 0; i < directionalPCFKeywords.Length; ++i)
+        //     {
+        //         if (i == pcfIndex)
+        //         {
+        //             commandBuffer.EnableShaderKeyword(directionalPCFKeywords[i]);
+        //         }
+        //
+        //         else
+        //         {
+        //             commandBuffer.DisableShaderKeyword(directionalPCFKeywords[i]);
+        //         }
+        //     }
+        // }
 
         private void SetCascadeInfo(int index, Vector4 cullingSphere, float tileSize)
         {

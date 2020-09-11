@@ -46,6 +46,12 @@ struct DirectionalShadowData // the info of the direcctional light
 	int shadowMaskChannel;
 };
 
+struct OtherShadowData
+{
+	float strength;
+	int shadowMaskChannel;
+};
+
 struct ShadowData // the info of the fragment
 {
     int cascadeIndex;
@@ -234,4 +240,24 @@ float GetDirectionalShadowAttenuation(DirectionalShadowData directionalShadowDat
 	#endif
 }
 
+float GetOtherShadowAttenuation(OtherShadowData otherShadowData, ShadowData globaleShadowData, Surface surfaceWS)
+{
+	#if !defined(RECEIVE_SHADOWS)
+		return 1.0;
+	#endif
+
+	float shadow;
+
+	if (otherShadowData.strength > 0.0)
+	{
+		shadow = GetBakedShadow(globaleShadowData.shadowMask, otherShadowData.shadowMaskChannel, otherShadowData.strength);
+	}
+
+	else
+	{
+		shadow = 1.0;
+	}
+
+	return shadow;
+}
 #endif

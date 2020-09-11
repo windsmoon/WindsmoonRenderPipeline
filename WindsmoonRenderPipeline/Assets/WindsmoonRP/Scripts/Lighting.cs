@@ -30,11 +30,13 @@ namespace WindsmoonRP
         private static int otherLightCountPropertyID = Shader.PropertyToID("_OtherLightCount");
         private static int otherLightDirectionsPropertyID = Shader.PropertyToID("_OtherLightDirections");
         private static int otherLightSpotAnglesPropertyID = Shader.PropertyToID("_OtherLightSpotAngles");
+        private static int otherLightShadowDatasPropertyID = Shader.PropertyToID("_OtherLightShadowData");
             
         private static Vector4[] otherLightColors = new Vector4[maxOtherLightCount];
         private static Vector4[] otherLightPositions = new Vector4[maxOtherLightCount];
         private static Vector4[] otherLightDirections = new Vector4[maxOtherLightCount];
         private static Vector4[] otherLightSpotAngles = new Vector4[maxOtherLightCount];
+        private static Vector4[] otherLightShadowDatas = new Vector4[maxOtherLightCount];
 
         private CullingResults cullingResults;
         private ShadowRenderer shadowRenderer = new ShadowRenderer();
@@ -122,6 +124,7 @@ namespace WindsmoonRP
                 commandBuffer.SetGlobalVectorArray(otherLightPositionsProoertyID, otherLightPositions);
                 commandBuffer.SetGlobalVectorArray(otherLightDirectionsPropertyID, otherLightDirections);
                 commandBuffer.SetGlobalVectorArray(otherLightSpotAnglesPropertyID, otherLightSpotAngles);
+                commandBuffer.SetGlobalVectorArray(otherLightShadowDatasPropertyID, otherLightShadowDatas);
             }
         }
 
@@ -140,6 +143,7 @@ namespace WindsmoonRP
             otherLightPositions[index] = position;
             otherLightDirections[index] = Vector4.zero;
             otherLightSpotAngles[index] = new Vector4(0f, 1f);
+            otherLightShadowDatas[index] = shadowRenderer.ReserveOtherShadows(visibleLight.light, index);
         }
         
         private void SetupSpotLight(int index, ref VisibleLight visibleLight) 
@@ -155,6 +159,7 @@ namespace WindsmoonRP
             float outerCos = Mathf.Cos(Mathf.Deg2Rad * 0.5f * visibleLight.spotAngle);
             float angleRangeInv = 1f / Mathf.Max(innerCos - outerCos, 0.001f);
             otherLightSpotAngles[index] = new Vector4(angleRangeInv, -outerCos * angleRangeInv);
+            otherLightShadowDatas[index] = shadowRenderer.ReserveOtherShadows(visibleLight.light, index);
         }
         #endregion
     }
