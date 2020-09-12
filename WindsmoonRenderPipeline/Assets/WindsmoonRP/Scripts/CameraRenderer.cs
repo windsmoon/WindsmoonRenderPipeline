@@ -94,14 +94,15 @@ namespace WindsmoonRP
             ExecuteCommandBuffer();
         }
         
-        private void DrawVisibleObjects(bool useDynamicBatching, bool useGPUInstancing)
+        private void DrawVisibleObjects(bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject)
         {
+            PerObjectData lightsPerObjectFlag = useLightsPerObject ? PerObjectData.LightData | PerObjectData.LightIndices : PerObjectData.None;
             SortingSettings sortingSettings = new SortingSettings(camera) {criteria = SortingCriteria.CommonOpaque};
             // Lightmaps enable LIGHTMAP_ON, ShadowMask enable shadow mask texture, OcclusionProbe enable unity_ProbesOcclusion
             DrawingSettings drawingSettings = new DrawingSettings(unlitShaderTagID, sortingSettings)
                 {enableDynamicBatching = useDynamicBatching, enableInstancing = useGPUInstancing, 
                     perObjectData = PerObjectData.Lightmaps | PerObjectData.ShadowMask | PerObjectData.OcclusionProbe | PerObjectData.OcclusionProbeProxyVolume 
-                                    | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.ReflectionProbes};
+                                    | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.ReflectionProbes | lightsPerObjectFlag};
             drawingSettings.SetShaderPassName(1, litShaderTagID);
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
