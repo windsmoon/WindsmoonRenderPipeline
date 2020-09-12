@@ -12,6 +12,7 @@ namespace WindsmoonRP
         private CameraRenderer cameraRenderer = new CameraRenderer();
         private bool useDynamicBatching;
         private bool useGPUInstancing;
+        private bool useLightsPerObject;
         private ShadowSettings shadowSettings;
 
 #if UNITY_EDITOR
@@ -76,10 +77,12 @@ namespace WindsmoonRP
         #endregion
         
         #region constructors
-        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher, ShadowSettings shadowSettings)
+        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher, bool useLightsPerObject, ShadowSettings shadowSettings)
         {
+            this.shadowSettings = shadowSettings;
             this.useDynamicBatching = useDynamicBatching;
             this.useGPUInstancing = useGPUInstancing;
+            this.useLightsPerObject = true;
             GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
             GraphicsSettings.lightsUseLinearIntensity = true;
             this.shadowSettings = shadowSettings;
@@ -95,7 +98,7 @@ namespace WindsmoonRP
         {
             foreach (Camera camera in cameras)
             {
-                cameraRenderer.Render(renderContex, camera, useDynamicBatching, useGPUInstancing, shadowSettings);
+                cameraRenderer.Render(renderContex, camera, useDynamicBatching, useGPUInstancing, useLightsPerObject, shadowSettings);
             }
         }
 

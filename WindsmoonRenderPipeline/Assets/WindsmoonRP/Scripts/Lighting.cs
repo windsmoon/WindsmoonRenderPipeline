@@ -9,6 +9,7 @@ namespace WindsmoonRP
     public class Lighting // todo : rename to LightRenderer
     {
         #region contants
+        private static string lightsPerObjectKeyword = "LIGHTS_PER_OBJECT";
         private const string bufferName = "Lighting";
         private const int maxDirectionalLightCount = 4;
         private const int maxOtherLightCount = 64;
@@ -43,12 +44,12 @@ namespace WindsmoonRP
         #endregion
         
         #region methods
-        public void Setup(ScriptableRenderContext renderContext, CullingResults cullingResults, ShadowSettings shadowSettings)
+        public void Setup(ScriptableRenderContext renderContext, CullingResults cullingResults, ShadowSettings shadowSettings, bool useLightsPerObject)
         {
             this.cullingResults = cullingResults;
             commandBuffer.BeginSample(bufferName);
             shadowRenderer.Setup(renderContext, cullingResults, shadowSettings);
-            SetupLights();
+            SetupLights(useLightsPerObject);
             shadowRenderer.Render();
             commandBuffer.EndSample(bufferName);
             renderContext.ExecuteCommandBuffer(commandBuffer);
@@ -60,14 +61,19 @@ namespace WindsmoonRP
             shadowRenderer.Cleanup();
         }
         
-        private void SetupLights()
+        private void SetupLights(bool useLightsPerObject)
         {
+            // lightIndexMap contains light indices, matching the visible light indices plus all other active lights in the scene (from catlike)
+            // we only use lightIndexMap for point and spot light
+            NativeArray<int> lightIndexMap = useLightsPerObject ? cullingResults.GetLightIndexMap(Allocator.Temp) : default;
             NativeArray<VisibleLight> visibleLights = cullingResults.visibleLights;
             int directionalLightCount = 0;
             int otherLightCount = 0;
+            int i = 0;
 
-            for (int i = 0; i < visibleLights.Length; ++i)
+            for (; i < visibleLights.Length; ++i)
             {
+                int newIndex = -1;
                 VisibleLight visibleLight = visibleLights[i];
 
                 switch (visibleLight.lightType)
@@ -86,6 +92,7 @@ namespace WindsmoonRP
                     {
                         if (otherLightCount < maxOtherLightCount)
                         {
+                            newIndex = otherLightCount;
                             SetupPointLight(otherLightCount++, ref visibleLight);
                         }
                         
@@ -96,13 +103,38 @@ namespace WindsmoonRP
                     {
                         if (otherLightCount < maxOtherLightCount)
                         {
+                            newIndex = otherLightCount;
                             SetupSpotLight(otherLightCount++, ref visibleLight);
                         }
                         
                         break;
                     }
                 }
+
+                if (useLightsPerObject)
+                {
+                    lightIndexMap[i] = newIndex;
+                }
             }
+            
+            if (useLightsPerObject) 
+            {
+                for (; i < lightIndexMap.Length; ++i)
+                {
+                    lightIndexMap[i] = -1;
+                }
+                
+                cullingResults.SetLightIndexMap(lightIndexMap);
+                Shader.EnableKeyword(lightsPerObjectKeyword);
+                lightIndexMap.Dispose();
+            }
+
+            else
+            {
+                Shader.DisableKeyword(lightsPerObjectKeyword);
+            }
+            
+            
             // Light light = RenderSettings.sun;
             // commandBuffer.SetGlobalVector(directionalLightColorPropertyID, light.color.linear * light.intensity);
             // commandBuffer.SetGlobalVector(directionalLightDirectionPropertyID, -light.transform.forward);

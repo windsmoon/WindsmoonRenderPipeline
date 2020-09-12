@@ -56,13 +56,14 @@
             #pragma multi_compile _ PREMULTIPLY_ALPHA
             #pragma multi_compile _ DIRECTIONAL_PCF3X3 DIRECTIONAL_PCF5X5 DIRECTIONAL_PCF7X7
             #pragma multi_compile _ CASCADE_BLEND_SOFT CASCADE_BLEND_DITHER
-            #pragma multi_compile _ SHADOW_MASK_ALWAYS  SHADOW_MASK_DISTANCE
+            #pragma multi_compile _ SHADOW_MASK_ALWAYS SHADOW_MASK_DISTANCE
             #pragma multi_compile _ RECEIVE_SHADOWS
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile _ LOD_FADE_CROSSFADE
             #pragma multi_compile _ NORMAL_MAP
             #pragma multi_compile _ MASK_MAP
             #pragma multi_compile _ DETAIL_MAP
+            #pragma multi_compile _ LIGHTS_PER_OBJECT
             #pragma multi_compile_instancing
             #pragma vertex LitVertex
             #pragma fragment LitFragment

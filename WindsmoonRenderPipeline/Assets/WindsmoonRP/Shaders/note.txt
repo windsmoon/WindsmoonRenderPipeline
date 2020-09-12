@@ -12,3 +12,5 @@ cbuffer UnityPerMaterial {
 
 
 We get one batch even though we use four materials. That works because all their data gets cached on the GPU and each draw call only has to contain an offset to the correct memory location. The only restriction is that the memory layout must be the same per material, which is the case because we use the same shader for all of them, only containing a single color property each. Unity doesn't compare the exact memory layout of materials, it simply only batches draw calls that use the exact same shader variant.
+
+Note that with lights-per-object enabled GPU instancing is less efficient, because only objects whose light counts and index lists match are grouped. The SRP batcher isn't affected, because each object still gets its own optimized draw call

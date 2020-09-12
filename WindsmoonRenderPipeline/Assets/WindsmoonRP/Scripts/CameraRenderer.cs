@@ -39,7 +39,7 @@ namespace WindsmoonRP
         #endregion
         
         #region methods
-        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing, ShadowSettings shadowSettings)
+        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject, ShadowSettings shadowSettings)
         {
             this.renderContext = renderContext;
             this.camera = camera;
@@ -56,10 +56,10 @@ namespace WindsmoonRP
             
             commandBuffer.BeginSample(commandBufferName);
             ExecuteCommandBuffer(); // ?? why do this ? maybe begin sample must be execute before next sample
-            lighting.Setup(renderContext, cullingResults, shadowSettings);
+            lighting.Setup(renderContext, cullingResults, shadowSettings, useLightsPerObject);
             commandBuffer.EndSample(commandBufferName);
             Setup(shadowSettings);
-            DrawVisibleObjects(useDynamicBatching, useGPUInstancing);
+            DrawVisibleObjects(useDynamicBatching, useGPUInstancing, useLightsPerObject);
 
             #if UNITY_EDITOR || DEBUG
             DrawUnsupportedShaderObjects();
