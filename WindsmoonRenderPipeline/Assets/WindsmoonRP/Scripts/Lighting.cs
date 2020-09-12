@@ -30,7 +30,7 @@ namespace WindsmoonRP
         private static int otherLightCountPropertyID = Shader.PropertyToID("_OtherLightCount");
         private static int otherLightDirectionsPropertyID = Shader.PropertyToID("_OtherLightDirections");
         private static int otherLightSpotAnglesPropertyID = Shader.PropertyToID("_OtherLightSpotAngles");
-        private static int otherLightShadowDatasPropertyID = Shader.PropertyToID("_OtherLightShadowData");
+        private static int otherLightShadowDatasPropertyID = Shader.PropertyToID("_OtherLightShadowDatas");
             
         private static Vector4[] otherLightColors = new Vector4[maxOtherLightCount];
         private static Vector4[] otherLightPositions = new Vector4[maxOtherLightCount];
