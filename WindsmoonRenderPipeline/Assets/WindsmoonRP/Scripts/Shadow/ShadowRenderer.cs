@@ -9,6 +9,7 @@ namespace WindsmoonRP.Shadow
         #region constants
         private const string bufferName = "Shadows";
         private const int maxDirectionalShadowCount = 4;
+        private const int maxOtherShadaowCount = 16;
         private const int maxCascadeCount = 4;
         #endregion
         
@@ -19,13 +20,15 @@ namespace WindsmoonRP.Shadow
         private ShadowSettings shadowSettings;
         private DirectionalShadow[] directionalShadows = new DirectionalShadow[maxDirectionalShadowCount];
         private int currentDirectionalLightShadowCount;
+        private int currentOtherShadowCount;
         private Matrix4x4[] directionalShadowMatrices = new Matrix4x4[maxDirectionalShadowCount * maxCascadeCount];
+        private Matrix4x4[] otherShadowMatrices = new Matrix4x4[maxOtherShadaowCount];
         private static int cascadeCountPropertyID = Shader.PropertyToID("_CascadeCount");
         private static int cascadeCullingSpheresPropertyID = Shader.PropertyToID("_CascadeCullingSpheres");
 //        private static int maxShadowDistancePropertyID = Shader.PropertyToID("_MaxShadowDistance");
         private static int shadowDistanceFadePropertyID = Shader.PropertyToID("_ShadowDistanceFade");
         private static int cascadeInfosPropertyID = Shader.PropertyToID("_CascadeInfos");
-        private static int directionalShadowMapSizePropertyID = Shader.PropertyToID("_DirectionalShadowMapSize");
+        private static int shadowMapSizePropertyID = Shader.PropertyToID("_DirectionalShadowMapSize");
         
         // macro in Shadow/ShadowSamplingTent.hlsl
         private static string[] directionalPCFKeywords =
@@ -33,6 +36,13 @@ namespace WindsmoonRP.Shadow
             "DIRECTIONAL_PCF3X3",
             "DIRECTIONAL_PCF5X5",
             "DIRECTIONAL_PCF7X7",
+        };
+        
+        private static string[] otherPCFKeywords = 
+        {
+            "OTHER_PCF3x3",
+            "OTHER_PCF5x5",
+            "OTHER_PCF7x7",
         };
 
         private static string[] cascadeBlendKeywords =
@@ -50,6 +60,7 @@ namespace WindsmoonRP.Shadow
         private Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
         private Vector4[] cascadeInfos = new Vector4[maxCascadeCount];
         private bool useShadowMask;
+        private Vector4 shadowMapSize;
         #endregion
 
         #region methods
@@ -59,6 +70,7 @@ namespace WindsmoonRP.Shadow
             this.cullingResults = cullingResults;
             this.shadowSettings = shadowSettings;
             currentDirectionalLightShadowCount = 0;
+            currentOtherShadowCount = 0;
             useShadowMask = false;
         }
         
@@ -97,18 +109,26 @@ namespace WindsmoonRP.Shadow
 
         public Vector4 ReserveOtherShadows(Light light, int visibleLightIndex)
         {
-            if (light.shadows != LightShadows.None && light.shadowStrength > 0)
+            if (light.shadows == LightShadows.None || light.shadowStrength <= 0)
             {
-                LightBakingOutput lightBakingOutput = light.bakingOutput;
+                return new Vector4(0f, 0f, 0f, -1f);
+            }
 
-                if (lightBakingOutput.lightmapBakeType == LightmapBakeType.Mixed && lightBakingOutput.mixedLightingMode == MixedLightingMode.Shadowmask)
-                {
-                    useShadowMask = true;
-                    return new Vector4(light.shadowStrength, 0f, 0f, lightBakingOutput.occlusionMaskChannel);
-                }
+            int occlusionMaskChannel = -1;
+            LightBakingOutput lightBakingOutput = light.bakingOutput;
+           
+            if (lightBakingOutput.lightmapBakeType == LightmapBakeType.Mixed && lightBakingOutput.mixedLightingMode == MixedLightingMode.Shadowmask)
+            {
+                useShadowMask = true;
+                occlusionMaskChannel = lightBakingOutput.occlusionMaskChannel;
+            }
+
+            if (currentOtherShadowCount >= maxOtherShadaowCount || !cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds bounds))
+            {
+                return new Vector4(-light.shadowStrength, 0f, 0f, occlusionMaskChannel);
             }
             
-            return new Vector4(0f, 0f, 0f, -1f);
+            return new Vector4(light.shadowStrength, currentOtherShadowCount++, 0f, occlusionMaskChannel);
         }
 
         public void Render()
@@ -117,9 +137,21 @@ namespace WindsmoonRP.Shadow
             {
                 RenderDirectionalShadow();
             }
+
+            if (currentOtherShadowCount > 0)
+            {
+                RenderOtherShadow();
+            }
             
             commandBuffer.BeginSample(bufferName);
             SetKeywords(shadowMaskKeywords, useShadowMask ? QualitySettings.shadowmaskMode == ShadowmaskMode.Shadowmask ? 0 : 1 : -1);
+            
+            // direction and other light use the same way to fade shadow
+            commandBuffer.SetGlobalInt(cascadeCountPropertyID, currentDirectionalLightShadowCount > 0 ? shadowSettings.DirectionalShadowSetting.CascadeCount : 0);
+            float cascadefade = 1 - shadowSettings.DirectionalShadowSetting.CascadeFade;
+            commandBuffer.SetGlobalVector(shadowDistanceFadePropertyID, new Vector4(1 / shadowSettings.MaxDistance, 1 / shadowSettings.DistanceFade, 1f / (1f - cascadefade * cascadefade)));
+            
+            commandBuffer.SetGlobalVector(shadowMapSizePropertyID, shadowMapSize);            
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
         }
@@ -131,12 +163,20 @@ namespace WindsmoonRP.Shadow
                 commandBuffer.ReleaseTemporaryRT(ShaderPropertyID.DirectionalShadowMap);
                 ExecuteBuffer();    
             }
+
+            if (currentOtherShadowCount > 0)
+            {
+                commandBuffer.ReleaseTemporaryRT(ShaderPropertyID.OtherShadowMap);
+                ExecuteBuffer();
+            }
         }
 
         private void RenderDirectionalShadow()
         {
-            int shadowMapSize = (int)shadowSettings.DirectionalShadowSetting.ShadowMapSize;
-            commandBuffer.GetTemporaryRT(ShaderPropertyID.DirectionalShadowMap, shadowMapSize, shadowMapSize, 32, FilterMode.Bilinear, RenderTextureFormat.Shadowmap);
+            int directionalShadowMapSize = (int)shadowSettings.DirectionalShadowSetting.ShadowMapSize;
+            shadowMapSize.x = directionalShadowMapSize;
+            shadowMapSize.y = 1f / directionalShadowMapSize;
+            commandBuffer.GetTemporaryRT(ShaderPropertyID.DirectionalShadowMap, directionalShadowMapSize, directionalShadowMapSize, 32, FilterMode.Bilinear, RenderTextureFormat.Shadowmap);
             commandBuffer.SetRenderTarget(ShaderPropertyID.DirectionalShadowMap, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
             commandBuffer.ClearRenderTarget(true, false, Color.clear);
             commandBuffer.BeginSample(bufferName);
@@ -145,7 +185,7 @@ namespace WindsmoonRP.Shadow
             int tileCount = currentDirectionalLightShadowCount * shadowSettings.DirectionalShadowSetting.CascadeCount;
             // todo : squared tile will waste texture space
             int splitCount = tileCount <= 1 ? 1 : tileCount <= 4 ? 2 : 4; // max tile count is 4 x 4 = 16, now the tile is squared
-            int tileSize = shadowMapSize / splitCount;
+            int tileSize = directionalShadowMapSize / splitCount;
 
             // ?? : An alternative approach is to apply a slope-scale bias, which is done by using a nonzero value for the second argument of SetGlobalDepthBias.
             // This value is used to scale the highest of the absolute clip-space depth derivative along the X and Y dimensions.
@@ -159,14 +199,13 @@ namespace WindsmoonRP.Shadow
             }
             
 //            commandBuffer.SetGlobalDepthBias(0f, 0f);
-            commandBuffer.SetGlobalInt(cascadeCountPropertyID, shadowSettings.DirectionalShadowSetting.CascadeCount);
+            // commandBuffer.SetGlobalInt(cascadeCountPropertyID, shadowSettings.DirectionalShadowSetting.CascadeCount);
             commandBuffer.SetGlobalVectorArray(cascadeCullingSpheresPropertyID, cascadeCullingSpheres);
             commandBuffer.SetGlobalVectorArray(cascadeInfosPropertyID, cascadeInfos);
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.DirectionalShadowMatrices, directionalShadowMatrices);
 //            commandBuffer.SetGlobalFloat(maxShadowDistancePropertyID, shadowSettings.MaxDistance);
-            float cascadefade = 1 - shadowSettings.DirectionalShadowSetting.CascadeFade;
-            commandBuffer.SetGlobalVector(shadowDistanceFadePropertyID, new Vector4(1 / shadowSettings.MaxDistance, 1 / shadowSettings.DistanceFade, 1f / (1f - cascadefade * cascadefade)));
-            commandBuffer.SetGlobalVector(directionalShadowMapSizePropertyID, new Vector4(shadowMapSize, 1f / shadowMapSize));
+            // float cascadefade = 1 - shadowSettings.DirectionalShadowSetting.CascadeFade;
+            // commandBuffer.SetGlobalVector(shadowDistanceFadePropertyID, new Vector4(1 / shadowSettings.MaxDistance, 1 / shadowSettings.DistanceFade, 1f / (1f - cascadefade * cascadefade)));
             // SetDirectionalShadowKeyword();
             SetKeywords(directionalPCFKeywords, (int)shadowSettings.DirectionalShadowSetting.PCFMode - 1);
             SetKeywords(cascadeBlendKeywords, (int)shadowSettings.DirectionalShadowSetting.CascadeBlendMode - 1);
@@ -174,6 +213,38 @@ namespace WindsmoonRP.Shadow
             ExecuteBuffer();
         }
 
+        private void RenderOtherShadow()
+        {
+            int otherShadowMapSize = (int)shadowSettings.OtherShadowSettings.ShadowMapSize;
+            shadowMapSize.z = otherShadowMapSize;
+            shadowMapSize.w = 1f / otherShadowMapSize;
+            commandBuffer.GetTemporaryRT(ShaderPropertyID.OtherShadowMap, otherShadowMapSize, otherShadowMapSize, 32, FilterMode.Bilinear, RenderTextureFormat.Shadowmap);
+            commandBuffer.SetRenderTarget(ShaderPropertyID.OtherShadowMap, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
+            commandBuffer.ClearRenderTarget(true, false, Color.clear);
+            commandBuffer.BeginSample(bufferName);
+            ExecuteBuffer();
+
+            int tileCount = currentOtherShadowCount;
+            // todo : squared tile will waste texture space
+            int splitCount = tileCount <= 1 ? 1 : tileCount <= 4 ? 2 : 4; // max tile count is 4 x 4 = 16, now the tile is squared
+            int tileSize = otherShadowMapSize / splitCount;
+
+            // ?? : An alternative approach is to apply a slope-scale bias, which is done by using a nonzero value for the second argument of SetGlobalDepthBias.
+            // This value is used to scale the highest of the absolute clip-space depth derivative along the X and Y dimensions.
+            // So it is zero for surfaces that are lit head-on, it's 1 when the light hits at a 45° angle in at least one of the two dimensions, and approaches infinity when the dot product of the surface normal and light direction reaches zero.
+            // So the bias increases automatically when more is needed, but there's no upper bound. 
+            //commandBuffer.SetGlobalDepthBias(0f, 3f); // ??
+            
+            for (int i = 0; i < currentDirectionalLightShadowCount; ++i)
+            {
+            }
+            
+            commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.OtherShadowMatrices, otherShadowMatrices);
+            SetKeywords(otherPCFKeywords, (int)shadowSettings.OtherShadowSettings.PCFMode - 1);
+            commandBuffer.EndSample(bufferName);
+            ExecuteBuffer();
+        }
+        
         private void RenderDirectionalShadow(int index, int splitCount, int tileSize)
         {
             DirectionalShadow directionalShadow = directionalShadows[index];
@@ -189,7 +260,7 @@ namespace WindsmoonRP.Shadow
                 // note : the split data contains information about how shadow caster objects should be culled
                 cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(directionalShadow.visibleLightIndex, i, cascadeCount,
                     cascadeRatios, tileSize, directionalShadow.nearPlaneOffset, out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
-                // shadowSplitData.shadowCascadeBlendCullingFactor = cascadeCullingFactor;
+                shadowSplitData.shadowCascadeBlendCullingFactor = cascadeCullingFactor;
                 shadowDrawingSettings.splitData = shadowSplitData;
 
                 if (index == 0) // set culling spheres, all directional light use only one group of culling spheres
