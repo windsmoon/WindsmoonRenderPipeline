@@ -126,6 +126,8 @@ namespace WindsmoonRP.Shadow
 
             if (currentOtherShadowCount >= maxOtherShadaowCount || !cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds bounds))
             {
+                // the shadow strength of light is negative, see GetDirectionalShadowAttenuation in WindsmoonShadow.hlsl
+                // if the stength is positive, the shader may be handle the shadow as realtime shadow
                 return new Vector4(-light.shadowStrength, 0f, 0f, occlusionMaskChannel);
             }
             
@@ -187,6 +189,7 @@ namespace WindsmoonRP.Shadow
             commandBuffer.GetTemporaryRT(ShaderPropertyID.DirectionalShadowMap, directionalShadowMapSize, directionalShadowMapSize, 32, FilterMode.Bilinear, RenderTextureFormat.Shadowmap);
             commandBuffer.SetRenderTarget(ShaderPropertyID.DirectionalShadowMap, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
             commandBuffer.ClearRenderTarget(true, false, Color.clear);
+            commandBuffer.SetGlobalInt(ShaderPropertyID.ShadowPancaking, 1);
             commandBuffer.BeginSample(bufferName);
             ExecuteBuffer();
 
@@ -229,6 +232,7 @@ namespace WindsmoonRP.Shadow
             commandBuffer.GetTemporaryRT(ShaderPropertyID.OtherShadowMap, otherShadowMapSize, otherShadowMapSize, 32, FilterMode.Bilinear, RenderTextureFormat.Shadowmap);
             commandBuffer.SetRenderTarget(ShaderPropertyID.OtherShadowMap, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
             commandBuffer.ClearRenderTarget(true, false, Color.clear);
+            commandBuffer.SetGlobalInt(ShaderPropertyID.ShadowPancaking, 0);
             commandBuffer.BeginSample(bufferName);
             ExecuteBuffer();
 
