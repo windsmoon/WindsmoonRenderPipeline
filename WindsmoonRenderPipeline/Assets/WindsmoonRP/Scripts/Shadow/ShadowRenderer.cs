@@ -20,6 +20,7 @@ namespace WindsmoonRP.Shadow
         private ShadowSettings shadowSettings;
         private DirectionalShadow[] directionalShadows = new DirectionalShadow[maxDirectionalShadowCount];
         private int currentDirectionalLightShadowCount;
+        private OtherShadow[] otherShadows = new OtherShadow[maxOtherShadaowCount];
         private int currentOtherShadowCount;
         private Matrix4x4[] directionalShadowMatrices = new Matrix4x4[maxDirectionalShadowCount * maxCascadeCount];
         private Matrix4x4[] otherShadowMatrices = new Matrix4x4[maxOtherShadaowCount];
@@ -128,6 +129,13 @@ namespace WindsmoonRP.Shadow
                 return new Vector4(-light.shadowStrength, 0f, 0f, occlusionMaskChannel);
             }
             
+            otherShadows[currentOtherShadowCount] = new OtherShadow()
+            {
+                VisibleLightIndex = visibleLightIndex,
+                SlopeScaleBias = light.shadowBias,
+                NoramlBias = light.shadowNormalBias
+            };
+            
             return new Vector4(light.shadowStrength, currentOtherShadowCount++, 0f, occlusionMaskChannel);
         }
 
@@ -235,8 +243,9 @@ namespace WindsmoonRP.Shadow
             // So the bias increases automatically when more is needed, but there's no upper bound. 
             //commandBuffer.SetGlobalDepthBias(0f, 3f); // ??
             
-            for (int i = 0; i < currentDirectionalLightShadowCount; ++i)
+            for (int i = 0; i < currentOtherShadowCount; ++i)
             {
+                RenderSpotShadow(i, splitCount, tileSize);
             }
             
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.OtherShadowMatrices, otherShadowMatrices);
@@ -284,6 +293,22 @@ namespace WindsmoonRP.Shadow
                 renderContext.DrawShadows(ref shadowDrawingSettings);
                 commandBuffer.SetGlobalDepthBias(0f, 0f);
             }
+        }
+
+        public void RenderSpotShadow(int index, int splitCount, int tileSize)
+        {
+            OtherShadow otherShadow = otherShadows[index];
+            ShadowDrawingSettings shadowDrawingSettings = new ShadowDrawingSettings(cullingResults, otherShadow.VisibleLightIndex);
+            cullingResults.ComputeSpotShadowMatricesAndCullingPrimitives(otherShadow.VisibleLightIndex,
+                out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
+            shadowDrawingSettings.splitData = shadowSplitData;
+            SetShadowMapViewport(index, splitCount, tileSize, out Vector2 offset);
+            otherShadowMatrices[index] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, splitCount);
+            commandBuffer.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
+            commandBuffer.SetGlobalDepthBias(0f, otherShadow.SlopeScaleBias);
+            ExecuteBuffer();
+            renderContext.DrawShadows(ref shadowDrawingSettings);
+            commandBuffer.SetGlobalDepthBias(0f, 0f);
         }
 
         private void SetKeywords(string[] keywords, int enableIndex)
@@ -385,6 +410,13 @@ namespace WindsmoonRP.Shadow
             public int visibleLightIndex;
             public float slopeScaleBias;
             public float nearPlaneOffset; // to solve shadow pancaking
+        }
+        
+        private struct OtherShadow
+        {
+            public int VisibleLightIndex;
+            public float SlopeScaleBias;
+            public float NoramlBias;
         }
         #endregion
     }

@@ -82,7 +82,7 @@ namespace WindsmoonRP
                     {
                         if (directionalLightCount < maxDirectionalLightCount)
                         {
-                            SetupDirectionalLight(directionalLightCount++, ref visibleLight);
+                            SetupDirectionalLight(directionalLightCount++, i, ref visibleLight);
                         }
                         
                         break;
@@ -93,7 +93,7 @@ namespace WindsmoonRP
                         if (otherLightCount < maxOtherLightCount)
                         {
                             newIndex = otherLightCount;
-                            SetupPointLight(otherLightCount++, ref visibleLight);
+                            SetupPointLight(otherLightCount++, i, ref visibleLight);
                         }
                         
                         break;
@@ -104,7 +104,7 @@ namespace WindsmoonRP
                         if (otherLightCount < maxOtherLightCount)
                         {
                             newIndex = otherLightCount;
-                            SetupSpotLight(otherLightCount++, ref visibleLight);
+                            SetupSpotLight(otherLightCount++, i, ref visibleLight);
                         }
                         
                         break;
@@ -159,14 +159,14 @@ namespace WindsmoonRP
             }
         }
 
-        private void SetupDirectionalLight(int index, ref VisibleLight visiblelight)
+        private void SetupDirectionalLight(int index, int visibleIndex, ref VisibleLight visiblelight)
         {
             directionalLightColors[index] = visiblelight.finalColor; // final color already usedthe light's intensity
             directionalLightDirections[index] = -visiblelight.localToWorldMatrix.GetColumn(2); // ?? remeber to revise
-            _DirectionalShadowInfos[index] = shadowRenderer.ReserveDirectionalShadows(visiblelight.light, index);
+            _DirectionalShadowInfos[index] = shadowRenderer.ReserveDirectionalShadows(visiblelight.light, visibleIndex);
         }
         
-        private void SetupPointLight (int index, ref VisibleLight visibleLight) 
+        private void SetupPointLight (int index, int visibleIndex, ref VisibleLight visibleLight) 
         {
             otherLightColors[index] = visibleLight.finalColor;
             Vector4 position = visibleLight.localToWorldMatrix.GetColumn(3);
@@ -174,10 +174,10 @@ namespace WindsmoonRP
             otherLightPositions[index] = position;
             otherLightDirections[index] = Vector4.zero;
             otherLightSpotAngles[index] = new Vector4(0f, 1f);
-            otherLightShadowDatas[index] = shadowRenderer.ReserveOtherShadows(visibleLight.light, index);
+            otherLightShadowDatas[index] = shadowRenderer.ReserveOtherShadows(visibleLight.light, visibleIndex);
         }
         
-        private void SetupSpotLight(int index, ref VisibleLight visibleLight) 
+        private void SetupSpotLight(int index, int visibleIndex, ref VisibleLight visibleLight) 
         {
             otherLightColors[index] = visibleLight.finalColor;
             Vector4 position = visibleLight.localToWorldMatrix.GetColumn(3);
@@ -190,7 +190,7 @@ namespace WindsmoonRP
             float outerCos = Mathf.Cos(Mathf.Deg2Rad * 0.5f * visibleLight.spotAngle);
             float angleRangeInv = 1f / Mathf.Max(innerCos - outerCos, 0.001f);
             otherLightSpotAngles[index] = new Vector4(angleRangeInv, -outerCos * angleRangeInv);
-            otherLightShadowDatas[index] = shadowRenderer.ReserveOtherShadows(visibleLight.light, index);
+            otherLightShadowDatas[index] = shadowRenderer.ReserveOtherShadows(visibleLight.light, visibleIndex);
         }
         #endregion
     }
