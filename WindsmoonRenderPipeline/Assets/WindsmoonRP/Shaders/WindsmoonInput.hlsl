@@ -7,6 +7,7 @@ CBUFFER_START(UnityPerDraw)
     float4 unity_LODFade;
     real4 unity_WorldTransformParams;
 
+	// todo : support more lights
 	real4 unity_LightData; // y is the light count per object ?? why must be defined directly after unity_WorldTransformParams. 
 	real4 unity_LightIndices[2]; // 2 x 4 up to 8 lights per object are supported ?? why must be defined directly after unity_WorldTransformParams.
     
