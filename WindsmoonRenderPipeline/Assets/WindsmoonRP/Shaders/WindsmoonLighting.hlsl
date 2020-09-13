@@ -28,10 +28,10 @@ float3 GetLighting(Surface surfaceWS, BRDF brdf, GI gi)
 	//float cascadeColor = shadowInfo.cascadeIndex * 0.25 + 0.25;
 	//return cascadeColor.rrr;
 
-#if !defined(LIGHTS_PER_OBJECT)
+#if defined(LIGHTS_PER_OBJECT)
 	// unity_LightIndices is a array of lenght 2 and type real4, so up to 8 light per object are supported
 	// but the unity_LightData.y is not limitted, so we have to do this
-	for (int j = 0; min(j < unity_LightData.y, 8); ++j)
+	for (int j = 0; j < min(unity_LightData.y, 8); ++j)
 	{
 		int lightIndex = unity_LightIndices[j / 4][j % 4];
 		Light light = GetOtherLight(lightIndex, surfaceWS, shadowData);

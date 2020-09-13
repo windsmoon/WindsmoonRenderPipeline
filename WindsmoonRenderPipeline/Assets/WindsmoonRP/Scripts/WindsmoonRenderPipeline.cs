@@ -82,7 +82,7 @@ namespace WindsmoonRP
             this.shadowSettings = shadowSettings;
             this.useDynamicBatching = useDynamicBatching;
             this.useGPUInstancing = useGPUInstancing;
-            this.useLightsPerObject = true;
+            this.useLightsPerObject = useLightsPerObject;
             GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
             GraphicsSettings.lightsUseLinearIntensity = true;
             this.shadowSettings = shadowSettings;

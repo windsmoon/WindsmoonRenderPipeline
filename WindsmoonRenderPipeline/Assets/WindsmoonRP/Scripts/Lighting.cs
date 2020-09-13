@@ -123,7 +123,7 @@ namespace WindsmoonRP
                 {
                     lightIndexMap[i] = -1;
                 }
-                
+                //
                 cullingResults.SetLightIndexMap(lightIndexMap);
                 Shader.EnableKeyword(lightsPerObjectKeyword);
                 lightIndexMap.Dispose();
@@ -133,7 +133,6 @@ namespace WindsmoonRP
             {
                 Shader.DisableKeyword(lightsPerObjectKeyword);
             }
-            
             
             // Light light = RenderSettings.sun;
             // commandBuffer.SetGlobalVector(directionalLightColorPropertyID, light.color.linear * light.intensity);
