@@ -36,7 +36,7 @@ Varyings ShadowCasterVertex(Attributes input)
     float3 positionWS = TransformObjectToWorld(input.positionOS);
     output.positionCS = TransformWorldToHClip(positionWS);
 
-    if (_ShadowPancaking)
+    if (_ShadowPancaking) // ?? why only directional shadow use this
     {
     	#if UNITY_REVERSED_Z
     	output.positionCS.z = min(output.positionCS.z, output.positionCS.w * UNITY_NEAR_CLIP_VALUE);    

@@ -233,6 +233,7 @@ namespace WindsmoonRP.Shadow
             commandBuffer.SetRenderTarget(ShaderPropertyID.OtherShadowMap, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
             commandBuffer.ClearRenderTarget(true, false, Color.clear);
             commandBuffer.SetGlobalInt(ShaderPropertyID.ShadowPancaking, 0);
+            commandBuffer.SetGlobalInt(ShaderPropertyID.ShadowPancaking, 0);
             commandBuffer.BeginSample(bufferName);
             ExecuteBuffer();
 

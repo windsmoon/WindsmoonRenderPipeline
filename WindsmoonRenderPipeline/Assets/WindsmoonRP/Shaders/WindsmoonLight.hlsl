@@ -61,6 +61,7 @@ OtherShadowData GetOtherLightShadowData(int index)
 {
     OtherShadowData otherShadowData;
     otherShadowData.strength = _OtherLightShadowDatas[index].x;
+    otherShadowData.tileIndex = _OtherLightShadowDatas[index].y;
     otherShadowData.shadowMaskChannel = _OtherLightShadowDatas[index].w;
     return otherShadowData;
 }
