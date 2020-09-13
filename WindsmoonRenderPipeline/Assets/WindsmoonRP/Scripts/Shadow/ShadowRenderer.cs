@@ -29,7 +29,7 @@ namespace WindsmoonRP.Shadow
 //        private static int maxShadowDistancePropertyID = Shader.PropertyToID("_MaxShadowDistance");
         private static int shadowDistanceFadePropertyID = Shader.PropertyToID("_ShadowDistanceFade");
         private static int cascadeInfosPropertyID = Shader.PropertyToID("_CascadeInfos");
-        private static int shadowMapSizePropertyID = Shader.PropertyToID("_DirectionalShadowMapSize");
+        private static int shadowMapSizePropertyID = Shader.PropertyToID("_ShadowMapSize");
         
         // macro in Shadow/ShadowSamplingTent.hlsl
         private static string[] directionalPCFKeywords =
@@ -41,9 +41,9 @@ namespace WindsmoonRP.Shadow
         
         private static string[] otherPCFKeywords = 
         {
-            "OTHER_PCF3x3",
-            "OTHER_PCF5x5",
-            "OTHER_PCF7x7",
+            "OTHER_PCF3X3",
+            "OTHER_PCF5X5",
+            "OTHER_PCF7X7",
         };
 
         private static string[] cascadeBlendKeywords =

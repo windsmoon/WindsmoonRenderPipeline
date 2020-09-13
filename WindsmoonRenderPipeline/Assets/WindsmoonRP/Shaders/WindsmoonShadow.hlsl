@@ -14,13 +14,13 @@
 	#define DIRECTIONAL_FILTER_SETUP SampleShadow_ComputeSamples_Tent_7x7
 #endif
 
-#if defined(OTHER_PCF3)
+#if defined(OTHER_PCF3X3)
     #define OTHER_FILTER_SAMPLES 4
     #define OTHER_FILTER_SETUP SampleShadow_ComputeSamples_Tent_3x3
-#elif defined(OTHER_PCF5)
+#elif defined(OTHER_PCF5X5)
     #define OTHER_FILTER_SAMPLES 9
     #define OTHER_FILTER_SETUP SampleShadow_ComputeSamples_Tent_5x5
-#elif defined(OTHER_PCF7)
+#elif defined(OTHER_PCF7X7)
     #define OTHER_FILTER_SAMPLES 16
     #define OTHER_FILTER_SETUP SampleShadow_ComputeSamples_Tent_7x7
 #endif
@@ -49,7 +49,7 @@ CBUFFER_START(ShadowProperty)
     //float _MaxShadowDistance;
     float4 _ShadowDistanceFade; // x means 1/maxShadowDistance, y means 1/distanceFade
     float4 _CascadeInfos[MAX_CASCADE_COUNT]; // x : 1 / (radius of cullingSphere) ^ 2
-    float4 _DirectionalShadowMapSize;
+    float4 _ShadowMapSize;
 CBUFFER_END 
 
 struct DirectionalShadowData // the info of the direcctional light
@@ -163,11 +163,12 @@ float SampleOtherShadow(float3 positionShadowMap)
 	return SAMPLE_TEXTURE2D_SHADOW(_OtherShadowMap, SHADOW_SAMPLER, positionShadowMap);
 }
 
-float FilterDirectionalShadow (float3 positionSTS) {
+float FilterDirectionalShadow(float3 positionSTS)
+{
 	#if defined(DIRECTIONAL_FILTER_SETUP)
 		float weights[DIRECTIONAL_FILTER_SAMPLES];
 		float2 positions[DIRECTIONAL_FILTER_SAMPLES];
-		float4 size = _DirectionalShadowMapSize.yyxx;
+		float4 size = _ShadowMapSize.yyxx;
 		DIRECTIONAL_FILTER_SETUP(size, positionSTS.xy, weights, positions);
 		float shadow = 0;
 		
@@ -182,19 +183,19 @@ float FilterDirectionalShadow (float3 positionSTS) {
 	#endif
 }
 
-float FilterOtherShadow(float positionShadowMap)
+float FilterOtherShadow(float3 positionShadowMap)
 {
 	#if defined(OTHER_FILTER_SETUP)
-		real weights[OTHER_FILTER_SAMPLES];
-		real2 positions[OTHER_FILTER_SAMPLES];
-		float4 size = _ShadowAtlasSize.wwzz;
-		OTHER_FILTER_SETUP(size, positionSTS.xy, weights, positions);
+		float weights[OTHER_FILTER_SAMPLES];
+		float2 positions[OTHER_FILTER_SAMPLES];
+		float4 size = _ShadowMapSize.wwzz;
+		OTHER_FILTER_SETUP(size, positionShadowMap.xy, weights, positions);
 		float shadow = 0;
 
-		for (int i = 0; i < OTHER_FILTER_SAMPLES; i++)
+		for (int i = 0; i < OTHER_FILTER_SAMPLES; ++i)
 		{
-			shadow += weights[i] * SampleOtherShadow(float3(positions[i].xy, positionShadowMap.z)
-		);
+			shadow += weights[i] * SampleOtherShadow(float3(positions[i].xy, positionShadowMap.z));
+		}
 
 		return shadow;
 	#else

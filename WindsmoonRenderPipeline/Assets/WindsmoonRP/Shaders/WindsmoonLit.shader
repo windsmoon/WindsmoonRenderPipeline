@@ -55,7 +55,7 @@
             #pragma multi_compile _ ALPHA_CLIPPING
             #pragma multi_compile _ PREMULTIPLY_ALPHA
             #pragma multi_compile _ DIRECTIONAL_PCF3X3 DIRECTIONAL_PCF5X5 DIRECTIONAL_PCF7X7
-            #pragma multi_compile _ OTHER_PCF3x3 OTHER_PCF5x5 _OTHER_PCF7x7
+            #pragma multi_compile _ OTHER_PCF3X3 OTHER_PCF5X5 OTHER_PCF7X7
             #pragma multi_compile _ CASCADE_BLEND_SOFT CASCADE_BLEND_DITHER
             #pragma multi_compile _ SHADOW_MASK_ALWAYS SHADOW_MASK_DISTANCE
             #pragma multi_compile _ RECEIVE_SHADOWS
