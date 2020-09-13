@@ -80,6 +80,7 @@ namespace WindsmoonRP.Shadow
                     maskChannel = -1;
                 }
                 
+                // GetShadowCasterBounds now returns true for directional lights even when there is nothing within the shadow range
                 if (!cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds b)) 
                 {
                     // the shadow strength of light is negative, see GetDirectionalShadowAttenuation in WindsmoonShadow.hlsl
