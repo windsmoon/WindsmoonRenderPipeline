@@ -29,5 +29,5 @@ MonoBehaviour:
       PCFMode: 3
       CascadeBlendMode: 1
     otherShadowSettings:
-      ShadowMapSize: 1024
+      ShadowMapSize: 4096
       PCFMode: 3
