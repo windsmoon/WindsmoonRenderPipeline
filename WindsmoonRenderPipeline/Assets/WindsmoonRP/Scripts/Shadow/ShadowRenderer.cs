@@ -239,6 +239,7 @@ namespace WindsmoonRP.Shadow
 
             int tileCount = currentOtherShadowCount;
             // todo : squared tile will waste texture space
+            // todo : unlike the cascaded shadow, there could have at most 16 of the other shadow, so the splitCount is not perfect
             int splitCount = tileCount <= 1 ? 1 : tileCount <= 4 ? 2 : 4; // max tile count is 4 x 4 = 16, now the tile is squared
             int tileSize = otherShadowMapSize / splitCount;
 
