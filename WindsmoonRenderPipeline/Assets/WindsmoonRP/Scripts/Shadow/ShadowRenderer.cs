@@ -331,6 +331,7 @@ namespace WindsmoonRP.Shadow
             Vector4 data = Vector4.zero;
             data.w = bias;
             otherShadowTiles[index] = data;
+            Debug.Log(bias);
         }
 
         private void SetKeywords(string[] keywords, int enableIndex)

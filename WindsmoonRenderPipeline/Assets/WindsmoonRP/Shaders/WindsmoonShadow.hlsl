@@ -287,10 +287,8 @@ float GetDirectionalShadowAttenuation(DirectionalShadowData directionalShadowDat
 float GetOtherShadow(OtherShadowData otherShadowData, ShadowData globalShadowData, Surface surfaceWS)
 {
 	float4 otherShadowTile = _OtherShadowTiles[otherShadowData.tileIndex];
-	
 	float3 surfaceToLight = otherShadowData.lightPositionWS - surfaceWS.position;
-	float distanceToLightPlane = dot(surfaceToLight, otherShadowData.spotDirectionWS); // ?? caculate spot shadow bias
-
+	float distanceToLightPlane = dot(surfaceToLight, otherShadowData.spotDirectionWS); // ?? caculate spot shadow bias, dot(surfaceToLight, otherShadowData.spotDirectionWS) is the length of the projection of light-surface distance to spot direction
 	float3 normalBias = surfaceWS.interpolatedNormal * (distanceToLightPlane * otherShadowTile.w);
 	float4 position = mul(_OtherShadowMatrices[otherShadowData.tileIndex], float4(surfaceWS.position + normalBias, 1.0));
 	return FilterOtherShadow(position.xyz / position.w); // ?? shadow map coord
