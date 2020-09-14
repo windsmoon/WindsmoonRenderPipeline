@@ -271,7 +271,8 @@ namespace WindsmoonRP.Shadow
             int tileOffset = index * cascadeCount;
             Vector3 cascadeRatios = shadowSettings.DirectionalShadowSetting.CascadeRatios;
             float cascadeCullingFactor = Mathf.Max(0f, 0.8f - shadowSettings.DirectionalShadowSetting.CascadeFade); // control how much shadow casters will cast shadow in larger cascade
-            
+            float inversedSplitCount = 1f / splitCount;
+
             for (int i = 0; i < cascadeCount; ++i)
             {
                 // note : the split data contains information about how shadow caster objects should be culled
@@ -293,7 +294,7 @@ namespace WindsmoonRP.Shadow
                 int tileIndex = tileOffset + i;
                 SetShadowMapViewport(tileIndex, splitCount, tileSize, out Vector2 offset);
                 // Matrix4x4 vpMatrix = projectionMatrix * viewMatrix
-                directionalShadowMatrices[tileIndex] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, splitCount);
+                directionalShadowMatrices[tileIndex] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, inversedSplitCount);
                 // directionalShadowMatrices[index] = projectionMatrix * viewMatrix;
                 commandBuffer.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
                 commandBuffer.SetGlobalDepthBias(0f, directionalShadow.slopeScaleBias);
@@ -311,15 +312,16 @@ namespace WindsmoonRP.Shadow
                 out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
             shadowDrawingSettings.splitData = shadowSplitData;
             SetShadowMapViewport(index, splitCount, tileSize, out Vector2 offset);
+            float inversedSplitCount = 1f / splitCount;
             
             // !!
             // ??
             float texelSize = 2f / (tileSize * projectionMatrix.m00);
             float filterSize = texelSize * ((float)shadowSettings.OtherShadowSettings.PCFMode + 1f);
             float bias = otherShadow.NoramlBias * filterSize * 1.4142136f;
-            SetOtherTileData(index, bias);
+            SetOtherTileData(index, offset, inversedSplitCount, bias);
             
-            otherShadowMatrices[index] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, splitCount);
+            otherShadowMatrices[index] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, inversedSplitCount);
             commandBuffer.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
             commandBuffer.SetGlobalDepthBias(0f, otherShadow.SlopeScaleBias);
             ExecuteBuffer();
@@ -327,12 +329,15 @@ namespace WindsmoonRP.Shadow
             commandBuffer.SetGlobalDepthBias(0f, 0f);
         }
         
-        private void SetOtherTileData(int index, float bias)
+        private void SetOtherTileData(int index, Vector2 offset, float inversedSplitCount, float bias)
         {
-            Vector4 data = Vector4.zero;
+            float halfTexel = shadowMapSize.w * 0.5f; // half texel
+            Vector4 data;
+            data.x = offset.x * inversedSplitCount + halfTexel; // left bound, move left half texel so that the coord is always in the bound 
+            data.y = offset.y * inversedSplitCount + halfTexel; // like x
+            data.z = inversedSplitCount - halfTexel - halfTexel;  // z means 1 / split count, it is the tile length in 01, so it need to be move left one texel, otherwise the rigth bound will over the tile
             data.w = bias;
             otherShadowTiles[index] = data;
-            Debug.Log(bias);
         }
 
         private void SetKeywords(string[] keywords, int enableIndex)
@@ -395,7 +400,7 @@ namespace WindsmoonRP.Shadow
         }
 
         // ??
-        private Matrix4x4 ConvertClipSpaceToTileSpace(Matrix4x4 matrix, Vector2 offset, int splitCount)
+        private Matrix4x4 ConvertClipSpaceToTileSpace(Matrix4x4 matrix, Vector2 offset, float inversedSplitCount)
         {
             if (SystemInfo.usesReversedZBuffer)
             {
@@ -405,15 +410,14 @@ namespace WindsmoonRP.Shadow
                 matrix.m23 = -matrix.m23;
             }
             
-            float scale = 1f / splitCount;
-            matrix.m00 = (0.5f * (matrix.m00 + matrix.m30) + offset.x * matrix.m30) * scale;
-            matrix.m01 = (0.5f * (matrix.m01 + matrix.m31) + offset.x * matrix.m31) * scale;
-            matrix.m02 = (0.5f * (matrix.m02 + matrix.m32) + offset.x * matrix.m32) * scale;
-            matrix.m03 = (0.5f * (matrix.m03 + matrix.m33) + offset.x * matrix.m33) * scale;
-            matrix.m10 = (0.5f * (matrix.m10 + matrix.m30) + offset.y * matrix.m30) * scale;
-            matrix.m11 = (0.5f * (matrix.m11 + matrix.m31) + offset.y * matrix.m31) * scale;
-            matrix.m12 = (0.5f * (matrix.m12 + matrix.m32) + offset.y * matrix.m32) * scale;
-            matrix.m13 = (0.5f * (matrix.m13 + matrix.m33) + offset.y * matrix.m33) * scale;
+            matrix.m00 = (0.5f * (matrix.m00 + matrix.m30) + offset.x * matrix.m30) * inversedSplitCount;
+            matrix.m01 = (0.5f * (matrix.m01 + matrix.m31) + offset.x * matrix.m31) * inversedSplitCount;
+            matrix.m02 = (0.5f * (matrix.m02 + matrix.m32) + offset.x * matrix.m32) * inversedSplitCount;
+            matrix.m03 = (0.5f * (matrix.m03 + matrix.m33) + offset.x * matrix.m33) * inversedSplitCount;
+            matrix.m10 = (0.5f * (matrix.m10 + matrix.m30) + offset.y * matrix.m30) * inversedSplitCount;
+            matrix.m11 = (0.5f * (matrix.m11 + matrix.m31) + offset.y * matrix.m31) * inversedSplitCount;
+            matrix.m12 = (0.5f * (matrix.m12 + matrix.m32) + offset.y * matrix.m32) * inversedSplitCount;
+            matrix.m13 = (0.5f * (matrix.m13 + matrix.m33) + offset.y * matrix.m33) * inversedSplitCount;
             matrix.m20 = 0.5f * (matrix.m20 + matrix.m30);
             matrix.m21 = 0.5f * (matrix.m21 + matrix.m31);
             matrix.m22 = 0.5f * (matrix.m22 + matrix.m32);

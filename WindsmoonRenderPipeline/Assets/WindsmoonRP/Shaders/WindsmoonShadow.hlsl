@@ -161,8 +161,10 @@ float SampleDirectionalShadow(float3 positionShadowMap)
     return SAMPLE_TEXTURE2D_SHADOW(_DirectionalShadowMap, SHADOW_SAMPLER, positionShadowMap); // ?? why directly use shadow map value than cmpare their depth
 }
 
-float SampleOtherShadow(float3 positionShadowMap)
+float SampleOtherShadow(float3 positionShadowMap, float3 bound)
 {
+	// we need clamp the bound, otherwise there may have incorrect shadow when the bias or pcf and so on are used
+	positionShadowMap.xy = clamp(positionShadowMap.xy, bound.xy, bound.xy + bound.z); // z means 1 / split count, it is the tile length in 01
 	return SAMPLE_TEXTURE2D_SHADOW(_OtherShadowMap, SHADOW_SAMPLER, positionShadowMap);
 }
 
@@ -186,7 +188,7 @@ float FilterDirectionalShadow(float3 positionSTS)
 	#endif
 }
 
-float FilterOtherShadow(float3 positionShadowMap)
+float FilterOtherShadow(float3 positionShadowMap, float3 bound)
 {
 	#if defined(OTHER_FILTER_SETUP)
 		float weights[OTHER_FILTER_SAMPLES];
@@ -197,12 +199,12 @@ float FilterOtherShadow(float3 positionShadowMap)
 
 		for (int i = 0; i < OTHER_FILTER_SAMPLES; ++i)
 		{
-			shadow += weights[i] * SampleOtherShadow(float3(positions[i].xy, positionShadowMap.z));
+			shadow += weights[i] * SampleOtherShadow(float3(positions[i].xy, positionShadowMap.z), bound);
 		}
 
 		return shadow;
 	#else
-		return SampleOtherShadow(positionShadowMap);
+		return SampleOtherShadow(positionShadowMap, bound);
 	#endif
 }
 
@@ -291,7 +293,7 @@ float GetOtherShadow(OtherShadowData otherShadowData, ShadowData globalShadowDat
 	float distanceToLightPlane = dot(surfaceToLight, otherShadowData.spotDirectionWS); // ?? caculate spot shadow bias, dot(surfaceToLight, otherShadowData.spotDirectionWS) is the length of the projection of light-surface distance to spot direction
 	float3 normalBias = surfaceWS.interpolatedNormal * (distanceToLightPlane * otherShadowTile.w);
 	float4 position = mul(_OtherShadowMatrices[otherShadowData.tileIndex], float4(surfaceWS.position + normalBias, 1.0));
-	return FilterOtherShadow(position.xyz / position.w); // ?? shadow map coord
+	return FilterOtherShadow(position.xyz / position.w, otherShadowTile.xyz); // ?? shadow map coord
 }
 
 float GetOtherShadowAttenuation(OtherShadowData otherShadowData, ShadowData globaleShadowData, Surface surfaceWS)
