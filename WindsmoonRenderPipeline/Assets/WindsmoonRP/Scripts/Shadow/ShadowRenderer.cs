@@ -60,6 +60,7 @@ namespace WindsmoonRP.Shadow
         
         private Vector4[] cascadeCullingSpheres = new Vector4[maxCascadeCount];
         private Vector4[] cascadeInfos = new Vector4[maxCascadeCount];
+        private Vector4[] otherShadowTiles = new Vector4[maxOtherShadaowCount];
         private bool useShadowMask;
         private Vector4 shadowMapSize;
         #endregion
@@ -255,6 +256,7 @@ namespace WindsmoonRP.Shadow
             }
             
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.OtherShadowMatrices, otherShadowMatrices);
+            commandBuffer.SetGlobalVectorArray(ShaderPropertyID.OtherShadowTiles, otherShadowTiles);
             SetKeywords(otherPCFKeywords, (int)shadowSettings.OtherShadowSettings.PCFMode - 1);
             commandBuffer.EndSample(bufferName);
             ExecuteBuffer();
@@ -309,12 +311,26 @@ namespace WindsmoonRP.Shadow
                 out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
             shadowDrawingSettings.splitData = shadowSplitData;
             SetShadowMapViewport(index, splitCount, tileSize, out Vector2 offset);
+            
+            // ??
+            float texelSize = 2f / (tileSize * projectionMatrix.m00);
+            float filterSize = texelSize * ((float)shadowSettings.OtherShadowSettings.PCFMode + 1f);
+            float bias = otherShadow.NoramlBias * filterSize * 1.4142136f;
+            SetOtherTileData(index, bias);
+            
             otherShadowMatrices[index] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, splitCount);
             commandBuffer.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
             commandBuffer.SetGlobalDepthBias(0f, otherShadow.SlopeScaleBias);
             ExecuteBuffer();
             renderContext.DrawShadows(ref shadowDrawingSettings);
             commandBuffer.SetGlobalDepthBias(0f, 0f);
+        }
+        
+        private void SetOtherTileData(int index, float bias)
+        {
+            Vector4 data = Vector4.zero;
+            data.w = bias;
+            otherShadowTiles[index] = data;
         }
 
         private void SetKeywords(string[] keywords, int enableIndex)

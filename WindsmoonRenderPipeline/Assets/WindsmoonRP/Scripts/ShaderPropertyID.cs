@@ -10,6 +10,7 @@ namespace WindsmoonRP
         public static int OtherShadowMap = Shader.PropertyToID("_OtherShadowMap");
         public static int OtherShadowMatrices = Shader.PropertyToID("_OtherShadowMatrices");
         public static int ShadowPancaking = Shader.PropertyToID("_ShadowPancaking");
+        public static int OtherShadowTiles = Shader.PropertyToID("_OtherShadowTiles");
         #endregion
     }
 }

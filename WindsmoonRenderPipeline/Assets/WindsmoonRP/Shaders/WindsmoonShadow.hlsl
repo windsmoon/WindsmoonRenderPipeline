@@ -26,7 +26,7 @@
 #endif
 
 #define MAX_DIRECTIONAL_SHADOW_COUNT 4
-#define MAX_SHADOWED_OTHER_LIGHT_COUNT 16
+#define MAX_OTHER_SHADOW_LIGHT_COUNT 16
 #define MAX_CASCADE_COUNT 4
 
 TEXTURE2D_SHADOW(_DirectionalShadowMap); // ?? what does TEXTURE2D_SHADOW mean ?
@@ -45,7 +45,8 @@ CBUFFER_START(ShadowProperty)
     int _CascadeCount;
     float4 _CascadeCullingSpheres[MAX_CASCADE_COUNT];
     float4x4 _DirectionalShadowMatrices[MAX_DIRECTIONAL_SHADOW_COUNT * MAX_CASCADE_COUNT];
-	float4x4 _OtherShadowMatrices[MAX_SHADOWED_OTHER_LIGHT_COUNT];
+	float4x4 _OtherShadowMatrices[MAX_OTHER_SHADOW_LIGHT_COUNT];
+	float4 _OtherShadowTiles[MAX_OTHER_SHADOW_LIGHT_COUNT];
     //float _MaxShadowDistance;
     float4 _ShadowDistanceFade; // x means 1/maxShadowDistance, y means 1/distanceFade
     float4 _CascadeInfos[MAX_CASCADE_COUNT]; // x : 1 / (radius of cullingSphere) ^ 2
@@ -65,6 +66,8 @@ struct OtherShadowData
 	float strength;
 	int tileIndex;
 	int shadowMaskChannel;
+	float3 lightPositionWS;
+	float3 spotDirectionWS;
 };
 
 struct ShadowData // the info of the fragment
@@ -283,7 +286,12 @@ float GetDirectionalShadowAttenuation(DirectionalShadowData directionalShadowDat
 
 float GetOtherShadow(OtherShadowData otherShadowData, ShadowData globalShadowData, Surface surfaceWS)
 {
-	float3 normalBias = surfaceWS.interpolatedNormal * 0.0;
+	float4 otherShadowTile = _OtherShadowTiles[otherShadowData.tileIndex];
+	
+	float3 surfaceToLight = otherShadowData.lightPositionWS - surfaceWS.position;
+	float distanceToLightPlane = dot(surfaceToLight, otherShadowData.spotDirectionWS); // ?? caculate spot shadow bias
+
+	float3 normalBias = surfaceWS.interpolatedNormal * (distanceToLightPlane * otherShadowTile.w);
 	float4 position = mul(_OtherShadowMatrices[otherShadowData.tileIndex], float4(surfaceWS.position + normalBias, 1.0));
 	return FilterOtherShadow(position.xyz / position.w); // ?? shadow map coord
 }
