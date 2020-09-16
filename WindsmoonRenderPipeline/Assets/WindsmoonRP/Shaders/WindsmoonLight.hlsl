@@ -62,8 +62,10 @@ OtherShadowData GetOtherLightShadowData(int index)
     OtherShadowData otherShadowData;
     otherShadowData.strength = _OtherLightShadowDatas[index].x;
     otherShadowData.tileIndex = _OtherLightShadowDatas[index].y;
+    otherShadowData.isPoint = _OtherLightShadowDatas[index].z == 1.0 ? true : false;
     otherShadowData.shadowMaskChannel = _OtherLightShadowDatas[index].w;
     otherShadowData.lightPositionWS = 0.0; // it is from light, not the shadow
+    otherShadowData.lightDirectionWS = 0.0; // it si from lgit, not the shadow
     otherShadowData.spotDirectionWS = 0.0; // it is from light, not the shadow
     return otherShadowData;
 }
@@ -88,6 +90,7 @@ Light GetOtherLight(int index, Surface surfaceWS, ShadowData shadowData)
     light.attenuation *= spotAttenuation * rangeAttenuation / distanceSqrt; // ?? why divided by distanceSqrt
 
     otherShadowData.lightPositionWS = position;
+    otherShadowData.lightDirectionWS = light.direction;
     otherShadowData.spotDirectionWS = spotDirection;
     return light;
 }
