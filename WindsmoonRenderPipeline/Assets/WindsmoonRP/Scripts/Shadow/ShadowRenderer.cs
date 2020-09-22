@@ -365,10 +365,21 @@ namespace WindsmoonRP.Shadow
             float bias = otherShadow.NormalBias * filterSize * 1.4142136f;
             float inversedSplitCount = 1f / splitCount;
 
+            // ?? 
+            float fovBias = Mathf.Atan(1f + bias + filterSize) * Mathf.Rad2Deg * 2f - 90f;
+            
             for (int i = 0; i < 6; ++i)
             {
-                cullingResults.ComputePointShadowMatricesAndCullingPrimitives(otherShadow.VisibleLightIndex, (CubemapFace)i, 0f,
+                
+                cullingResults.ComputePointShadowMatricesAndCullingPrimitives(otherShadow.VisibleLightIndex, (CubemapFace)i, fovBias,
                     out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
+                
+                // m00 is always 0 
+                // ??
+                viewMatrix.m11 = -viewMatrix.m11;
+                viewMatrix.m12 = -viewMatrix.m12;
+                viewMatrix.m13 = -viewMatrix.m13;
+                
                 shadowDrawingSettings.splitData = shadowSplitData;
                 
                 int tileIndex = index + i;
