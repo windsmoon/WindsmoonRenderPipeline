@@ -125,7 +125,10 @@ namespace WindsmoonRP.Shadow
                 occlusionMaskChannel = lightBakingOutput.occlusionMaskChannel;
             }
 
-            if (currentOtherShadowCount >= maxOtherShadaowCount || !cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds bounds))
+            bool isPoint = light.type == LightType.Point;
+            int newLightCount = currentOtherShadowCount + (isPoint ? 6 : 1);
+            
+            if (newLightCount >= maxOtherShadaowCount || !cullingResults.GetShadowCasterBounds(visibleLightIndex, out Bounds bounds))
             {
                 // the shadow strength of light is negative, see GetDirectionalShadowAttenuation in WindsmoonShadow.hlsl
                 // if the stength is positive, the shader may be handle the shadow as realtime shadow
@@ -136,10 +139,13 @@ namespace WindsmoonRP.Shadow
             {
                 VisibleLightIndex = visibleLightIndex,
                 SlopeScaleBias = light.shadowBias,
-                NoramlBias = light.shadowNormalBias
+                NoramlBias = light.shadowNormalBias,
+                IsPoint = isPoint
             };
             
-            return new Vector4(light.shadowStrength, currentOtherShadowCount++, 0f, occlusionMaskChannel);
+            Vector4 data = new Vector4(light.shadowStrength, currentOtherShadowCount, isPoint ? 1f : 0f, occlusionMaskChannel);
+            currentOtherShadowCount = newLightCount;
+            return data;
         }
 
         public void Render()
@@ -249,10 +255,19 @@ namespace WindsmoonRP.Shadow
             // So it is zero for surfaces that are lit head-on, it's 1 when the light hits at a 45° angle in at least one of the two dimensions, and approaches infinity when the dot product of the surface normal and light direction reaches zero.
             // So the bias increases automatically when more is needed, but there's no upper bound. 
             //commandBuffer.SetGlobalDepthBias(0f, 3f); // ??
-            
-            for (int i = 0; i < currentOtherShadowCount; ++i)
+
+            for (int i = 0; i < currentOtherShadowCount;)
             {
-                RenderSpotShadow(i, splitCount, tileSize);
+                if (otherShadows[i].IsPoint)
+                {
+                    RenderPointShadow(i, splitCount, tileSize);
+                    i += 6;
+                }
+
+                else
+                {
+                    RenderSpotShadow(i, splitCount, tileSize);
+                }
             }
             
             commandBuffer.SetGlobalMatrixArray(ShaderPropertyID.OtherShadowMatrices, otherShadowMatrices);
@@ -327,6 +342,37 @@ namespace WindsmoonRP.Shadow
             ExecuteBuffer();
             renderContext.DrawShadows(ref shadowDrawingSettings);
             commandBuffer.SetGlobalDepthBias(0f, 0f);
+        }
+
+        public void RenderPointShadow(int index, int splitCount, int tileSize)
+        {
+            OtherShadow otherShadow = otherShadows[index];
+            ShadowDrawingSettings shadowDrawingSettings = new ShadowDrawingSettings(cullingResults, otherShadow.VisibleLightIndex);
+
+            // !!
+            // ??
+            float texelSize = 2f / tileSize;
+            float filterSize = texelSize * ((float)shadowSettings.OtherShadowSettings.PCFMode + 1f);
+            float bias = otherShadow.NoramlBias * filterSize * 1.4142136f;
+            float inversedSplitCount = 1f / splitCount;
+
+            for (int i = 0; i < 6; ++i)
+            {
+                cullingResults.ComputePointShadowMatricesAndCullingPrimitives(otherShadow.VisibleLightIndex, (CubemapFace)i, 0f,
+                    out Matrix4x4 viewMatrix, out Matrix4x4 projectionMatrix, out ShadowSplitData shadowSplitData);
+                shadowDrawingSettings.splitData = shadowSplitData;
+                int tileIndex = index + i;
+                
+                SetShadowMapViewport(tileIndex, splitCount, tileSize, out Vector2 offset);
+                SetOtherTileData(tileIndex, offset, inversedSplitCount, bias);
+                otherShadowMatrices[tileIndex] = ConvertClipSpaceToTileSpace(projectionMatrix * viewMatrix, offset, inversedSplitCount);
+
+                commandBuffer.SetViewProjectionMatrices(viewMatrix, projectionMatrix);
+                commandBuffer.SetGlobalDepthBias(0f, otherShadow.SlopeScaleBias);
+                ExecuteBuffer();
+                renderContext.DrawShadows(ref shadowDrawingSettings);
+                commandBuffer.SetGlobalDepthBias(0f, 0f);
+            }
         }
         
         private void SetOtherTileData(int index, Vector2 offset, float inversedSplitCount, float bias)
@@ -445,6 +491,7 @@ namespace WindsmoonRP.Shadow
             public int VisibleLightIndex;
             public float SlopeScaleBias;
             public float NoramlBias;
+            public bool IsPoint;
         }
         #endregion
     }
