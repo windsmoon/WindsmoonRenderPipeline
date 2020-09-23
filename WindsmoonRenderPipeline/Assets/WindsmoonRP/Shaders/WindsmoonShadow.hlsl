@@ -65,8 +65,10 @@ struct OtherShadowData
 {
 	float strength;
 	int tileIndex;
+	bool isPoint;
 	int shadowMaskChannel;
 	float3 lightPositionWS;
+	float3 lightDirectionWS;
 	float3 spotDirectionWS;
 };
 
@@ -286,13 +288,33 @@ float GetDirectionalShadowAttenuation(DirectionalShadowData directionalShadowDat
 	#endif
 }
 
+static const float3 pointShadowPlanes[6] =
+{
+	float3(-1.0, 0.0, 0.0),
+    float3(1.0, 0.0, 0.0),
+    float3(0.0, -1.0, 0.0),
+    float3(0.0, 1.0, 0.0),
+    float3(0.0, 0.0, -1.0),
+    float3(0.0, 0.0, 1.0)
+};
+
 float GetOtherShadow(OtherShadowData otherShadowData, ShadowData globalShadowData, Surface surfaceWS)
 {
-	float4 otherShadowTile = _OtherShadowTiles[otherShadowData.tileIndex];
+	float tileIndex = otherShadowData.tileIndex;
+	float3 lightPlane = otherShadowData.spotDirectionWS;
+
+	if (otherShadowData.isPoint)
+	{	
+    	float faceOffset = CubeMapFaceID(-otherShadowData.lightDirectionWS); // todo : see the impl
+    	tileIndex += faceOffset;
+		lightPlane = pointShadowPlanes[faceOffset];
+    }
+	
+	float4 otherShadowTile = _OtherShadowTiles[tileIndex];
 	float3 surfaceToLight = otherShadowData.lightPositionWS - surfaceWS.position;
-	float distanceToLightPlane = dot(surfaceToLight, otherShadowData.spotDirectionWS); // ?? caculate spot shadow bias, dot(surfaceToLight, otherShadowData.spotDirectionWS) is the length of the projection of light-surface distance to spot direction
+	float distanceToLightPlane = dot(surfaceToLight, lightPlane); // ?? caculate spot shadow bias, dot(surfaceToLight, otherShadowData.spotDirectionWS) is the length of the projection of light-surface distance to spot direction
 	float3 normalBias = surfaceWS.interpolatedNormal * (distanceToLightPlane * otherShadowTile.w);
-	float4 position = mul(_OtherShadowMatrices[otherShadowData.tileIndex], float4(surfaceWS.position + normalBias, 1.0));
+	float4 position = mul(_OtherShadowMatrices[tileIndex], float4(surfaceWS.position + normalBias, 1.0));
 	return FilterOtherShadow(position.xyz / position.w, otherShadowTile.xyz); // ?? shadow map coord
 }
 
