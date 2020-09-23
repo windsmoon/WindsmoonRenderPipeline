@@ -65,10 +65,8 @@ struct OtherShadowData
 {
 	float strength;
 	int tileIndex;
-	bool isPoint;
 	int shadowMaskChannel;
 	float3 lightPositionWS;
-	float3 lightDirectionWS;
 	float3 spotDirectionWS;
 };
 
