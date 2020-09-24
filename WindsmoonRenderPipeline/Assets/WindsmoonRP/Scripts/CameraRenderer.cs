@@ -67,7 +67,8 @@ namespace WindsmoonRP
 
             #if UNITY_EDITOR || DEBUG
             DrawUnsupportedShaderObjects();
-            DrawGizmos();
+            DrawGizmos(true);
+            // DrawGizmos(false);
             #endif
 
             if (postProcessingStack.IsActive)
@@ -75,6 +76,10 @@ namespace WindsmoonRP
                 postProcessingStack.Render(cameraFrameBufferPropertyID);
             }
             
+            #if UNITY_EDITOR || DEBUG
+            DrawGizmos(false);
+            #endif
+
             Cleanup();
             Submit();
         }
@@ -100,6 +105,12 @@ namespace WindsmoonRP
 
             if (postProcessingStack.IsActive)
             {
+                // clear color and depth unless use the skybox clear flag (sky box flag is the smallest value of the clearFlags enum)
+                if (cameraClearFlags > CameraClearFlags.Color)
+                {
+                    cameraClearFlags = CameraClearFlags.Color;
+                }
+                
                 commandBuffer.GetTemporaryRT(cameraFrameBufferPropertyID, camera.pixelWidth, camera.pixelHeight, 32, FilterMode.Bilinear, RenderTextureFormat.Default);
                 commandBuffer.SetRenderTarget(cameraFrameBufferPropertyID, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
             }
@@ -171,11 +182,20 @@ namespace WindsmoonRP
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
         }
 
-        private void DrawGizmos() // ?? nothing happened, do not call this methods also has gizmos
+        private void DrawGizmos(bool isBeforePostProcessing) // ?? nothing happened, do not call this methods also has gizmos
         {
-            if (Handles.ShouldRenderGizmos())
+            if (Handles.ShouldRenderGizmos() == false)
+            {
+                return;
+            }
+
+            if (isBeforePostProcessing)
             {
                 renderContext.DrawGizmos(camera, GizmoSubset.PreImageEffects);
+            }
+
+            else
+            {
                 renderContext.DrawGizmos(camera, GizmoSubset.PostImageEffects);
             }
         }
