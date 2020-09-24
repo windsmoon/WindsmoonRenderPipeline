@@ -267,6 +267,7 @@ namespace WindsmoonRP.Shadow
                 else
                 {
                     RenderSpotShadow(i, splitCount, tileSize);
+                    i += 1;
                 }
             }
             
