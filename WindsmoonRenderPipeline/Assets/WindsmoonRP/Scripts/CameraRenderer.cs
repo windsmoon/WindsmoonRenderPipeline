@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+using WindsmoonRP.PostProcessing;
 using WindsmoonRP.Shadow;
 
 namespace WindsmoonRP
@@ -20,8 +21,10 @@ namespace WindsmoonRP
         private CullingResults cullingResults;
         private static ShaderTagId unlitShaderTagID = new ShaderTagId("SRPDefaultUnlit");
         private static ShaderTagId litShaderTagID = new ShaderTagId("WindsmoonLit");
+        private static int cameraFrameBufferPropertyID = Shader.PropertyToID("_CameraFrameBuffer");
         private string commandBufferName;
         private Lighting lighting = new Lighting();
+        private PostProcessingStack postProcessingStack = new PostProcessingStack();
 
         #if UNITY_EDITOR || DEBUG
         private static ShaderTagId[] legacyShaderTagIDs = 
@@ -39,7 +42,7 @@ namespace WindsmoonRP
         #endregion
         
         #region methods
-        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject, ShadowSettings shadowSettings)
+        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject, ShadowSettings shadowSettings, PostProcessingAsset postProcessingAsset)
         {
             this.renderContext = renderContext;
             this.camera = camera;
@@ -57,6 +60,7 @@ namespace WindsmoonRP
             commandBuffer.BeginSample(commandBufferName);
             ExecuteCommandBuffer(); // ?? why do this ? maybe begin sample must be execute before next sample
             lighting.Setup(renderContext, cullingResults, shadowSettings, useLightsPerObject);
+            postProcessingStack.Setup(renderContext, camera, postProcessingAsset);
             commandBuffer.EndSample(commandBufferName);
             Setup(shadowSettings);
             DrawVisibleObjects(useDynamicBatching, useGPUInstancing, useLightsPerObject);
@@ -65,8 +69,13 @@ namespace WindsmoonRP
             DrawUnsupportedShaderObjects();
             DrawGizmos();
             #endif
+
+            if (postProcessingStack.IsActive)
+            {
+                postProcessingStack.Render(cameraFrameBufferPropertyID);
+            }
             
-            lighting.Cleanup();
+            Cleanup();
             Submit();
         }
 
@@ -88,10 +97,27 @@ namespace WindsmoonRP
         {
             renderContext.SetupCameraProperties(camera); // ?? this method must be called before excute commandbuffer, or clear command will call GL.Draw to clear
             CameraClearFlags cameraClearFlags = camera.clearFlags;
+
+            if (postProcessingStack.IsActive)
+            {
+                commandBuffer.GetTemporaryRT(cameraFrameBufferPropertyID, camera.pixelWidth, camera.pixelHeight, 32, FilterMode.Bilinear, RenderTextureFormat.Default);
+                commandBuffer.SetRenderTarget(cameraFrameBufferPropertyID, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
+            }
+            
             commandBuffer.ClearRenderTarget(cameraClearFlags <= CameraClearFlags.Depth, cameraClearFlags == CameraClearFlags.Color, cameraClearFlags == CameraClearFlags.Color ?
                 camera.backgroundColor.linear : Color.clear); // ?? tbdr resolve
             commandBuffer.BeginSample(commandBufferName);
             ExecuteCommandBuffer();
+        }
+        
+        private void Cleanup()
+        {
+            lighting.Cleanup();
+
+            if (postProcessingStack.IsActive)
+            {
+                commandBuffer.ReleaseTemporaryRT(cameraFrameBufferPropertyID);
+            }
         }
         
         private void DrawVisibleObjects(bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject)

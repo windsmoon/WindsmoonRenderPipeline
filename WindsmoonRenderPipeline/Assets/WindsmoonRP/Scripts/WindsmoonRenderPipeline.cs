@@ -3,6 +3,7 @@ using UnityEngine.Rendering;
 using WindsmoonRP.Shadow;
 using Unity.Collections;
 using UnityEngine.Experimental.GlobalIllumination;
+using WindsmoonRP.PostProcessing;
 
 namespace WindsmoonRP
 {
@@ -14,6 +15,7 @@ namespace WindsmoonRP
         private bool useGPUInstancing;
         private bool useLightsPerObject;
         private ShadowSettings shadowSettings;
+        private PostProcessingAsset postProcessingAsset;
 
 #if UNITY_EDITOR
         private static Lightmapping.RequestLightsDelegate requestLightDelegate =
@@ -77,7 +79,7 @@ namespace WindsmoonRP
         #endregion
         
         #region constructors
-        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher, bool useLightsPerObject, ShadowSettings shadowSettings)
+        public WindsmoonRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher, bool useLightsPerObject, ShadowSettings shadowSettings, PostProcessingAsset postProcessingAsset)
         {
             this.shadowSettings = shadowSettings;
             this.useDynamicBatching = useDynamicBatching;
@@ -86,6 +88,7 @@ namespace WindsmoonRP
             GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
             GraphicsSettings.lightsUseLinearIntensity = true;
             this.shadowSettings = shadowSettings;
+            this.postProcessingAsset = postProcessingAsset;
             
 #if UNITY_EDITOR
             Lightmapping.SetDelegate(requestLightDelegate);            
@@ -98,7 +101,7 @@ namespace WindsmoonRP
         {
             foreach (Camera camera in cameras)
             {
-                cameraRenderer.Render(renderContex, camera, useDynamicBatching, useGPUInstancing, useLightsPerObject, shadowSettings);
+                cameraRenderer.Render(renderContex, camera, useDynamicBatching, useGPUInstancing, useLightsPerObject, shadowSettings, postProcessingAsset);
             }
         }
 

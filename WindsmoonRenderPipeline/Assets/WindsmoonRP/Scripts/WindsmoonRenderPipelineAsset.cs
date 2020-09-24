@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+using WindsmoonRP.PostProcessing;
 using WindsmoonRP.Shadow;
 
 namespace WindsmoonRP
@@ -18,12 +19,14 @@ namespace WindsmoonRP
         private bool useLightsPerObject = true;
         [SerializeField]
         private ShadowSettings shadowSettings;
+        [SerializeField]
+        private PostProcessingAsset postProcessingAsset = default;
         #endregion
 
         #region methods
         protected override RenderPipeline CreatePipeline()
         {
-            return new WindsmoonRenderPipeline(useDynamicBatching, useGPUInstancing, useSPRBatcher, useLightsPerObject, shadowSettings);
+            return new WindsmoonRenderPipeline(useDynamicBatching, useGPUInstancing, useSPRBatcher, useLightsPerObject, shadowSettings, postProcessingAsset);
         }
         #endregion
     }
