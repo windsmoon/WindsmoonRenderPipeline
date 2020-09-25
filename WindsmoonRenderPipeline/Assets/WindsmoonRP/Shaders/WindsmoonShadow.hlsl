@@ -232,7 +232,7 @@ float GetBakedShadow(ShadowMask shadowMask, int maskChannel)
 	
 	if (shadowMask.useDistanceShadowMask || shadowMask.useAlwaysShadowMask)
 	{
-		if (maskChannel > 0)
+		if (maskChannel >= 0)
 		{
 			shadow = shadowMask.shadows[maskChannel];
 		}
