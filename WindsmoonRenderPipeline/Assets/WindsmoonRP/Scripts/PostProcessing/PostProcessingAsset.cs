@@ -9,6 +9,10 @@ namespace WindsmoonRP.PostProcessing
         [SerializeField]
         private Shader shader;
         private Material material;
+        
+        // bloom
+        [SerializeField]
+        private BloomSettings bloomSettings;
         #endregion
 
         #region properties
@@ -24,6 +28,11 @@ namespace WindsmoonRP.PostProcessing
 
                 return material;
             }
+        }
+        
+        public BloomSettings BloomSettings
+        {
+            get => bloomSettings;
         }
         #endregion
     }
