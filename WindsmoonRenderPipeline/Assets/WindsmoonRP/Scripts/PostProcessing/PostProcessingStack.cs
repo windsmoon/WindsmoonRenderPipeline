@@ -1,3 +1,4 @@
+using System.Security.Authentication.ExtendedProtection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -81,6 +82,15 @@ namespace WindsmoonRP.PostProcessing
             commandBuffer.BeginSample("Bloom");
             int width = camera.pixelWidth / 2;
             int height = camera.pixelHeight / 2;
+
+            if (bloomSettings.MaxBloomIterationCount == 0 || width < bloomSettings.MinResolution ||
+                height < bloomSettings.MinResolution)
+            {
+                Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.Copy);
+                commandBuffer.EndSample("Bloom");
+                return;
+            }
+            
             RenderTextureFormat rtFormat = RenderTextureFormat.Default;
             int fromID = sourceID;
             int toID = bloomIteration1PropertyID + 1;
@@ -103,30 +113,42 @@ namespace WindsmoonRP.PostProcessing
                 width /= 2;
                 height /= 2;
             }
-            
-            // this time the fromID is the last rt be written in above for loop
-            // the BuiltinRenderTextureType.CameraTarget
-            // Draw(fromID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.Copy);
-            commandBuffer.ReleaseTemporaryRT(fromID - 1);
-            toID -= 5; // after blur, the toID is the last vertical pass rt id + 2, so -5 is the horizontal pass rt id before the last iteration
-            
-            // for (i -= 1; i >= 1; --i)
-            // {
-            //     commandBuffer.ReleaseTemporaryRT(fromID);
-            //     commandBuffer.ReleaseTemporaryRT(fromID - 1);
-            //     fromID -= 2;
-            // }
-            
-            // because the final pass is write to the camera target, so the loop need to be finish earlier and write the final result to the camera target manually
-            for (i -= 2; i > 0; --i) 
+
+            if (i > 2) // means there has at least 2 iterations
             {
-                commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, toID +1); // toID + 1 is the vertical pass, as the high resolution rt
-                Draw(fromID, toID, PostProcessingPassEnum.BloomCombine);
-                commandBuffer.ReleaseTemporaryRT(fromID);
-                commandBuffer.ReleaseTemporaryRT(toID + 1);
-                fromID = toID;
-                toID -= 2; // -2 as the higher res horizontal pass
+                commandBuffer.ReleaseTemporaryRT(fromID - 1);
+                toID -= 5; // after blur, the toID is the last vertical pass rt id + 2, so -5 is the horizontal pass rt id before the last iteration
+
+                // because the final pass is write to the camera target, so the loop need to be finish earlier and write the final result to the camera target manually
+                for (i -= 2; i > 0; --i) 
+                {
+                    commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, toID +1); // toID + 1 is the vertical pass, as the high resolution rt
+                    Draw(fromID, toID, PostProcessingPassEnum.BloomCombine);
+                    commandBuffer.ReleaseTemporaryRT(fromID);
+                    commandBuffer.ReleaseTemporaryRT(toID + 1);
+                    fromID = toID;
+                    toID -= 2; // -2 as the higher res horizontal pass
+                }
             }
+
+            else
+            {
+                commandBuffer.ReleaseTemporaryRT(bloomIteration1PropertyID);
+            }
+            // // this time the fromID is the last rt be written in above for loop
+            // commandBuffer.ReleaseTemporaryRT(fromID - 1);
+            // toID -= 5; // after blur, the toID is the last vertical pass rt id + 2, so -5 is the horizontal pass rt id before the last iteration
+            //
+            // // because the final pass is write to the camera target, so the loop need to be finish earlier and write the final result to the camera target manually
+            // for (i -= 2; i > 0; --i) 
+            // {
+            //     commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, toID +1); // toID + 1 is the vertical pass, as the high resolution rt
+            //     Draw(fromID, toID, PostProcessingPassEnum.BloomCombine);
+            //     commandBuffer.ReleaseTemporaryRT(fromID);
+            //     commandBuffer.ReleaseTemporaryRT(toID + 1);
+            //     fromID = toID;
+            //     toID -= 2; // -2 as the higher res horizontal pass
+            // }
             
             
             commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, sourceID);
