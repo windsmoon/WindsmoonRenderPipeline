@@ -13,12 +13,34 @@ Shader "Windsmoon RP/Windsmoon Lit"
 
 		Pass 
 		{
+			Name "Bloom Horizontal Blur"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment BloomHorizontalBlurFragment
+			ENDHLSL
+		}
+		
+		Pass 
+		{
+			Name "Bloom Vertical Blur"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment BloomVerticalBlurFragment
+			ENDHLSL
+		}
+		
+		Pass 
+		{
 			Name "Copy"
 			
 			HLSLPROGRAM
 			#pragma target 3.5
 			#pragma vertex PostProcessingVertex
-			#pragma fragment CopyPassFragment
+			#pragma fragment CopyFragment
 			ENDHLSL
 		}
 	}

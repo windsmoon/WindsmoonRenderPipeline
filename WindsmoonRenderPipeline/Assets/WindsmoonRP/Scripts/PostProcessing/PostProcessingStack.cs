@@ -33,7 +33,7 @@ namespace WindsmoonRP.PostProcessing
         {
             bloomIteration1PropertyID = Shader.PropertyToID("_BloomIteration1");
 
-            for (int i = 2; i <= maxBloomIterationCount; ++i)
+            for (int i = 2; i <= maxBloomIterationCount * 2; ++i)
             {
                 // todo : do not use the api's side effect
                 Shader.PropertyToID("_BloomIteration" + i); // when firstly request a shader property, the id will be simply increase one 
@@ -83,7 +83,7 @@ namespace WindsmoonRP.PostProcessing
             int height = camera.pixelHeight / 2;
             RenderTextureFormat rtFormat = RenderTextureFormat.Default;
             int fromID = sourceID;
-            int toID = bloomIteration1PropertyID;
+            int toID = bloomIteration1PropertyID + 1;
             int i;
 
             for (i = 1; i <= bloomSettings.MaxBloomIterationCount; ++i)
@@ -92,11 +92,14 @@ namespace WindsmoonRP.PostProcessing
                 {
                     break;
                 }
-                
+
+                int middleID = toID - 1;
+                commandBuffer.GetTemporaryRT(middleID, width, height, 0, FilterMode.Bilinear, rtFormat);
                 commandBuffer.GetTemporaryRT(toID, width, height, 0, FilterMode.Bilinear, rtFormat);
-                Draw(fromID, toID, PostProcessingPassEnum.Copy);
+                Draw(fromID, middleID, PostProcessingPassEnum.BloomHorizontalBlur);
+                Draw(middleID, toID, PostProcessingPassEnum.BloomVerticalBlur);
                 fromID = toID;
-                ++toID;
+                toID += 2;
                 width /= 2;
                 height /= 2;
             }
@@ -107,7 +110,9 @@ namespace WindsmoonRP.PostProcessing
 
             for (i -= 1; i >= 1; --i)
             {
-                commandBuffer.ReleaseTemporaryRT(bloomIteration1PropertyID + i - 1);
+                commandBuffer.ReleaseTemporaryRT(fromID);
+                commandBuffer.ReleaseTemporaryRT(fromID - 1);
+                fromID -= 2;
             }
             
             commandBuffer.EndSample("Bloom");
