@@ -35,6 +35,17 @@ Shader "Windsmoon RP/Windsmoon Lit"
 		
 		Pass 
 		{
+			Name "Bloom Combine Blur"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment BloomCombineFragment
+			ENDHLSL
+		}
+		
+		Pass 
+		{
 			Name "Copy"
 			
 			HLSLPROGRAM

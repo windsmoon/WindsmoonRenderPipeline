@@ -14,6 +14,8 @@ namespace WindsmoonRP
         
         // post processing
         public static int PostProcessingSource = Shader.PropertyToID("_PostProcessingSource");
+        public static int PostProcessingSource2 = Shader.PropertyToID("_PostProcessingSource2");
+
         #endregion
     }
 }

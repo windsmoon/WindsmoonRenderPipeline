@@ -4,6 +4,7 @@ namespace WindsmoonRP.PostProcessing
     {
         BloomHorizontalBlur,
         BloomVerticalBlur,
+        BloomCombine,
         Copy
     }
 }
