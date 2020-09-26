@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee6fabdaea6e43e7b05c83e5b7ff60d0, type: 3}
   m_Name: WindsmoonPostProcessing
   m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: b25469b5caf14d308501590d1742366b, type: 3}

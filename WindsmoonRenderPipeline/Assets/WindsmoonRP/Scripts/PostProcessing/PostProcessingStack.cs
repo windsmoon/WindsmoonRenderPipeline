@@ -24,19 +24,39 @@ namespace WindsmoonRP.PostProcessing
         #endregion
 
         #region methods
+
         public void Setup(ScriptableRenderContext renderContext, Camera camera, PostProcessingAsset postProcessingAsset)
         {
             this.renderContext = renderContext;
             this.camera = camera;
+
+#if UNITY_EDITOR
+            // game and scene (scene has a switch)
+            this.postProcessingAsset = camera.cameraType <= CameraType.SceneView ? postProcessingAsset : null;
+
+            if (camera.cameraType == CameraType.SceneView && UnityEditor.SceneView.currentDrawingSceneView.sceneViewState.showImageEffects == false)
+            {
+                this.postProcessingAsset = null;
+            }
+#else
             this.postProcessingAsset = postProcessingAsset;
+#endif
         }
 
         public void Render(int sourceID)
         {
-            commandBuffer.Blit(sourceID, BuiltinRenderTextureType.CameraTarget);
+            Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.Copy);
             renderContext.ExecuteCommandBuffer(commandBuffer);
             commandBuffer.Clear();
         }
+
+        private void Draw(RenderTargetIdentifier source, RenderTargetIdentifier dest, PostProcessingPassEnum passEnum)
+        {
+            commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource, source);
+            commandBuffer.SetRenderTarget(dest, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
+            commandBuffer.DrawProcedural(Matrix4x4.identity, postProcessingAsset.Material, (int)passEnum, MeshTopology.Triangles, 3);
+        }
+        
         #endregion
     }
 }

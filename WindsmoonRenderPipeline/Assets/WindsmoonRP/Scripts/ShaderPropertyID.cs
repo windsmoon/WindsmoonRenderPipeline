@@ -11,6 +11,9 @@ namespace WindsmoonRP
         public static int OtherShadowMatrices = Shader.PropertyToID("_OtherShadowMatrices");
         public static int ShadowPancaking = Shader.PropertyToID("_ShadowPancaking");
         public static int OtherShadowTiles = Shader.PropertyToID("_OtherShadowTiles");
+        
+        // post processing
+        public static int PostProcessingSource = Shader.PropertyToID("_PostProcessingSource");
         #endregion
     }
 }
