@@ -26,6 +26,7 @@ namespace WindsmoonRP
         #region methods
         protected override RenderPipeline CreatePipeline()
         {
+            postProcessingAsset.BloomSettings.Init();
             return new WindsmoonRenderPipeline(useDynamicBatching, useGPUInstancing, useSPRBatcher, useLightsPerObject, shadowSettings, postProcessingAsset);
         }
         #endregion

@@ -112,7 +112,9 @@ namespace WindsmoonRP.PostProcessing
                 width /= 2;
                 height /= 2;
             }
-
+            
+            commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomBicubicUpsampling, bloomSettings.UseBicubicUpsampling ? 1.0f : 0.0f);
+            
             if (i > 2) // means there has at least 2 iterations
             {
                 // // this time the fromID is the last rt be written in above for loop

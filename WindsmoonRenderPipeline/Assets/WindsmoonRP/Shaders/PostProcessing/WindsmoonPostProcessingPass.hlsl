@@ -1,12 +1,15 @@
 #ifndef WINDSMOON_POST_PROCESSING_INCLUDED
 #define WINDSMOON_POST_PROCESSING_INCLUDED
 
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Filtering.hlsl"
+
 TEXTURE2D(_PostProcessingSource);
 TEXTURE2D(_PostProcessingSource2);
 SAMPLER(sampler_linear_clamp);
 float4 _PostProcessingSource_TexelSize;
 
 float4 _ProjectionParams; // x : if x is less than 0, the v is from top to bottom
+bool _BloomBicubicUpsampling;
 
 struct Varyings
 {
@@ -41,6 +44,11 @@ float4 GetSource(float2 uv)
 float4 GetSource2(float2 uv)
 {
     return SAMPLE_TEXTURE2D(_PostProcessingSource2, sampler_linear_clamp, uv);
+}
+
+float4 GetSourceBicubic(float2 uv)
+{
+    return SampleTexture2DBicubic(TEXTURE2D_ARGS(_PostProcessingSource, sampler_linear_clamp), uv, _PostProcessingSource_TexelSize.zwxy, 1.0, 0.0);
 }
 
 float4 BloomHorizontalBlurFragment(Varyings input) : SV_TARGET
@@ -89,7 +97,22 @@ float4 BloomVerticalBlurFragment(Varyings input) : SV_TARGET
 
 float4 BloomCombineFragment(Varyings input) : SV_TARGET
 {
-    float3 lowRes = GetSource(input.uv).rgb;
+    float3 lowRes;
+
+    if (_BloomBicubicUpsampling)
+    {
+        // todo : look the function impl
+        // the lowRes added to the result will give the blicky appearance, especially glow the dark area
+        lowRes = GetSourceBicubic(input.uv).rgb; 
+        // lowRes = float4(-1000, -10000, -10000, -1000);
+    }
+
+    else
+    {
+        lowRes = GetSource(input.uv).rgb;
+        // lowRes = float4(1000, 10000, 10000, 1000);
+    }
+    
     float3 hightRes = GetSource2(input.uv).rgb;
     return float4(lowRes + hightRes, 1.0);
 }
