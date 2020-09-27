@@ -9,6 +9,8 @@ namespace WindsmoonRP
     public class WindsmoonRenderPipelineAsset : RenderPipelineAsset
     {
         #region fields
+        [SerializeField] 
+        private bool allowHDR = true;
         [SerializeField]
         private bool useDynamicBatching = true;
         [SerializeField]
@@ -26,8 +28,8 @@ namespace WindsmoonRP
         #region methods
         protected override RenderPipeline CreatePipeline()
         {
-            postProcessingAsset.BloomSettings.Init();
-            return new WindsmoonRenderPipeline(useDynamicBatching, useGPUInstancing, useSPRBatcher, useLightsPerObject, shadowSettings, postProcessingAsset);
+            // postProcessingAsset.BloomSettings.Init();
+            return new WindsmoonRenderPipeline(allowHDR, useDynamicBatching, useGPUInstancing, useSPRBatcher, useLightsPerObject, shadowSettings, postProcessingAsset);
         }
         #endregion
     }

@@ -1,6 +1,7 @@
 #ifndef WINDSMOON_POST_PROCESSING_INCLUDED
 #define WINDSMOON_POST_PROCESSING_INCLUDED
 
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Filtering.hlsl"
 
 TEXTURE2D(_PostProcessingSource);
@@ -69,6 +70,35 @@ float4 BloomPrefilterPassFragment(Varyings input) : SV_TARGET
 {
     float3 color = ApplyBloomThreshold(GetSource(input.uv).rgb);
     return float4(color, 1.0);
+}
+
+// At the end we divide the sample sum by the sum of those weights
+// This effectively spreads out the brightness of the fireflies across all other samples
+// If those other samples are dark the firefly fades (from catlike)
+float4 BloomPrefilterFadeFireFliesFragment(Varyings input) : SV_TARGET
+{
+    float3 totalColor = 0.0;
+    float weightSum = 0.0;
+
+    // todo : optimal the cache miss
+    float2 offsets[] =
+    {
+        float2(0.0, 0.0),
+        float2(-1.0, -1.0), float2(-1.0, 1.0), float2(1.0, -1.0), float2(1.0, 1.0),
+        float2(-1.0, 0.0), float2(1.0, 0.0), float2(0.0, -1.0), float2(0.0, 1.0)
+    };
+    
+    for (int i = 0; i < 9; i++)
+    {
+        float3 color = GetSource(input.uv + offsets[i] * GetSourceTexelSize() * 2.0).rgb;
+        color = ApplyBloomThreshold(color);
+        float weight = 1.0 / (Luminance(color) + 1.0); // the more luminace, the less , and the weight is always less than 1 
+        totalColor += color * weight;
+        weightSum += weight;
+    }
+    
+    totalColor /= weightSum;
+    return float4(totalColor, 1.0);
 }
 
 float4 BloomHorizontalBlurFragment(Varyings input) : SV_TARGET

@@ -17,6 +17,7 @@ namespace WindsmoonRP.PostProcessing
         private ScriptableRenderContext renderContext;
         private Camera camera;
         private PostProcessingAsset postProcessingAsset;
+        private bool useHDR;
 
         // bloom
         private int bloomIteration1PropertyID;
@@ -43,10 +44,11 @@ namespace WindsmoonRP.PostProcessing
         #endregion
         
         #region methods
-        public void Setup(ScriptableRenderContext renderContext, Camera camera, PostProcessingAsset postProcessingAsset)
+        public void Setup(ScriptableRenderContext renderContext, Camera camera, PostProcessingAsset postProcessingAsset, bool useHDR)
         {
             this.renderContext = renderContext;
             this.camera = camera;
+            this.useHDR = useHDR;
 
 #if UNITY_EDITOR
             // game and scene (scene has a switch)
@@ -69,11 +71,11 @@ namespace WindsmoonRP.PostProcessing
             commandBuffer.Clear();
         }
 
-        private void Draw(RenderTargetIdentifier source, RenderTargetIdentifier dest, PostProcessingPassEnum passEnum)
+        private void Draw(RenderTargetIdentifier source, RenderTargetIdentifier dest, PostProcessingPass pass)
         {
             commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource, source);
             commandBuffer.SetRenderTarget(dest, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
-            commandBuffer.DrawProcedural(Matrix4x4.identity, postProcessingAsset.Material, (int)passEnum, MeshTopology.Triangles, 3);
+            commandBuffer.DrawProcedural(Matrix4x4.identity, postProcessingAsset.Material, (int)pass, MeshTopology.Triangles, 3);
         }
 
         private void DoBloom(int sourceID)
@@ -86,7 +88,7 @@ namespace WindsmoonRP.PostProcessing
             // * 2 regard that there has at least 2 iteration
             if (bloomSettings.MaxBloomIterationCount == 0 || bloomSettings.Intensity <= 0 || width < bloomSettings.MinResolution * 2 || height < bloomSettings.MinResolution * 2)
             {
-                Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.Copy);
+                Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPass.Copy);
                 commandBuffer.EndSample("Bloom");
                 return;
             }
@@ -99,9 +101,9 @@ namespace WindsmoonRP.PostProcessing
             threshold.y -= threshold.x;
             commandBuffer.SetGlobalVector(ShaderPropertyID.BloomThreshold, threshold);
 
-            RenderTextureFormat rtFormat = RenderTextureFormat.Default;
+            RenderTextureFormat rtFormat = useHDR ? RenderTextureFormat.DefaultHDR : RenderTextureFormat.Default;
             commandBuffer.GetTemporaryRT(ShaderPropertyID.BloomPreFilter, width, height, 0, FilterMode.Bilinear, rtFormat);
-            Draw(sourceID, ShaderPropertyID.BloomPreFilter, PostProcessingPassEnum.BloomPreFilter);
+            Draw(sourceID, ShaderPropertyID.BloomPreFilter, bloomSettings.FadeFireflies ? PostProcessingPass.BloomPreFilterFadeFireFlies : PostProcessingPass.BloomPreFilter);
             width /= 2;
             height /= 2;
             int fromID = ShaderPropertyID.BloomPreFilter;
@@ -118,8 +120,8 @@ namespace WindsmoonRP.PostProcessing
                 int middleID = toID - 1;
                 commandBuffer.GetTemporaryRT(middleID, width, height, 0, FilterMode.Bilinear, rtFormat);
                 commandBuffer.GetTemporaryRT(toID, width, height, 0, FilterMode.Bilinear, rtFormat);
-                Draw(fromID, middleID, PostProcessingPassEnum.BloomHorizontalBlur);
-                Draw(middleID, toID, PostProcessingPassEnum.BloomVerticalBlur);
+                Draw(fromID, middleID, PostProcessingPass.BloomHorizontalBlur);
+                Draw(middleID, toID, PostProcessingPass.BloomVerticalBlur);
                 fromID = toID;
                 toID += 2;
                 width /= 2;
@@ -141,7 +143,7 @@ namespace WindsmoonRP.PostProcessing
                 for (i -= 2; i > 0; --i) 
                 {
                     commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, toID +1); // toID + 1 is the vertical pass, as the high resolution rt
-                    Draw(fromID, toID, PostProcessingPassEnum.BloomCombine);
+                    Draw(fromID, toID, PostProcessingPass.BloomCombine);
                     commandBuffer.ReleaseTemporaryRT(fromID);
                     commandBuffer.ReleaseTemporaryRT(toID + 1);
                     fromID = toID;
@@ -156,7 +158,7 @@ namespace WindsmoonRP.PostProcessing
             
             commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, bloomSettings.Intensity); // only the final pass ues the intensity
             commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, sourceID);
-            Draw(fromID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.BloomCombine);
+            Draw(fromID, BuiltinRenderTextureType.CameraTarget, PostProcessingPass.BloomCombine);
             commandBuffer.ReleaseTemporaryRT(fromID);
             commandBuffer.EndSample("Bloom");
         }

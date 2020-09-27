@@ -18,18 +18,19 @@ namespace WindsmoonRP.PostProcessing
         public float ThresholdKnee;
         [Min(0f)]
         public float Intensity;
+        public bool FadeFireflies;
         #endregion
 
         #region methods
-        public void Init()
-        {
-            MaxBloomIterationCount = 16;
-            MinResolution = 1;
-            UseBicubicUpsampling = true;
-            Threshold = 0.5f;
-            ThresholdKnee = 0.5f;
-            Intensity = 1;
-        }
+        // public void Init()
+        // {
+        //     MaxBloomIterationCount = 16;
+        //     MinResolution = 1;
+        //     UseBicubicUpsampling = true;
+        //     Threshold = 0.5f;
+        //     ThresholdKnee = 0.5f;
+        //     Intensity = 1;
+        // }
         #endregion
     }
 }

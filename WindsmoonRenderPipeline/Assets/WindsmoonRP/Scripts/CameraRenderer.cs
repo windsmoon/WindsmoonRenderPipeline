@@ -17,6 +17,7 @@ namespace WindsmoonRP
         #region fields
         private ScriptableRenderContext renderContext;
         private Camera camera;
+        private bool useHDR;
         private CommandBuffer commandBuffer = new CommandBuffer();
         private CullingResults cullingResults;
         private static ShaderTagId unlitShaderTagID = new ShaderTagId("SRPDefaultUnlit");
@@ -42,7 +43,7 @@ namespace WindsmoonRP
         #endregion
         
         #region methods
-        public void Render(ScriptableRenderContext renderContext, Camera camera, bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject, ShadowSettings shadowSettings, PostProcessingAsset postProcessingAsset)
+        public void Render(ScriptableRenderContext renderContext, Camera camera, bool allowHDR, bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject, ShadowSettings shadowSettings, PostProcessingAsset postProcessingAsset)
         {
             this.renderContext = renderContext;
             this.camera = camera;
@@ -56,11 +57,12 @@ namespace WindsmoonRP
             {
                 return;
             }
-            
+
+            useHDR = allowHDR && camera.allowHDR;
             commandBuffer.BeginSample(commandBufferName);
             ExecuteCommandBuffer(); // ?? why do this ? maybe begin sample must be execute before next sample
             lighting.Setup(renderContext, cullingResults, shadowSettings, useLightsPerObject);
-            postProcessingStack.Setup(renderContext, camera, postProcessingAsset);
+            postProcessingStack.Setup(renderContext, camera, postProcessingAsset, useHDR);
             commandBuffer.EndSample(commandBufferName);
             Setup(shadowSettings);
             DrawVisibleObjects(useDynamicBatching, useGPUInstancing, useLightsPerObject);
@@ -111,7 +113,9 @@ namespace WindsmoonRP
                     cameraClearFlags = CameraClearFlags.Color;
                 }
                 
-                commandBuffer.GetTemporaryRT(cameraFrameBufferPropertyID, camera.pixelWidth, camera.pixelHeight, 32, FilterMode.Bilinear, RenderTextureFormat.Default);
+                commandBuffer.GetTemporaryRT(cameraFrameBufferPropertyID, camera.pixelWidth, camera.pixelHeight, 32, 
+                    FilterMode.Bilinear, useHDR ? RenderTextureFormat.DefaultHDR : RenderTextureFormat.Default);
+                
                 commandBuffer.SetRenderTarget(cameraFrameBufferPropertyID, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store);
             }
             

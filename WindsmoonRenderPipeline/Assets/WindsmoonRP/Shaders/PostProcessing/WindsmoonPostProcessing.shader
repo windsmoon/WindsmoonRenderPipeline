@@ -22,6 +22,16 @@ Shader "Windsmoon RP/Windsmoon Lit"
 			ENDHLSL
 		}
 		
+		Pass 
+		{
+			Name "Bloom Pre Filter Fade Fire Flies"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment BloomPrefilterFadeFireFliesFragment
+			ENDHLSL
+		}
 
 		Pass 
 		{

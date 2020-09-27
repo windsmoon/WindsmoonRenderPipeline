@@ -1,8 +1,9 @@
 namespace WindsmoonRP.PostProcessing
 {
-    public enum PostProcessingPassEnum
+    public enum PostProcessingPass
     {
         BloomPreFilter,
+        BloomPreFilterFadeFireFlies,
         BloomHorizontalBlur,
         BloomVerticalBlur,
         BloomCombine,
