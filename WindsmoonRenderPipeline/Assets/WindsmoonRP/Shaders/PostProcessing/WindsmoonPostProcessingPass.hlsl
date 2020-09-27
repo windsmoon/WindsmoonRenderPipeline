@@ -104,13 +104,11 @@ float4 BloomCombineFragment(Varyings input) : SV_TARGET
         // todo : look the function impl
         // the lowRes added to the result will give the blicky appearance, especially glow the dark area
         lowRes = GetSourceBicubic(input.uv).rgb; 
-        // lowRes = float4(-1000, -10000, -10000, -1000);
     }
 
     else
     {
         lowRes = GetSource(input.uv).rgb;
-        // lowRes = float4(1000, 10000, 10000, 1000);
     }
     
     float3 hightRes = GetSource2(input.uv).rgb;

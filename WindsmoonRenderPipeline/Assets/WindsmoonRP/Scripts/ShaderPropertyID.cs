@@ -16,6 +16,7 @@ namespace WindsmoonRP
         public static int PostProcessingSource = Shader.PropertyToID("_PostProcessingSource");
         public static int PostProcessingSource2 = Shader.PropertyToID("_PostProcessingSource2");
         public static int BloomBicubicUpsampling = Shader.PropertyToID("_BloomBicubicUpsampling");
+        public static int BloomPreFilter = Shader.PropertyToID("_BloomPreFilter");
         #endregion
     }
 }

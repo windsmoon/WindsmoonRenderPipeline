@@ -83,7 +83,8 @@ namespace WindsmoonRP.PostProcessing
             int width = camera.pixelWidth / 2;
             int height = camera.pixelHeight / 2;
 
-            if (bloomSettings.MaxBloomIterationCount == 0 || width < bloomSettings.MinResolution || height < bloomSettings.MinResolution)
+            // * 2 regard that there has at least 2 iteration
+            if (bloomSettings.MaxBloomIterationCount == 0 || width < bloomSettings.MinResolution * 2 || height < bloomSettings.MinResolution * 2)
             {
                 Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.Copy);
                 commandBuffer.EndSample("Bloom");
@@ -91,7 +92,11 @@ namespace WindsmoonRP.PostProcessing
             }
             
             RenderTextureFormat rtFormat = RenderTextureFormat.Default;
-            int fromID = sourceID;
+            commandBuffer.GetTemporaryRT(ShaderPropertyID.BloomPreFilter, width, height, 0, FilterMode.Bilinear, rtFormat);
+            Draw(sourceID, ShaderPropertyID.BloomPreFilter, PostProcessingPassEnum.Copy);
+            width /= 2;
+            height /= 2;
+            int fromID = ShaderPropertyID.BloomPreFilter;
             int toID = bloomIteration1PropertyID + 1;
             int i;
 
@@ -113,6 +118,7 @@ namespace WindsmoonRP.PostProcessing
                 height /= 2;
             }
             
+            commandBuffer.ReleaseTemporaryRT(ShaderPropertyID.BloomPreFilter);
             commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomBicubicUpsampling, bloomSettings.UseBicubicUpsampling ? 1.0f : 0.0f);
             
             if (i > 2) // means there has at least 2 iterations
