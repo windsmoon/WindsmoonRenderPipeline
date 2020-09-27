@@ -11,8 +11,13 @@ namespace WindsmoonRP.PostProcessing
         public int MaxBloomIterationCount;
         [Min(1)]
         public int MinResolution;
-        [SerializeField]
         public bool UseBicubicUpsampling;
+        [Min(0)]
+        public float Threshold;
+        [Range(0, 1)]
+        public float ThresholdKnee;
+        [Min(0f)]
+        public float Intensity;
         #endregion
 
         #region methods
@@ -21,6 +26,9 @@ namespace WindsmoonRP.PostProcessing
             MaxBloomIterationCount = 16;
             MinResolution = 1;
             UseBicubicUpsampling = true;
+            Threshold = 0.5f;
+            ThresholdKnee = 0.5f;
+            Intensity = 1;
         }
         #endregion
     }

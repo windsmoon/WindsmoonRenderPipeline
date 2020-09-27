@@ -84,16 +84,24 @@ namespace WindsmoonRP.PostProcessing
             int height = camera.pixelHeight / 2;
 
             // * 2 regard that there has at least 2 iteration
-            if (bloomSettings.MaxBloomIterationCount == 0 || width < bloomSettings.MinResolution * 2 || height < bloomSettings.MinResolution * 2)
+            if (bloomSettings.MaxBloomIterationCount == 0 || bloomSettings.Intensity <= 0 || width < bloomSettings.MinResolution * 2 || height < bloomSettings.MinResolution * 2)
             {
                 Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.Copy);
                 commandBuffer.EndSample("Bloom");
                 return;
             }
             
+            Vector4 threshold;
+            threshold.x = Mathf.GammaToLinearSpace(bloomSettings.Threshold);
+            threshold.y = threshold.x * bloomSettings.ThresholdKnee;
+            threshold.z = 2f * threshold.y;
+            threshold.w = 0.25f / (threshold.y + 0.00001f);
+            threshold.y -= threshold.x;
+            commandBuffer.SetGlobalVector(ShaderPropertyID.BloomThreshold, threshold);
+
             RenderTextureFormat rtFormat = RenderTextureFormat.Default;
             commandBuffer.GetTemporaryRT(ShaderPropertyID.BloomPreFilter, width, height, 0, FilterMode.Bilinear, rtFormat);
-            Draw(sourceID, ShaderPropertyID.BloomPreFilter, PostProcessingPassEnum.Copy);
+            Draw(sourceID, ShaderPropertyID.BloomPreFilter, PostProcessingPassEnum.BloomPreFilter);
             width /= 2;
             height /= 2;
             int fromID = ShaderPropertyID.BloomPreFilter;
@@ -120,7 +128,9 @@ namespace WindsmoonRP.PostProcessing
             
             commandBuffer.ReleaseTemporaryRT(ShaderPropertyID.BloomPreFilter);
             commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomBicubicUpsampling, bloomSettings.UseBicubicUpsampling ? 1.0f : 0.0f);
+            commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, 1f); // only the final pass ues the intensity
             
+            // todo : the greater can be removed or not
             if (i > 2) // means there has at least 2 iterations
             {
                 // // this time the fromID is the last rt be written in above for loop
@@ -144,6 +154,7 @@ namespace WindsmoonRP.PostProcessing
                 commandBuffer.ReleaseTemporaryRT(bloomIteration1PropertyID);
             }
             
+            commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, bloomSettings.Intensity); // only the final pass ues the intensity
             commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, sourceID);
             Draw(fromID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.BloomCombine);
             commandBuffer.ReleaseTemporaryRT(fromID);

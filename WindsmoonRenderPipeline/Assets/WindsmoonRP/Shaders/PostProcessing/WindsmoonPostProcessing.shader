@@ -10,6 +10,18 @@ Shader "Windsmoon RP/Windsmoon Lit"
 		#include "../WindsmoonCommon.hlsl"
 		#include "WindsmoonPostProcessingPass.hlsl"
 		ENDHLSL
+		
+		Pass 
+		{
+			Name "Bloom Pre Filter"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment BloomPrefilterPassFragment
+			ENDHLSL
+		}
+		
 
 		Pass 
 		{

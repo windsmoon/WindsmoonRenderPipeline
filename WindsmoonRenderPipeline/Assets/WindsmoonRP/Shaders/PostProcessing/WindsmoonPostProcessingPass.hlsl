@@ -7,9 +7,11 @@ TEXTURE2D(_PostProcessingSource);
 TEXTURE2D(_PostProcessingSource2);
 SAMPLER(sampler_linear_clamp);
 float4 _PostProcessingSource_TexelSize;
+float _BloomIntensity;
 
 float4 _ProjectionParams; // x : if x is less than 0, the v is from top to bottom
 bool _BloomBicubicUpsampling;
+float4 _BloomThreshold;
 
 struct Varyings
 {
@@ -49,6 +51,24 @@ float4 GetSource2(float2 uv)
 float4 GetSourceBicubic(float2 uv)
 {
     return SampleTexture2DBicubic(TEXTURE2D_ARGS(_PostProcessingSource, sampler_linear_clamp), uv, _PostProcessingSource_TexelSize.zwxy, 1.0, 0.0);
+}
+
+
+float3 ApplyBloomThreshold(float3 color)
+{
+    float brightness = Max3(color.r, color.g, color.b);
+    float soft = brightness + _BloomThreshold.y;
+    soft = clamp(soft, 0.0, _BloomThreshold.z);
+    soft = soft * soft * _BloomThreshold.w;
+    float contribution = max(soft, brightness - _BloomThreshold.x);
+    contribution /= max(brightness, 0.00001);
+    return color * contribution;
+}
+
+float4 BloomPrefilterPassFragment(Varyings input) : SV_TARGET
+{
+    float3 color = ApplyBloomThreshold(GetSource(input.uv).rgb);
+    return float4(color, 1.0);
 }
 
 float4 BloomHorizontalBlurFragment(Varyings input) : SV_TARGET
@@ -112,7 +132,7 @@ float4 BloomCombineFragment(Varyings input) : SV_TARGET
     }
     
     float3 hightRes = GetSource2(input.uv).rgb;
-    return float4(lowRes + hightRes, 1.0);
+    return float4(lowRes * _BloomIntensity + hightRes, 1.0);
 }
 
 float4 CopyFragment(Varyings input) : SV_TARGET
