@@ -16,7 +16,7 @@ MonoBehaviour:
   bloomSettings:
     MaxBloomIterationCount: 5
     MinResolution: 1
-    UseBicubicUpsampling: 0
+    UseBicubicUpsampling: 1
     Threshold: 1
     ThresholdKnee: 0.5
     Intensity: 1

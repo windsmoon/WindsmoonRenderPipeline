@@ -80,15 +80,18 @@ float4 BloomPrefilterFadeFireFliesFragment(Varyings input) : SV_TARGET
     float3 totalColor = 0.0;
     float weightSum = 0.0;
 
+    // because there has Gaussian blur after pre filter, so remove the 4 samples to improve the performance
     // todo : optimal the cache miss
     float2 offsets[] =
     {
         float2(0.0, 0.0),
-        float2(-1.0, -1.0), float2(-1.0, 1.0), float2(1.0, -1.0), float2(1.0, 1.0),
-        float2(-1.0, 0.0), float2(1.0, 0.0), float2(0.0, -1.0), float2(0.0, 1.0)
+        // float2(-1.0, -1.0), float2(-1.0, 1.0), float2(1.0, -1.0), float2(1.0, 1.0),
+        // float2(-1.0, 0.0), float2(1.0, 0.0), float2(0.0, -1.0), float2(0.0, 1.0)
+        float2(-1.0, -1.0), float2(-1.0, 1.0), float2(1.0, -1.0), float2(1.0, 1.0)
     };
+
     
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 5; i++)
     {
         float3 color = GetSource(input.uv + offsets[i] * GetSourceTexelSize() * 2.0).rgb;
         color = ApplyBloomThreshold(color);
