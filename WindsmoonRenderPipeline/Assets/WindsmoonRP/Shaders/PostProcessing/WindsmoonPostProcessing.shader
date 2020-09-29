@@ -57,12 +57,23 @@ Shader "Windsmoon RP/Windsmoon Lit"
 		
 		Pass 
 		{
-			Name "Bloom Combine Blur"
+			Name "Bloom Combine Additive"
 			
 			HLSLPROGRAM
 			#pragma target 3.5
 			#pragma vertex PostProcessingVertex
-			#pragma fragment BloomCombineFragment
+			#pragma fragment BloomAdditiveFragment
+			ENDHLSL
+		}
+		
+		Pass 
+		{
+			Name "Bloom Combine Scattering"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment BloomScatteringFragment
 			ENDHLSL
 		}
 		

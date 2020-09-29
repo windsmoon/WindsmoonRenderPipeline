@@ -130,7 +130,21 @@ namespace WindsmoonRP.PostProcessing
             
             commandBuffer.ReleaseTemporaryRT(ShaderPropertyID.BloomPreFilter);
             commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomBicubicUpsampling, bloomSettings.UseBicubicUpsampling ? 1.0f : 0.0f);
-            commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, 1f); // only the final pass ues the intensity
+            // commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, 1f); // only the final pass ues the intensity
+
+            PostProcessingPass combinePass;
+
+            if (bloomSettings.type == BloomSettings.BloomType.Additive)
+            {
+                combinePass = PostProcessingPass.BloomAdditive;
+                commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity,  1f);
+            }
+
+            else
+            {
+                combinePass = PostProcessingPass.BloomScattering;
+                commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, bloomSettings.Scatter);
+            }
             
             // todo : the greater can be removed or not
             if (i > 2) // means there has at least 2 iterations
@@ -143,7 +157,7 @@ namespace WindsmoonRP.PostProcessing
                 for (i -= 2; i > 0; --i) 
                 {
                     commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, toID +1); // toID + 1 is the vertical pass, as the high resolution rt
-                    Draw(fromID, toID, PostProcessingPass.BloomCombine);
+                    Draw(fromID, toID, combinePass);
                     commandBuffer.ReleaseTemporaryRT(fromID);
                     commandBuffer.ReleaseTemporaryRT(toID + 1);
                     fromID = toID;
@@ -158,7 +172,7 @@ namespace WindsmoonRP.PostProcessing
             
             commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, bloomSettings.Intensity); // only the final pass ues the intensity
             commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, sourceID);
-            Draw(fromID, BuiltinRenderTextureType.CameraTarget, PostProcessingPass.BloomCombine);
+            Draw(fromID, BuiltinRenderTextureType.CameraTarget, combinePass);
             commandBuffer.ReleaseTemporaryRT(fromID);
             commandBuffer.EndSample("Bloom");
         }

@@ -148,7 +148,7 @@ float4 BloomVerticalBlurFragment(Varyings input) : SV_TARGET
     return float4(color, 1.0);
 }
 
-float4 BloomCombineFragment(Varyings input) : SV_TARGET
+float4 BloomAdditiveFragment(Varyings input) : SV_TARGET
 {
     float3 lowRes;
 
@@ -166,6 +166,26 @@ float4 BloomCombineFragment(Varyings input) : SV_TARGET
     
     float3 hightRes = GetSource2(input.uv).rgb;
     return float4(lowRes * _BloomIntensity + hightRes, 1.0);
+}
+
+float4 BloomScatteringFragment(Varyings input) : SV_TARGET
+{
+    float3 lowRes;
+
+    if (_BloomBicubicUpsampling)
+    {
+        // todo : look the function impl
+        // the lowRes added to the result will give the blicky appearance, especially glow the dark area
+        lowRes = GetSourceBicubic(input.uv).rgb; 
+    }
+
+    else
+    {
+        lowRes = GetSource(input.uv).rgb;
+    }
+    
+    float3 hightRes = GetSource2(input.uv).rgb;
+    return float4(lerp(hightRes, lowRes, _BloomIntensity), 1.0);
 }
 
 float4 CopyFragment(Varyings input) : SV_TARGET

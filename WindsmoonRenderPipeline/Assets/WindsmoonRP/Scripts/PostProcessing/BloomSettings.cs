@@ -19,6 +19,9 @@ namespace WindsmoonRP.PostProcessing
         [Min(0f)]
         public float Intensity;
         public bool FadeFireflies;
+        public BloomType type;
+        [Range(0f, 1f)]
+        public float Scatter;
         #endregion
 
         #region methods
@@ -31,6 +34,14 @@ namespace WindsmoonRP.PostProcessing
         //     ThresholdKnee = 0.5f;
         //     Intensity = 1;
         // }
+        #endregion
+
+        #region enums
+        public enum BloomType
+        {
+            Additive,
+            Scattering
+        }
         #endregion
     }
 }

@@ -6,7 +6,8 @@ namespace WindsmoonRP.PostProcessing
         BloomPreFilterFadeFireFlies,
         BloomHorizontalBlur,
         BloomVerticalBlur,
-        BloomCombine,
+        BloomAdditive,
+        BloomScattering,
         Copy
     }
 }
