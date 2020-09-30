@@ -67,7 +67,17 @@ namespace WindsmoonRP.PostProcessing
         public void Render(int sourceID)
         {
             // Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.Copy);
-            DoBloom(sourceID);
+            if (DoBloom(sourceID))
+            {
+                DoToneMapping(ShaderPropertyID.BloomResult);
+                commandBuffer.ReleaseTemporaryRT(ShaderPropertyID.BloomResult);
+            }
+
+            else
+            {
+                DoToneMapping(sourceID);
+            }
+            
             renderContext.ExecuteCommandBuffer(commandBuffer);
             commandBuffer.Clear();
         }
@@ -79,21 +89,22 @@ namespace WindsmoonRP.PostProcessing
             commandBuffer.DrawProcedural(Matrix4x4.identity, postProcessingAsset.Material, (int)pass, MeshTopology.Triangles, 3);
         }
 
-        private void DoBloom(int sourceID)
+        private bool DoBloom(int sourceID)
         {
+            // commandBuffer.BeginSample("Bloom");
             BloomSettings bloomSettings = postProcessingAsset.BloomSettings;
-            commandBuffer.BeginSample("Bloom");
             int width = camera.pixelWidth / 2;
             int height = camera.pixelHeight / 2;
 
             // * 2 regard that there has at least 2 iteration
             if (bloomSettings.MaxBloomIterationCount == 0 || bloomSettings.Intensity <= 0 || width < bloomSettings.MinResolution * 2 || height < bloomSettings.MinResolution * 2)
             {
-                Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPass.Copy);
-                commandBuffer.EndSample("Bloom");
-                return;
+                // Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPass.Copy);
+                // commandBuffer.EndSample("Bloom");
+                return false;
             }
             
+            commandBuffer.BeginSample("Bloom");
             Vector4 threshold;
             threshold.x = Mathf.GammaToLinearSpace(bloomSettings.Threshold);
             threshold.y = threshold.x * bloomSettings.ThresholdKnee;
@@ -137,7 +148,7 @@ namespace WindsmoonRP.PostProcessing
             PostProcessingPass finalPass;
             float finalIntensity;
             
-            if (bloomSettings.type == BloomSettings.BloomType.Additive)
+            if (bloomSettings.mode == BloomSettings.BloomMode.Additive)
             {
                 combinePass = PostProcessingPass.BloomAdditive;
                 finalPass = combinePass;
@@ -179,9 +190,18 @@ namespace WindsmoonRP.PostProcessing
             
             commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, finalIntensity);
             commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, sourceID);
-            Draw(fromID, BuiltinRenderTextureType.CameraTarget, finalPass);
+            commandBuffer.GetTemporaryRT(ShaderPropertyID.BloomResult, camera.pixelWidth, camera.pixelHeight, 0, FilterMode.Bilinear, rtFormat);
+            Draw(fromID, ShaderPropertyID.BloomResult, finalPass);
             commandBuffer.ReleaseTemporaryRT(fromID);
             commandBuffer.EndSample("Bloom");
+            return true;
+        }
+
+        private void DoToneMapping(int sourceID)
+        {
+            ToneMappingSettings toneMappingSettings = postProcessingAsset.ToneMappingSettings;
+            PostProcessingPass pass = toneMappingSettings.Mode < 0 ? PostProcessingPass.Copy : PostProcessingPass.ToneMappingReinhard;
+            Draw(sourceID, BuiltinRenderTextureType.CameraTarget, pass);
         }
         #endregion
     }

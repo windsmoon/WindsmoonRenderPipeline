@@ -60,6 +60,17 @@ namespace WindsmoonRP.Samples.LearningScene
             smoothness = UnityEngine.Random.Range(0f, 1f);
             OnValidate();
         }
+        
+        [ContextMenu("RandomColor")]
+        public void RandomColor()
+        {
+            baseColor = UnityEngine.Random.ColorHSV() + new Color(0.3f, 0.3f, 0.3f, 0.3f);
+            // emissionColor = UnityEngine.Random.ColorHSV() + new Color(0.6f, 0.6f, 0.6f, 1f);
+            cutoff = UnityEngine.Random.Range(0f, 1f);
+            metallic = UnityEngine.Random.Range(0f, 1f);
+            smoothness = UnityEngine.Random.Range(0f, 1f);
+            OnValidate();
+        }
 
         [ContextMenu("Reset")]
         private void Reset()

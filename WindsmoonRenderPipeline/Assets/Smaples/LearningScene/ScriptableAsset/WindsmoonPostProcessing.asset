@@ -19,7 +19,9 @@ MonoBehaviour:
     UseBicubicUpsampling: 1
     Threshold: 1
     ThresholdKnee: 0.5
-    Intensity: 1.22
+    Intensity: 1
     FadeFireflies: 1
-    type: 1
-    Scatter: 0.726
+    mode: 1
+    Scatter: 0.487
+  toneMappingSettings:
+    Mode: 0

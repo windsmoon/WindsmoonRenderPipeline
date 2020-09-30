@@ -19,6 +19,7 @@ namespace WindsmoonRP
         public static int BloomPreFilter = Shader.PropertyToID("_BloomPreFilter");
         public static int BloomThreshold = Shader.PropertyToID("_BloomThreshold");
         public static int BloomIntensity = Shader.PropertyToID("_BloomIntensity");
+        public static int BloomResult = Shader.PropertyToID("_BloomResult");
         #endregion
     }
 }

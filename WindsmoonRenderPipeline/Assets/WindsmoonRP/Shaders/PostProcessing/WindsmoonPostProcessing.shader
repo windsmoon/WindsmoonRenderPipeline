@@ -10,6 +10,17 @@ Shader "Windsmoon RP/Windsmoon Lit"
 		#include "../WindsmoonCommon.hlsl"
 		#include "WindsmoonPostProcessingPass.hlsl"
 		ENDHLSL
+				
+		Pass 
+		{
+			Name "Copy"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment CopyFragment
+			ENDHLSL
+		}
 		
 		Pass 
 		{
@@ -90,12 +101,12 @@ Shader "Windsmoon RP/Windsmoon Lit"
 		
 		Pass 
 		{
-			Name "Copy"
+			Name "Tone Mapping Reinhard"
 			
 			HLSLPROGRAM
 			#pragma target 3.5
 			#pragma vertex PostProcessingVertex
-			#pragma fragment CopyFragment
+			#pragma fragment ToneMappingReinhardFragment
 			ENDHLSL
 		}
 	}

@@ -66,6 +66,11 @@ float3 ApplyBloomThreshold(float3 color)
     return color * contribution;
 }
 
+float4 CopyFragment(Varyings input) : SV_TARGET
+{
+    return GetSource(input.uv);
+}
+
 float4 BloomPrefilterPassFragment(Varyings input) : SV_TARGET
 {
     float3 color = ApplyBloomThreshold(GetSource(input.uv).rgb);
@@ -209,8 +214,16 @@ float4 BloomScatteringFinalFragment(Varyings input) :SV_TARGET
     return float4(lerp(highRes, lowRes, _BloomIntensity), 1.0);
 }
 
-float4 CopyFragment(Varyings input) : SV_TARGET
+float4 ToneMappingReinhardFragment(Varyings input) : SV_Target
 {
-    return GetSource(input.uv);
+    float4 color = GetSource(input.uv);
+    // because the precision limition, the very large values end up at 1 much earlier than infinity
+    // It can become a problem for some functions when half values are used.
+    // Due to a bug in the shader compiler this happens in some cases with the Metal API, even when float is used explicitly.
+    // This also affects some MacBooks, not only mobiles. (from catlike)
+    // 60 is a good limition
+    color.rgb = min(color.rgb, 60.0); 
+    color.rgb /= (1 + color.rgb);
+    return color;
 }
 #endif

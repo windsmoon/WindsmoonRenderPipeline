@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace WindsmoonRP.PostProcessing
 {
@@ -19,7 +20,7 @@ namespace WindsmoonRP.PostProcessing
         [Min(0f)]
         public float Intensity;
         public bool FadeFireflies;
-        public BloomType type;
+        public BloomMode mode;
         [Range(0.05f, 0.95f)]
         public float Scatter;
         #endregion
@@ -37,7 +38,7 @@ namespace WindsmoonRP.PostProcessing
         #endregion
 
         #region enums
-        public enum BloomType
+        public enum BloomMode
         {
             Additive,
             Scattering

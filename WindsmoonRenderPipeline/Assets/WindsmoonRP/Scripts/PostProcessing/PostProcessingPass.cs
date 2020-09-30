@@ -2,6 +2,7 @@ namespace WindsmoonRP.PostProcessing
 {
     public enum PostProcessingPass
     {
+        Copy,
         BloomPreFilter,
         BloomPreFilterFadeFireFlies,
         BloomHorizontalBlur,
@@ -9,6 +10,6 @@ namespace WindsmoonRP.PostProcessing
         BloomAdditive,
         BloomScattering,
         BloomScatteringFinal,
-        Copy
+        ToneMappingReinhard
     }
 }

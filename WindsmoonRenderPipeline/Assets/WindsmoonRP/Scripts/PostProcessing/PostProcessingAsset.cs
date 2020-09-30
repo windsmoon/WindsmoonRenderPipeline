@@ -13,6 +13,8 @@ namespace WindsmoonRP.PostProcessing
         // bloom
         [SerializeField] 
         private BloomSettings bloomSettings = new BloomSettings {Scatter = 0.7f};
+        [SerializeField]
+        private ToneMappingSettings toneMappingSettings = new ToneMappingSettings();
         #endregion
 
         #region properties
@@ -29,11 +31,9 @@ namespace WindsmoonRP.PostProcessing
                 return material;
             }
         }
-        
-        public BloomSettings BloomSettings
-        {
-            get => bloomSettings;
-        }
+
+        public BloomSettings BloomSettings => bloomSettings;
+        public ToneMappingSettings ToneMappingSettings => toneMappingSettings;
         #endregion
     }
 }
