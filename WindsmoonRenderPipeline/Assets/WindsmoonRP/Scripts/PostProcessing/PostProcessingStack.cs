@@ -1,6 +1,7 @@
 using System.Security.Authentication.ExtendedProtection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.ParticleSystemJobs;
 using UnityEngine.Rendering;
 
 namespace WindsmoonRP.PostProcessing
@@ -133,17 +134,23 @@ namespace WindsmoonRP.PostProcessing
             // commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, 1f); // only the final pass ues the intensity
 
             PostProcessingPass combinePass;
-
+            PostProcessingPass finalPass;
+            float finalIntensity;
+            
             if (bloomSettings.type == BloomSettings.BloomType.Additive)
             {
                 combinePass = PostProcessingPass.BloomAdditive;
+                finalPass = combinePass;
                 commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity,  1f);
+                finalIntensity = bloomSettings.Intensity;
             }
 
             else
             {
                 combinePass = PostProcessingPass.BloomScattering;
+                finalPass = PostProcessingPass.BloomScatteringFinal;
                 commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, bloomSettings.Scatter);
+                finalIntensity = Mathf.Min(bloomSettings.Intensity, 0.95f);
             }
             
             // todo : the greater can be removed or not
@@ -170,9 +177,9 @@ namespace WindsmoonRP.PostProcessing
                 commandBuffer.ReleaseTemporaryRT(bloomIteration1PropertyID);
             }
             
-            commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, bloomSettings.Intensity); // only the final pass ues the intensity
+            commandBuffer.SetGlobalFloat(ShaderPropertyID.BloomIntensity, finalIntensity);
             commandBuffer.SetGlobalTexture(ShaderPropertyID.PostProcessingSource2, sourceID);
-            Draw(fromID, BuiltinRenderTextureType.CameraTarget, combinePass);
+            Draw(fromID, BuiltinRenderTextureType.CameraTarget, finalPass);
             commandBuffer.ReleaseTemporaryRT(fromID);
             commandBuffer.EndSample("Bloom");
         }

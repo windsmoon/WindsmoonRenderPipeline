@@ -79,6 +79,17 @@ Shader "Windsmoon RP/Windsmoon Lit"
 		
 		Pass 
 		{
+			Name "Bloom Combine Scattering Final"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment BloomScatteringFinalFragment
+			ENDHLSL
+		}
+		
+		Pass 
+		{
 			Name "Copy"
 			
 			HLSLPROGRAM

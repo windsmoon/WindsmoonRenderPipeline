@@ -11,8 +11,8 @@ namespace WindsmoonRP.PostProcessing
         private Material material;
         
         // bloom
-        [SerializeField]
-        private BloomSettings bloomSettings;
+        [SerializeField] 
+        private BloomSettings bloomSettings = new BloomSettings {Scatter = 0.7f};
         #endregion
 
         #region properties

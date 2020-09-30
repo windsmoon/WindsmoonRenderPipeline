@@ -20,7 +20,7 @@ namespace WindsmoonRP.PostProcessing
         public float Intensity;
         public bool FadeFireflies;
         public BloomType type;
-        [Range(0f, 1f)]
+        [Range(0.05f, 0.95f)]
         public float Scatter;
         #endregion
 

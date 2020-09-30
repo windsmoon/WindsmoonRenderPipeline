@@ -8,6 +8,7 @@ namespace WindsmoonRP.PostProcessing
         BloomVerticalBlur,
         BloomAdditive,
         BloomScattering,
+        BloomScatteringFinal,
         Copy
     }
 }

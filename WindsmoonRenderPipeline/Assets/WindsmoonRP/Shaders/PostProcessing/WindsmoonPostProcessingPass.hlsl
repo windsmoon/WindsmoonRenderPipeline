@@ -184,8 +184,29 @@ float4 BloomScatteringFragment(Varyings input) : SV_TARGET
         lowRes = GetSource(input.uv).rgb;
     }
     
-    float3 hightRes = GetSource2(input.uv).rgb;
-    return float4(lerp(hightRes, lowRes, _BloomIntensity), 1.0);
+    float3 highRes = GetSource2(input.uv).rgb;
+    return float4(lerp(highRes, lowRes, _BloomIntensity), 1.0);
+}
+
+float4 BloomScatteringFinalFragment(Varyings input) :SV_TARGET
+{
+    float3 lowRes;
+
+    if (_BloomBicubicUpsampling)
+    {
+        // todo : look the function impl
+        // the lowRes added to the result will give the blicky appearance, especially glow the dark area
+        lowRes = GetSourceBicubic(input.uv).rgb; 
+    }
+
+    else
+    {
+        lowRes = GetSource(input.uv).rgb;
+    }
+    
+    float3 highRes = GetSource2(input.uv).rgb;
+    lowRes += highRes - ApplyBloomThreshold(highRes); // compensate the missing light
+    return float4(lerp(highRes, lowRes, _BloomIntensity), 1.0);
 }
 
 float4 CopyFragment(Varyings input) : SV_TARGET
