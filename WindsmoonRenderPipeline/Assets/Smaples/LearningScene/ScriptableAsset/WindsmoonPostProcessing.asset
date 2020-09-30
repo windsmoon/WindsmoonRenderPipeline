@@ -22,6 +22,6 @@ MonoBehaviour:
     Intensity: 1
     FadeFireflies: 1
     mode: 1
-    Scatter: 0.487
+    Scatter: 0.7
   toneMappingSettings:
     Mode: 0

@@ -10,6 +10,8 @@ namespace WindsmoonRP.PostProcessing
         BloomAdditive,
         BloomScattering,
         BloomScatteringFinal,
+        ToneMappingACES,
+        ToneMappingNeutral,
         ToneMappingReinhard
     }
 }

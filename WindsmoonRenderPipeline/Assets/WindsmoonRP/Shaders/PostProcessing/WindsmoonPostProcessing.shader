@@ -101,6 +101,28 @@ Shader "Windsmoon RP/Windsmoon Lit"
 		
 		Pass 
 		{
+			Name "Tone Mapping ACES"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment ToneMappingACESFragment
+			ENDHLSL
+		}
+		
+		Pass 
+		{
+			Name "Tone Mapping Neutral"
+			
+			HLSLPROGRAM
+			#pragma target 3.5
+			#pragma vertex PostProcessingVertex
+			#pragma fragment ToneMappingNeutralFragment
+			ENDHLSL
+		}
+		
+		Pass 
+		{
 			Name "Tone Mapping Reinhard"
 			
 			HLSLPROGRAM

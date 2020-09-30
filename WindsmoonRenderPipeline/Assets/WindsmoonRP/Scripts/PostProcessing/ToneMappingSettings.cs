@@ -14,6 +14,8 @@ namespace WindsmoonRP.PostProcessing
         public enum ToneMappingMode
         {
             None = -1,
+            ACES,
+            Neutral,
             Reinhard
         }
         #endregion
