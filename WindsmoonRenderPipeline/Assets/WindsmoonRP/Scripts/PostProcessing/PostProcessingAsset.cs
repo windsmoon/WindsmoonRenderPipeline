@@ -18,6 +18,8 @@ namespace WindsmoonRP.PostProcessing
         [SerializeField]
         private WhiteBalanceSettings whiteBalanceSettings = default;
         [SerializeField]
+        private SplitToningSettings splitToningSettings = new SplitToningSettings() {ShadowColor = Color.gray, HighLightColor = Color.gray};
+        [SerializeField]
         private ToneMappingSettings toneMappingSettings = new ToneMappingSettings();
         #endregion
 
@@ -39,6 +41,7 @@ namespace WindsmoonRP.PostProcessing
         public BloomSettings BloomSettings => bloomSettings;
         public ColorGradingSettings ColorGradingSettings => colorGradingSettings;
         public WhiteBalanceSettings WhiteBalanceSettings => whiteBalanceSettings;
+        public SplitToningSettings SplitToningSettings => splitToningSettings;
         public ToneMappingSettings ToneMappingSettings => toneMappingSettings;
         #endregion
     }

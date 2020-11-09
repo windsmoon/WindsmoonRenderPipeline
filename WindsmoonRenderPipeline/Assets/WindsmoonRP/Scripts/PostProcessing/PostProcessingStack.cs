@@ -202,6 +202,7 @@ namespace WindsmoonRP.PostProcessing
         {
             ConfigureColorAdjustments();
             ConfigureWhiteBalance();
+            ConfigureSplitToning();
             DoToneMapping(sourceID);
         }
         
@@ -224,6 +225,15 @@ namespace WindsmoonRP.PostProcessing
             // The tint can be used to compensate for undesired color balance, pushing the image toward either green or magenta (from catlike)
             WhiteBalanceSettings whiteBalanceSettings = postProcessingAsset.WhiteBalanceSettings;
             commandBuffer.SetGlobalVector(ShaderPropertyID.WhiteBalancePropertyID, ColorUtils.ColorBalanceToLMSCoeffs(whiteBalanceSettings.Temperature, whiteBalanceSettings.Tint));
+        }
+
+        private void ConfigureSplitToning()
+        {
+            SplitToningSettings splitToningSettings = postProcessingAsset.SplitToningSettings;
+            Color shadowColor = splitToningSettings.ShadowColor;
+            shadowColor.a = splitToningSettings.Balance * 0.01f;
+            commandBuffer.SetGlobalColor(ShaderPropertyID.SplitToningShadowColorPropertyID, shadowColor);
+            commandBuffer.SetGlobalColor(ShaderPropertyID.SplitToningHighLightColorPropertyID, splitToningSettings.HighLightColor);
         }
 
         private void DoToneMapping(int sourceID)

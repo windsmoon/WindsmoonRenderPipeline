@@ -32,5 +32,9 @@ MonoBehaviour:
   whiteBalanceSettings:
     Temperature: 100
     Tint: 66
+  splitToningSettings:
+    ShadowColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    HighLightColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    Balance: 0
   toneMappingSettings:
     Mode: 0

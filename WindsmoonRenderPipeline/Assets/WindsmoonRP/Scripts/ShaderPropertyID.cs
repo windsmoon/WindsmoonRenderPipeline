@@ -30,8 +30,12 @@ namespace WindsmoonRP
         public static int ColorFilterPropertyID = Shader.PropertyToID("_ColorFilter");
         // color filter
         public static int WhiteBalancePropertyID = Shader.PropertyToID("_WhiteBalanceData");
+        // split toning
+        public static int SplitToningShadowColorPropertyID = Shader.PropertyToID("_SplitToningShadowColor");
+        public static int SplitToningHighLightColorPropertyID = Shader.PropertyToID("_SplitToningHighLightColor");
         // end color grading
         // end post processing
+
         #endregion
     }
 }
