@@ -24,4 +24,4 @@ MonoBehaviour:
     mode: 1
     Scatter: 0.578
   toneMappingSettings:
-    Mode: 0
+    Mode: 1

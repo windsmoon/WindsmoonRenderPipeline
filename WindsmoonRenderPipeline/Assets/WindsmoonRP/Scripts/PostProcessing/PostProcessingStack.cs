@@ -200,7 +200,7 @@ namespace WindsmoonRP.PostProcessing
         private void DoToneMapping(int sourceID)
         {
             ToneMappingSettings toneMappingSettings = postProcessingAsset.ToneMappingSettings;
-            PostProcessingPass pass = toneMappingSettings.Mode < 0 ? PostProcessingPass.Copy : PostProcessingPass.ToneMappingACES + (int)toneMappingSettings.Mode;
+            PostProcessingPass pass = PostProcessingPass.ToneMappingNone + (int)toneMappingSettings.Mode;
             Draw(sourceID, BuiltinRenderTextureType.CameraTarget, pass);
         }
         #endregion
