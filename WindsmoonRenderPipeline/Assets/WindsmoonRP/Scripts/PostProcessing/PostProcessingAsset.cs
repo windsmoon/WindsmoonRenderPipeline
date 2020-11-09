@@ -14,6 +14,8 @@ namespace WindsmoonRP.PostProcessing
         [SerializeField] 
         private BloomSettings bloomSettings = new BloomSettings {Scatter = 0.7f};
         [SerializeField]
+        private ColorGradingSettings colorGradingSettings = new ColorGradingSettings() {ColorFilter = Color.white};
+        [SerializeField]
         private ToneMappingSettings toneMappingSettings = new ToneMappingSettings();
         #endregion
 
@@ -33,6 +35,7 @@ namespace WindsmoonRP.PostProcessing
         }
 
         public BloomSettings BloomSettings => bloomSettings;
+        public ColorGradingSettings ColorGradingSettings => colorGradingSettings;
         public ToneMappingSettings ToneMappingSettings => toneMappingSettings;
         #endregion
     }

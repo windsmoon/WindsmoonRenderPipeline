@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.ParticleSystemJobs;
 using UnityEngine.Rendering;
+using static WindsmoonRP.PostProcessing.PostProcessingAsset;
 
 namespace WindsmoonRP.PostProcessing
 {
@@ -69,13 +70,13 @@ namespace WindsmoonRP.PostProcessing
             // Draw(sourceID, BuiltinRenderTextureType.CameraTarget, PostProcessingPassEnum.Copy);
             if (DoBloom(sourceID))
             {
-                DoToneMapping(ShaderPropertyID.BloomResult);
+                DoColorGradingAndToneMapping(ShaderPropertyID.BloomResult);
                 commandBuffer.ReleaseTemporaryRT(ShaderPropertyID.BloomResult);
             }
 
             else
             {
-                DoToneMapping(sourceID);
+                DoColorGradingAndToneMapping(sourceID);
             }
             
             renderContext.ExecuteCommandBuffer(commandBuffer);
@@ -195,6 +196,25 @@ namespace WindsmoonRP.PostProcessing
             commandBuffer.ReleaseTemporaryRT(fromID);
             commandBuffer.EndSample("Bloom");
             return true;
+        }
+
+        private void DoColorGradingAndToneMapping(int sourceID)
+        {
+            DoColorGrading();
+            DoToneMapping(sourceID);
+        }
+        
+        private void DoColorGrading()
+        {
+            ColorGradingSettings colorGradingSettings = postProcessingAsset.ColorGradingSettings;
+            commandBuffer.SetGlobalVector(ShaderPropertyID.ColorGradingDataPropertyID, new Vector4(
+                Mathf.Pow(2f, colorGradingSettings.PostExposure),
+                colorGradingSettings.Contrast * 0.01f + 1f,
+                colorGradingSettings.HueShift * (1f / 360f),
+                colorGradingSettings.Saturation * 0.01f + 1f
+            ));
+            
+            commandBuffer.SetGlobalColor(ShaderPropertyID.ColorFilterPropertyID, colorGradingSettings.ColorFilter.linear);
         }
 
         private void DoToneMapping(int sourceID)
