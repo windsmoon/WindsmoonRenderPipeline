@@ -24,10 +24,10 @@ MonoBehaviour:
     mode: 1
     Scatter: 0.578
   colorGradingSettings:
-    PostExposure: 0
-    Contrast: 68
-    ColorFilter: {r: 1, g: 1, b: 1, a: 1}
+    PostExposure: 2.02
+    Contrast: 2
+    ColorFilter: {r: 0.355311, g: 0.41509432, b: 0.107689574, a: 1}
     HueShift: 0
-    Saturation: 0
+    Saturation: -30
   toneMappingSettings:
     Mode: 1
