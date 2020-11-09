@@ -26,8 +26,11 @@ MonoBehaviour:
   colorGradingSettings:
     PostExposure: 2.02
     Contrast: 2
-    ColorFilter: {r: 0.2938196, g: 0.31132078, b: 0.116011046, a: 1}
-    HueShift: 0
+    ColorFilter: {r: 0.31494975, g: 0.3207547, b: 0.249644, a: 1}
+    HueShift: 14
     Saturation: -30
+  whiteBalanceSettings:
+    Temperature: 100
+    Tint: 66
   toneMappingSettings:
     Mode: 0

@@ -220,6 +220,8 @@ namespace WindsmoonRP.PostProcessing
 
         private void ConfigureWhiteBalance()
         {
+            // LMS : It describes colors as the responses of the three photoreceptor cone types in the human eye (from catlike)
+            // The tint can be used to compensate for undesired color balance, pushing the image toward either green or magenta (from catlike)
             WhiteBalanceSettings whiteBalanceSettings = postProcessingAsset.WhiteBalanceSettings;
             commandBuffer.SetGlobalVector(ShaderPropertyID.WhiteBalancePropertyID, ColorUtils.ColorBalanceToLMSCoeffs(whiteBalanceSettings.Temperature, whiteBalanceSettings.Tint));
         }

@@ -14,6 +14,14 @@ float3 ColorGradingPostExposure(float3 color)
     return color * _ColorAdjustmentData.x;
 }
 
+float3 ColorGradingWhiteBalance(float3 color)
+{
+    // LMS : It describes colors as the responses of the three photoreceptor cone types in the human eye. (from catlike)
+    color = LinearToLMS(color);
+    color *= _WhiteBalanceData.rgb;
+    return LMSToLinear(color);
+}
+
 float3 ColorGradingContrast(float3 color)
 {
     // convert to logc space can get better result
@@ -45,6 +53,7 @@ float3 ColorGrading (float3 color)
 {
     color = min(color, 60.0);
     color = ColorGradingPostExposure(color);
+    color = ColorGradingWhiteBalance(color);
     color = ColorGradingContrast(color);     // contrast can make negative color
     color = ColorGradingColorFilter(color); // filter can work with negative color so we can apply it before eliminating negative valuses
     color = max(color, 0.0);
