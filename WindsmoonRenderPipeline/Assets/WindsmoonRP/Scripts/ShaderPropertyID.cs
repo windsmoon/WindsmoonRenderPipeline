@@ -25,8 +25,9 @@ namespace WindsmoonRP
         public static int BloomResult = Shader.PropertyToID("_BloomResult");
         
         // color grading
-        public static int ColorGradingDataPropertyID = Shader.PropertyToID("_ColorGradingData");
+        public static int ColorAdjustmentsDataPropertyID = Shader.PropertyToID("_ColorAdjustmentData");
         public static int ColorFilterPropertyID = Shader.PropertyToID("_ColorFilter");
+        public static int WhiteBalancePropertyID = Shader.PropertyToID("_WhiteBalanceData");
         #endregion
     }
 }

@@ -200,14 +200,15 @@ namespace WindsmoonRP.PostProcessing
 
         private void DoColorGradingAndToneMapping(int sourceID)
         {
-            DoColorGrading();
+            ConfigureColorAdjustments();
+            ConfigureWhiteBalance();
             DoToneMapping(sourceID);
         }
         
-        private void DoColorGrading()
+        private void ConfigureColorAdjustments()
         {
             ColorGradingSettings colorGradingSettings = postProcessingAsset.ColorGradingSettings;
-            commandBuffer.SetGlobalVector(ShaderPropertyID.ColorGradingDataPropertyID, new Vector4(
+            commandBuffer.SetGlobalVector(ShaderPropertyID.ColorAdjustmentsDataPropertyID, new Vector4(
                 Mathf.Pow(2f, colorGradingSettings.PostExposure),
                 colorGradingSettings.Contrast * 0.01f + 1f,
                 colorGradingSettings.HueShift * (1f / 360f),
@@ -215,6 +216,12 @@ namespace WindsmoonRP.PostProcessing
             ));
             
             commandBuffer.SetGlobalColor(ShaderPropertyID.ColorFilterPropertyID, colorGradingSettings.ColorFilter.linear);
+        }
+
+        private void ConfigureWhiteBalance()
+        {
+            WhiteBalanceSettings whiteBalanceSettings = postProcessingAsset.WhiteBalanceSettings;
+            commandBuffer.SetGlobalVector(ShaderPropertyID.WhiteBalancePropertyID, ColorUtils.ColorBalanceToLMSCoeffs(whiteBalanceSettings.Temperature, whiteBalanceSettings.Tint));
         }
 
         private void DoToneMapping(int sourceID)

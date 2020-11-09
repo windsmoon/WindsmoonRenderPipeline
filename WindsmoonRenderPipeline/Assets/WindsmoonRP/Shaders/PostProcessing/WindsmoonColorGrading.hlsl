@@ -5,19 +5,20 @@
 // y : Contrast * 0.01f + 1f, contrast si -100 ~ 100, so the y is 0 ~ 2
 // z : HueShift * (1f / 360f), HueShift is -180 ~ 180
 // w : saturation is the same as contrast
-float4 _ColorGradingData;
+float4 _ColorAdjustmentData;
 float4 _ColorFilter;
+float4 _WhiteBalanceData;
 
 float3 ColorGradingPostExposure(float3 color)
 {
-    return color * _ColorGradingData.x;
+    return color * _ColorAdjustmentData.x;
 }
 
 float3 ColorGradingContrast(float3 color)
 {
     // convert to logc space can get better result
     color = LinearToLogC(color);
-    color = (color - ACEScc_MIDGRAY) * _ColorGradingData.y + ACEScc_MIDGRAY;
+    color = (color - ACEScc_MIDGRAY) * _ColorAdjustmentData.y + ACEScc_MIDGRAY;
     return LogCToLinear(color);
 }
 
@@ -29,7 +30,7 @@ float3 ColorGradingColorFilter(float3 color)
 float3 ColorGradingHueShift(float3 color)
 {
     color = RgbToHsv(color);
-    float hue = color.x + _ColorGradingData.z;
+    float hue = color.x + _ColorAdjustmentData.z;
     color.x = RotateHue(hue, 0.0, 1.0);
     return HsvToRgb(color);
 }
@@ -37,7 +38,7 @@ float3 ColorGradingHueShift(float3 color)
 float3 ColorGradingSaturation (float3 color)
 {
     float luminance = Luminance(color);
-    return (color - luminance) * _ColorGradingData.w + luminance;
+    return (color - luminance) * _ColorAdjustmentData.w + luminance;
 }
 
 float3 ColorGrading (float3 color)
