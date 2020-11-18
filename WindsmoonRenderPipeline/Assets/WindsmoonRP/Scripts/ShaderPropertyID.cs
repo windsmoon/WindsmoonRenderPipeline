@@ -33,6 +33,10 @@ namespace WindsmoonRP
         // split toning
         public static int SplitToningShadowColorPropertyID = Shader.PropertyToID("_SplitToningShadowColor");
         public static int SplitToningHighLightColorPropertyID = Shader.PropertyToID("_SplitToningHighLightColor");
+        // channel mixer
+        public static int ChannelMixerRedPropertyID = Shader.PropertyToID("_ChannelMixerRed");
+        public static int ChannelMixerGreenPropertyID = Shader.PropertyToID("_ChannelMixerGreen");
+        public static int ChannelMixerBluePropertyID = Shader.PropertyToID("_ChannelMixerBlue");
         // end color grading
         // end post processing
 

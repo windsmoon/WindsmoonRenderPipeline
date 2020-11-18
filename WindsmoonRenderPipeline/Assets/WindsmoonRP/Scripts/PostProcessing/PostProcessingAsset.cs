@@ -20,6 +20,8 @@ namespace WindsmoonRP.PostProcessing
         [SerializeField]
         private SplitToningSettings splitToningSettings = new SplitToningSettings() {ShadowColor = Color.gray, HighLightColor = Color.gray};
         [SerializeField]
+        private ChannelMixerSettings channelMixerSettings = new ChannelMixerSettings() {Red = Vector3.right, Green = Vector3.up, Blue = Vector3.forward};
+        [SerializeField]
         private ToneMappingSettings toneMappingSettings = new ToneMappingSettings();
         #endregion
 
@@ -42,6 +44,7 @@ namespace WindsmoonRP.PostProcessing
         public ColorGradingSettings ColorGradingSettings => colorGradingSettings;
         public WhiteBalanceSettings WhiteBalanceSettings => whiteBalanceSettings;
         public SplitToningSettings SplitToningSettings => splitToningSettings;
+        public ChannelMixerSettings ChannelMixerSettings => channelMixerSettings;
         public ToneMappingSettings ToneMappingSettings => toneMappingSettings;
         #endregion
     }

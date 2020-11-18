@@ -203,6 +203,7 @@ namespace WindsmoonRP.PostProcessing
             ConfigureColorAdjustments();
             ConfigureWhiteBalance();
             ConfigureSplitToning();
+            ConfigureChannelMixer();
             DoToneMapping(sourceID);
         }
         
@@ -234,6 +235,14 @@ namespace WindsmoonRP.PostProcessing
             shadowColor.a = splitToningSettings.Balance * 0.01f;
             commandBuffer.SetGlobalColor(ShaderPropertyID.SplitToningShadowColorPropertyID, shadowColor);
             commandBuffer.SetGlobalColor(ShaderPropertyID.SplitToningHighLightColorPropertyID, splitToningSettings.HighLightColor);
+        }
+
+        private void ConfigureChannelMixer()
+        {
+            ChannelMixerSettings channelMixerSettings = postProcessingAsset.ChannelMixerSettings;
+            commandBuffer.SetGlobalVector(ShaderPropertyID.ChannelMixerRedPropertyID, channelMixerSettings.Red);
+            commandBuffer.SetGlobalVector(ShaderPropertyID.ChannelMixerGreenPropertyID, channelMixerSettings.Green);
+            commandBuffer.SetGlobalVector(ShaderPropertyID.ChannelMixerBluePropertyID, channelMixerSettings.Blue);
         }
 
         private void DoToneMapping(int sourceID)
