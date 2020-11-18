@@ -10,6 +10,9 @@ float4 _ColorFilter;
 float4 _WhiteBalanceData;
 float4 _SplitToningShadowColor; // w is balance * 0.01f (-1 ~ 1)
 float4 _SplitToningHighLightColor;
+float4 _ChannelMixerRed;
+float4 _ChannelMixerGreen;
+float4 _ChannelMixerBlue;
 
 float3 ColorGradingPostExposure(float3 color)
 {
@@ -62,6 +65,11 @@ float3 ColorGradingSaturation (float3 color)
     return (color - luminance) * _ColorAdjustmentData.w + luminance;
 }
 
+float3 ColorGradingChannelMixer(float3 color)
+{
+    return mul(float3x3(_ChannelMixerRed.rgb, _ChannelMixerGreen.rgb, _ChannelMixerBlue.rgb), color);
+}
+
 float3 ColorGrading (float3 color)
 {
     color = min(color, 60.0);
@@ -72,6 +80,8 @@ float3 ColorGrading (float3 color)
     color = max(color, 0.0);
     // ?? wtf it is
     // color = ColorGradingSplitToning(color); // after color filter and eliminate the negative values
+    color = ColorGradingChannelMixer(color); // this can get negative color
+    color = max(color, 0.0);
     color = ColorGradingHueShift(color); // hue shift muse wokr with positive values
     color = ColorGradingSaturation(color); // saturation is the last work, and it can make negative color
     color = max(color, 0.0);
