@@ -204,6 +204,7 @@ namespace WindsmoonRP.PostProcessing
             ConfigureWhiteBalance();
             ConfigureSplitToning();
             ConfigureChannelMixer();
+            ConfigureShadowsMidtonesHighlights();
             DoToneMapping(sourceID);
         }
         
@@ -243,6 +244,16 @@ namespace WindsmoonRP.PostProcessing
             commandBuffer.SetGlobalVector(ShaderPropertyID.ChannelMixerRedPropertyID, channelMixerSettings.Red);
             commandBuffer.SetGlobalVector(ShaderPropertyID.ChannelMixerGreenPropertyID, channelMixerSettings.Green);
             commandBuffer.SetGlobalVector(ShaderPropertyID.ChannelMixerBluePropertyID, channelMixerSettings.Blue);
+        }
+
+        private void ConfigureShadowsMidtonesHighlights()
+        {
+            ShadowsMidtonesHighLightsSettings shadowsMidtonesHighLightsSettings = postProcessingAsset.ShadowsMidtonesHighLightsSettings;
+            commandBuffer.SetGlobalColor(ShaderPropertyID.ShadowsMidtonesHighlights_ShadowsPropertyID, shadowsMidtonesHighLightsSettings.Shadows);
+            commandBuffer.SetGlobalColor(ShaderPropertyID.ShadowsMidtonesHighlights_MidtonesPropertyID, shadowsMidtonesHighLightsSettings.Midtones);
+            commandBuffer.SetGlobalColor(ShaderPropertyID.ShadowsMidtonesHighlights_HighlightsPropertyID, shadowsMidtonesHighLightsSettings.Highlights);
+            commandBuffer.SetGlobalVector(ShaderPropertyID.ShadowsMidtonesHighlights_RangePropertyID, 
+                new Vector4(shadowsMidtonesHighLightsSettings.ShadowsStart, shadowsMidtonesHighLightsSettings.ShadowsEnd, shadowsMidtonesHighLightsSettings.HighLightsStart, shadowsMidtonesHighLightsSettings.HighLightsEnd));
         }
 
         private void DoToneMapping(int sourceID)

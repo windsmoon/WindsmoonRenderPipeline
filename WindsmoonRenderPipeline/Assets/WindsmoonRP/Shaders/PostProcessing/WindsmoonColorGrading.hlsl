@@ -13,6 +13,10 @@ float4 _SplitToningHighLightColor;
 float4 _ChannelMixerRed;
 float4 _ChannelMixerGreen;
 float4 _ChannelMixerBlue;
+float4 _ShadowsMidtonesHighlights_Shadows;
+float4 _ShadowsMidtonesHighlights_Midtones;
+float4 _ShadowsMidtonesHighlights_Hightlights;
+float4 _ShadowsMidtonesHighlights_Range;
 
 float3 ColorGradingPostExposure(float3 color)
 {
@@ -70,6 +74,15 @@ float3 ColorGradingChannelMixer(float3 color)
     return mul(float3x3(_ChannelMixerRed.rgb, _ChannelMixerGreen.rgb, _ChannelMixerBlue.rgb), color);
 }
 
+float3 ColorGradingShadowsMidtonesHighlights(float3 color)
+{
+    float luminance = Luminance(color);
+    float shadowsWeight = 1.0 - smoothstep(_ShadowsMidtonesHighlights_Range.x, _ShadowsMidtonesHighlights_Range.y, luminance);
+    float highlightsWeight = 1.0 - smoothstep(_ShadowsMidtonesHighlights_Range.z, _ShadowsMidtonesHighlights_Range.w, luminance);
+    float midtonesWeight = 1.0 - shadowsWeight - highlightsWeight;
+    return color * (_ShadowsMidtonesHighlights_Shadows.rgb * shadowsWeight + _ShadowsMidtonesHighlights_Midtones.rgb * midtonesWeight + _ShadowsMidtonesHighlights_Hightlights.rgb * highlightsWeight); 
+}
+
 float3 ColorGrading (float3 color)
 {
     color = min(color, 60.0);
@@ -82,6 +95,7 @@ float3 ColorGrading (float3 color)
     // color = ColorGradingSplitToning(color); // after color filter and eliminate the negative values
     color = ColorGradingChannelMixer(color); // this can get negative color
     color = max(color, 0.0);
+    color = ColorGradingShadowsMidtonesHighlights(color);
     color = ColorGradingHueShift(color); // hue shift muse wokr with positive values
     color = ColorGradingSaturation(color); // saturation is the last work, and it can make negative color
     color = max(color, 0.0);

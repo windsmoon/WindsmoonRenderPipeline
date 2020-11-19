@@ -37,6 +37,11 @@ namespace WindsmoonRP
         public static int ChannelMixerRedPropertyID = Shader.PropertyToID("_ChannelMixerRed");
         public static int ChannelMixerGreenPropertyID = Shader.PropertyToID("_ChannelMixerGreen");
         public static int ChannelMixerBluePropertyID = Shader.PropertyToID("_ChannelMixerBlue");
+        // shadows midtones highlights
+        public static int ShadowsMidtonesHighlights_ShadowsPropertyID = Shader.PropertyToID("_ShadowsMidtonesHighlights_Shadows");
+        public static int ShadowsMidtonesHighlights_MidtonesPropertyID = Shader.PropertyToID("_ShadowsMidtonesHighlights_Midtones");
+        public static int ShadowsMidtonesHighlights_HighlightsPropertyID = Shader.PropertyToID("_ShadowsMidtonesHighlights_Hightlights");
+        public static int ShadowsMidtonesHighlights_RangePropertyID = Shader.PropertyToID("_ShadowsMidtonesHighlights_Range");
         // end color grading
         // end post processing
 

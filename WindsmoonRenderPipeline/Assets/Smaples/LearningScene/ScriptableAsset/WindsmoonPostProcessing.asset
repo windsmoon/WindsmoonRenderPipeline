@@ -40,5 +40,13 @@ MonoBehaviour:
     Red: {x: 1, y: 0, z: 0.33333334}
     Green: {x: 0, y: 0.5, z: 0.33333334}
     Blue: {x: 0, y: 0.5, z: 0.33333334}
+  shadowsMidtonesHighLightsSettings:
+    Shadows: {r: 1, g: 1, b: 1, a: 1}
+    Midtones: {r: 1, g: 1, b: 1, a: 1}
+    Highlights: {r: 1, g: 1, b: 1, a: 1}
+    ShadowsStart: 0
+    ShadowsEnd: 0.3
+    HighLightsStart: 0.55
+    HighLightsEnd: 1
   toneMappingSettings:
     Mode: 1
