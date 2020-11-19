@@ -17,8 +17,8 @@ float4 ToneMappingACESFragment(Varyings input) : SV_Target
     // Due to a bug in the shader compiler this happens in some cases with the Metal API, even when float is used explicitly.
     // This also affects some MacBooks, not only mobiles. (from catlike)
     // 60 is a good limition
-    color.rgb = ColorGrading(color.rgb);
-    color.rgb = AcesTonemap(unity_to_ACES(color.rgb)); // todo : the function impl
+    color.rgb = ColorGrading(color.rgb, true);
+    color.rgb = AcesTonemap(color.rgb); // todo : the function impl
     return color;
 }
 
