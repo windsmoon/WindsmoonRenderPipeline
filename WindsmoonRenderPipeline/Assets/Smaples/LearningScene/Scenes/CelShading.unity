@@ -156,7 +156,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -206,13 +206,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 292424658}
-  m_LocalRotation: {x: 0.3812141, y: 0.23780982, z: -0.10214603, w: 0.88751817}
+  m_LocalRotation: {x: 0.23019747, y: 0.37333244, z: -0.3746262, w: 0.8168766}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 46.49, y: 30.000002, z: 0}
+  m_LocalEulerAnglesHint: {x: 40.981003, y: 35.413002, z: -35.666}
 --- !u!1001 &609137106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -382,6 +382,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: CelShading_Sphere
       objectReference: {fileID: 0}
+    - target: {fileID: 519358202452113766, guid: 91bcfc9610837a54da09a1b5a4ff21a8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483520447465323960, guid: 91bcfc9610837a54da09a1b5a4ff21a8,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5acc078ed9fd02442ac8c6e3ccd61723, type: 2}
     - target: {fileID: 2655272457245831439, guid: 91bcfc9610837a54da09a1b5a4ff21a8,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -11,6 +11,9 @@ TEXTURE2D(_DetailMap);
 TEXTURE2D(_DetailNormalMap);
 SAMPLER(sampler_DetailMap);
 
+TEXTURE2D(_RampMap);
+SAMPLER(sampler_RampMap);
+
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
     UNITY_DEFINE_INSTANCED_PROP(float4, _DetailMap_ST)
@@ -171,6 +174,11 @@ float3 GetEmission(InputConfig config)
     float4 emissionMap = SAMPLE_TEXTURE2D(_EmissionMap, sampler_BaseMap, config.uv);
     float4 emissionColor = INPUT_PROP(_EmissionColor);
     return emissionMap.rgb * emissionColor.rgb;
+}
+
+float GetRamp(float rampUV)
+{
+    return SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, float2(rampUV, 0.5)).r;
 }
 
 float GetOutlineWidth()

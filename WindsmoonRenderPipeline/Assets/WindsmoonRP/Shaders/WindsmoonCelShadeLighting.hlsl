@@ -3,16 +3,15 @@
 
 float3 GetLighting(Surface surface, Light light, BRDF brdfLight)
 {
-    // ?? why tutorial do light attenuation in saturate
-    //return saturate(dot(surface.normal, light.direction) * light.attenuation;) * light.color * GetDirectBRDFLight(surface, brdfLight, light);
-
     // return saturate(dot(surface.normal, light.direction)) * light.color * GetDirectBRDF(surface, brdfLight, light) * light.attenuation;
 	float nDotL = dot(surface.normal, light.direction);
 	float halfLambert = nDotL * 0.5 + 0.5;
-	half ramp = smoothstep(0, _ShadowSmooth, halfLambert - _ShadowRange);
-	// float3 diffuse = halfLambert > _ShadowRange ? GetCelShadeColor() : GetShadowColor();
+	half ramp = GetRamp(halfLambert - GetShadowRange()); // todo : edge light ?
+	// half ramp = smoothstep(0, _ShadowSmooth, halfLambert -  GetShadowRange());
+	// float3 diffuse = halfLambert >  GetShadowRange() ? GetCelShadeColor() : GetShadowColor();
 	float3 diffuse = lerp(GetShadowColor(), GetCelShadeColor(), ramp);
-	float3 color = diffuse * light.color *  GetDirectBRDF(surface, brdfLight, light) * light.attenuation;
+	float3 color = diffuse * light.color * GetDirectBRDF(surface, brdfLight, light) * light.attenuation;
+	// return SAMPLE_TEXTURE2D(_RampMap, sampler_BaseMap, float2(halfLambert - GetShadowRange(), 0.5));
 	return color;
 }
 

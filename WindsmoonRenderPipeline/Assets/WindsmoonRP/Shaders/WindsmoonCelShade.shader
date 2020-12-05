@@ -31,13 +31,14 @@
 		[Toggle(RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
     	
     	// cel shading
-    	[Space(10)]
+    	[Space(20)]
+    	_RampMap("Ramp Texture", 2D) = "gray" {}
     	_OutlineWidth("Outline Width", Range(0.01, 2)) = 0.24
         _OutlineColor("Outline Color", Color) = (0.5, 0.5, 0.5, 1)
     	_CelShadeColor("Cel Shade Color", Color) = (1, 1, 1)
     	_ShadowColor("Shadow Color", Color) = (0.7, 0.7, 0.8)
 		_ShadowRange("Shadow Range", Range(0, 1)) = 0.5
-        _ShadowSmooth("Shadow Smooth", Range(0, 1)) = 0.2
+//        _ShadowSmooth("Shadow Smooth", Range(0, 1)) = 0.2
     	
 		[HideInInspector] _MainTex("Texture for Lightmap", 2D) = "white" {}
 		[HideInInspector] _Color("Color for Lightmap", Color) = (0.5, 0.5, 0.5, 1.0)
@@ -93,7 +94,8 @@
             }
         	
             Cull Front
-            
+            ZWrite Off
+        	
             HLSLPROGRAM
             #pragma target 3.5 // for loops which are use a variable length
            
