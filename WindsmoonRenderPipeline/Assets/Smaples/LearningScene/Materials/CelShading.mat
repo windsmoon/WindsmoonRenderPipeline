@@ -92,10 +92,12 @@ Material:
     - _NormalScale: 1
     - _Occlusion: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 2
+    - _OutlineWidth: 1.165
     - _Parallax: 0.02
     - _PremultiplyAlpha: 0
     - _ReceiveShadows: 1
+    - _ShadowRange: 0.5
+    - _ShadowSmooth: 0.096
     - _Shadow_Mode: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -105,7 +107,9 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CelShadeColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutLineColor: {r: 0.6603774, g: 0.15263441, b: 0.15263441, a: 1}
-    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowColor: {r: 0.7, g: 0.7, b: 0.8, a: 1}

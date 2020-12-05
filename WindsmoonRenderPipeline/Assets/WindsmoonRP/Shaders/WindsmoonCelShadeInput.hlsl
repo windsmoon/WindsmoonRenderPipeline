@@ -27,6 +27,10 @@ UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float, _DetailNormalScale)
     UNITY_DEFINE_INSTANCED_PROP(float, _OutlineWidth)
     UNITY_DEFINE_INSTANCED_PROP(float4, _OutlineColor)
+    UNITY_DEFINE_INSTANCED_PROP(float4, _CelShadeColor)
+    UNITY_DEFINE_INSTANCED_PROP(float4, _ShadowColor)
+    UNITY_DEFINE_INSTANCED_PROP(float, _ShadowRange)
+    UNITY_DEFINE_INSTANCED_PROP(float, _ShadowSmooth)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 #define INPUT_PROP(name) UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, name)
@@ -80,6 +84,11 @@ float4 GetMask(InputConfig config)
     #else
         return 1.0;
     #endif
+}
+
+float4 GetBaseMapColor(InputConfig config)
+{
+    
 }
 
 float4 GetBaseColor(InputConfig config)
@@ -172,6 +181,26 @@ float GetOutlineWidth()
 float4 GetOutlineColor()
 {
     return INPUT_PROP(_OutlineColor);
+}
+
+float3 GetCelShadeColor()
+{
+    return INPUT_PROP(_CelShadeColor);
+}
+
+float3 GetShadowColor()
+{
+    return INPUT_PROP(_ShadowColor);
+}
+
+float GetShadowRange()
+{
+    return INPUT_PROP(_ShadowRange);
+}
+
+float GetShadowSmooth()
+{
+    return INPUT_PROP(_ShadowSmooth);
 }
 
 #endif

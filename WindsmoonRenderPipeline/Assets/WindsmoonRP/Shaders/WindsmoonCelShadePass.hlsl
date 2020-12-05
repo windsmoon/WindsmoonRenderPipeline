@@ -7,7 +7,7 @@
 #include "WindsmoonLight.hlsl"
 #include "WindsmoonBRDF.hlsl"
 #include "WindsmoonGI.hlsl"
-#include "WindsmoonLighting.hlsl"
+#include "WindsmoonCelShadeLighting.hlsl"
 
 //CBUFFER_START(UnityPerMaterial)
   //  float4 _BaseColor;
