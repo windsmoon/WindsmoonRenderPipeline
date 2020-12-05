@@ -1,5 +1,5 @@
-﻿#ifndef WINDSMOON_LIT_PASS_INCLUDED
-#define WINDSMOON_LIT_PASS_INCLUDED
+#ifndef WINDSMOON_CEL_SHADING_PASS_INCLUDED
+#define WINDSMOON_CEL_SHADING_PASS_INCLUDED
 
 //#include "WindsmoonCommon.hlsl"
 #include "WindsmoonSurface.hlsl"
@@ -34,7 +34,10 @@ struct Attribute
 	#endif
 
 	float2 baseUV : TEXCOORD0;
+
+	float2 outlineNorma1 : TEXCOORD1; // todo : outline direction stored in this
     GI_ATTRIBUTE_DATA
+	
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -128,4 +131,86 @@ float4 LitFragment(Varyings input) : SV_Target
 	GI gi = GetGI(GI_FRAGMENT_DATA(input), surface, brdf);
 	return float4(GetLighting(surface, brdf, gi) + GetEmission(config), surface.alpha);
 }
+
+struct Attribute_Outline
+{
+	float3 positionOS : POSITION;
+	float3 normalOS : NORMAL;
+
+	// #if defined(NORMAL_MAP)
+	float4 tangentOS : TANGENT; // it should be omitted automatically
+	// #endif
+
+	float2 baseUV : TEXCOORD0;
+
+	float2 outlineNorma1 : TEXCOORD1; // todo : outline direction stored in this
+	// GI_ATTRIBUTE_DATA
+	
+    UNITY_VERTEX_INPUT_INSTANCE_ID
+};
+
+struct Varyings_Outline
+{
+	float4 positionCS : SV_Position;
+	float3 positionWS : VAR_POSITION;
+	float3 normalWS : VAR_NORMAL;
+
+	#if defined(NORMAL_MAP)
+	float4 tangentWS : VAR_TANGENT;
+	#endif
+
+	float2 baseUV : VAR_BASE_UV;
+
+	#if defined(DETAIL_MAP)
+	float2 detailUV : VAR_DETAIL_UV;
+	#endif
+	
+	// GI_VARYINGS_DATA
+
+	UNITY_VERTEX_INPUT_INSTANCE_ID
+};
+
+
+Varyings_Outline OutlineVertex(Attribute_Outline input)
+{
+	Varyings_Outline output;
+	UNITY_SETUP_INSTANCE_ID(input);
+	UNITY_TRANSFER_INSTANCE_ID(input, output);
+	// TRANSFER_GI_DATA(input, output);
+	//float3 worldPos = TransformObjectToWorld(input.positionOS);
+	// output.positionWS = TransformObjectToWorld(input.positionOS);
+	// output.positionCS = TransformWorldToHClip(output.positionWS);
+	// output.positionCS = TransformObjectToHClip(float4(input.positionOS.xyz+ input.normalOS.xyz * GetOutlineWidth() * 0.1, 1));
+	output.positionCS = TransformObjectToHClip(input.positionOS);
+	output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+
+	// can not use TransformWorldToHClip, because the step that transform world to view has translation
+	float3 outlineNormalOS = float3(input.outlineNorma1.xy, input.tangentOS.w);
+	float3 outlineDirection = TransformObjectToWorldNormal(outlineNormalOS);
+	outlineDirection = TransformWorldToViewDir(outlineDirection);
+	// beacuse it will be divided by w, so it need multiply w to get the distance independent outline
+	float2 ndcNormal = normalize(TransformWViewToHClip(outlineDirection).xy) * output.positionCS.w;
+	float ratio = _ScreenParams.y / _ScreenParams.x;
+	ndcNormal.x *= ratio;
+	output.positionCS.xy += 0.01 * GetOutlineWidth() * ndcNormal;
+
+	#if defined(NORMAL_MAP)
+	output.tangentWS = float4(TransformObjectToWorldDir(input.tangentOS.xyz), input.tangentOS.w);
+	#endif
+
+	//float4 baseST = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+	output.baseUV = TransformBaseUV(input.baseUV);
+
+	#if defined(DETAIL_MAP)
+	output.detailUV = TransformDetailUV(input.baseUV);
+	#endif
+	
+	return output;
+}
+
+float4 OutlineFragment(Varyings_Outline input) : SV_Target
+{
+	return GetOutlineColor();
+}
+
 #endif

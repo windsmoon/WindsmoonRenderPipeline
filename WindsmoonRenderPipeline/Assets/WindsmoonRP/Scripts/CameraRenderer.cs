@@ -1,4 +1,5 @@
-﻿using System.Net.Configuration;
+﻿using System;
+using System.Net.Configuration;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -14,11 +15,18 @@ namespace WindsmoonRP
         private const string defaultCommandBufferName = "Camera Renderer";
         #endregion
 
+        #region events
+        public static EventHandler<RenderPointEventArgs> PreRenderOpaqueEvent;
+        public static EventHandler<RenderPointEventArgs> PostRenderOpaqueEvent;
+        public static EventHandler<RenderPointEventArgs> PreRenderTransparentEvent;
+        public static EventHandler<RenderPointEventArgs> PostRenderTransparentEvent;
+        #endregion
+
         #region fields
         private ScriptableRenderContext renderContext;
         private Camera camera;
         private bool useHDR;
-        private CommandBuffer commandBuffer = new CommandBuffer();
+        private CommandBuffer commandBuffer;
         private CullingResults cullingResults;
         private static ShaderTagId unlitShaderTagID = new ShaderTagId("SRPDefaultUnlit");
         private static ShaderTagId litShaderTagID = new ShaderTagId("WindsmoonLit");
@@ -26,6 +34,7 @@ namespace WindsmoonRP
         private string commandBufferName;
         private Lighting lighting = new Lighting();
         private PostProcessingStack postProcessingStack = new PostProcessingStack();
+        private RenderPointEventArgs renderPointEventArgs;
 
         #if UNITY_EDITOR || DEBUG
         private static ShaderTagId[] legacyShaderTagIDs = 
@@ -43,6 +52,13 @@ namespace WindsmoonRP
         #endregion
         
         #region methods
+
+        public CameraRenderer()
+        {
+            commandBuffer = new CommandBuffer();
+            renderPointEventArgs = new RenderPointEventArgs(commandBuffer);
+        }
+        
         public void Render(ScriptableRenderContext renderContext, Camera camera, bool allowHDR, bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject, ShadowSettings shadowSettings, PostProcessingAsset postProcessingAsset)
         {
             this.renderContext = renderContext;
@@ -146,12 +162,39 @@ namespace WindsmoonRP
                                     | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.ReflectionProbes | lightsPerObjectFlag};
             drawingSettings.SetShaderPassName(1, litShaderTagID);
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
+
+            if (PreRenderOpaqueEvent != null)
+            {
+                PreRenderOpaqueEvent(this, renderPointEventArgs);
+                ExecuteCommandBuffer();
+            }
+            
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
             renderContext.DrawSkybox(camera);
+            
+            if (PostRenderOpaqueEvent != null)
+            {
+                PostRenderOpaqueEvent(this, renderPointEventArgs);
+                ExecuteCommandBuffer();
+            }
+
             sortingSettings.criteria = SortingCriteria.CommonTransparent;
             drawingSettings.sortingSettings = sortingSettings;
             filteringSettings.renderQueueRange = RenderQueueRange.transparent;
+
+            if (PreRenderTransparentEvent != null)
+            {
+                PreRenderTransparentEvent(this, renderPointEventArgs);
+                ExecuteCommandBuffer();
+            }
+            
             renderContext.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
+
+            if (PostRenderTransparentEvent != null)
+            {
+                PostRenderTransparentEvent(this, renderPointEventArgs);
+                ExecuteCommandBuffer();
+            }
         }
 
         #if UNITY_EDITOR || DEBUG
