@@ -24,22 +24,22 @@ MonoBehaviour:
     mode: 1
     Scatter: 0.541
   colorGradingSettings:
-    PostExposure: 1.77
-    Contrast: -31
-    ColorFilter: {r: 0.6792453, g: 0.5312211, b: 0.36205056, a: 1}
+    PostExposure: 0
+    Contrast: 0
+    ColorFilter: {r: 1, g: 1, b: 1, a: 1}
     HueShift: 0
-    Saturation: 57
+    Saturation: 0
   whiteBalanceSettings:
-    Temperature: 100
+    Temperature: 0
     Tint: 0
   splitToningSettings:
     ShadowColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
     HighLightColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
     Balance: 0
   channelMixerSettings:
-    Red: {x: 1, y: 0, z: 0.33333334}
-    Green: {x: 0, y: 0.5, z: 0.33333334}
-    Blue: {x: 0, y: 0.5, z: 0.33333334}
+    Red: {x: 1, y: 0, z: 0}
+    Green: {x: 0, y: 1, z: 0}
+    Blue: {x: 0, y: 0, z: 1}
   shadowsMidtonesHighLightsSettings:
     Shadows: {r: 1, g: 1, b: 1, a: 1}
     Midtones: {r: 1, g: 1, b: 1, a: 1}
@@ -49,4 +49,4 @@ MonoBehaviour:
     HighLightsStart: 0.55
     HighLightsEnd: 1
   toneMappingSettings:
-    Mode: 1
+    Mode: 0
