@@ -104,7 +104,7 @@ Material:
     - _Parallax: 0.02
     - _PremultiplyAlpha: 0
     - _ReceiveShadows: 0
-    - _ShadowRange: 0.418
+    - _ShadowRange: 0.444
     - _ShadowSmooth: 0.294
     - _Shadow_Mode: 0
     - _Smoothness: 0.949
