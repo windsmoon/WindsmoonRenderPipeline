@@ -385,7 +385,7 @@ PrefabInstance:
     - target: {fileID: 519358202452113766, guid: 91bcfc9610837a54da09a1b5a4ff21a8,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2483520447465323960, guid: 91bcfc9610837a54da09a1b5a4ff21a8,
         type: 3}
@@ -449,3 +449,107 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91bcfc9610837a54da09a1b5a4ff21a8, type: 3}
+--- !u!1001 &2011352981
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -597045760652548103, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: -0.00022382289
+      objectReference: {fileID: 0}
+    - target: {fileID: -597045760652548103, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: 0.0070063025
+      objectReference: {fileID: 0}
+    - target: {fileID: -597045760652548103, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: 0.804655
+      objectReference: {fileID: 0}
+    - target: {fileID: -597045760652548103, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.17734158
+      objectReference: {fileID: 0}
+    - target: {fileID: -597045760652548103, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.1443047
+      objectReference: {fileID: 0}
+    - target: {fileID: -597045760652548103, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.20596677
+      objectReference: {fileID: 0}
+    - target: {fileID: -597045760652548103, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_DirtyAABB
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5,
+        type: 3}
+      propertyPath: m_Name
+      value: chitanda_eru_v001
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3c36f0bdbd13fd14b84a518d3d8d27d5, type: 3}
