@@ -34,6 +34,8 @@ UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float4, _ShadowColor)
     UNITY_DEFINE_INSTANCED_PROP(float, _ShadowRange)
     UNITY_DEFINE_INSTANCED_PROP(float, _ShadowSmooth)
+    UNITY_DEFINE_INSTANCED_PROP(float4, _RimColor)
+    UNITY_DEFINE_INSTANCED_PROP(float4, _RimRange)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 #define INPUT_PROP(name) UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, name)
@@ -87,11 +89,6 @@ float4 GetMask(InputConfig config)
     #else
         return 1.0;
     #endif
-}
-
-float4 GetBaseMapColor(InputConfig config)
-{
-    
 }
 
 float4 GetBaseColor(InputConfig config)
@@ -209,6 +206,16 @@ float GetShadowRange()
 float GetShadowSmooth()
 {
     return INPUT_PROP(_ShadowSmooth);
+}
+
+float4 GetRimColor()
+{
+    return INPUT_PROP(_RimColor);
+}
+
+float2 GetRimRange()
+{
+    return INPUT_PROP(_RimRange); 
 }
 
 #endif

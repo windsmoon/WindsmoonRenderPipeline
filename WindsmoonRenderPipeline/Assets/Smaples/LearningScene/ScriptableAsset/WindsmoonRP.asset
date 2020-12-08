@@ -32,4 +32,5 @@ MonoBehaviour:
     otherShadowSettings:
       ShadowMapSize: 4096
       PCFMode: 3
-  postProcessingAsset: {fileID: 0}
+  postProcessingAsset: {fileID: 11400000, guid: c3b0bfa40ba31e048a87b1cae87287a9,
+    type: 2}

@@ -38,6 +38,8 @@
     	_CelShadeColor("Cel Shade Color", Color) = (1, 1, 1)
     	_ShadowColor("Shadow Color", Color) = (0.7, 0.7, 0.8)
 		_ShadowRange("Shadow Range", Range(0, 1)) = 0.5
+    	_RimColor("Rim Color", Color) = (0, 0, 0, 0)
+    	_RimRange("Rim Range (Min and Max, 0 ~ 1)", Vector) = (0.8, 1, 0, 0) 
 //        _ShadowSmooth("Shadow Smooth", Range(0, 1)) = 0.2
     	
 		[HideInInspector] _MainTex("Texture for Lightmap", 2D) = "white" {}

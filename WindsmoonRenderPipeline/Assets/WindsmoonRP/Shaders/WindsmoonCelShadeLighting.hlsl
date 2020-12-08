@@ -5,13 +5,24 @@ float3 GetLighting(Surface surface, Light light, BRDF brdfLight)
 {
     // return saturate(dot(surface.normal, light.direction)) * light.color * GetDirectBRDF(surface, brdfLight, light) * light.attenuation;
 	float nDotL = dot(surface.normal, light.direction);
+
+	// diffuse
 	float halfLambert = nDotL * 0.5 + 0.5;
 	half ramp = GetRamp(halfLambert - GetShadowRange()); // todo : edge light ?
 	// half ramp = smoothstep(0, _ShadowSmooth, halfLambert -  GetShadowRange());
 	// float3 diffuse = halfLambert >  GetShadowRange() ? GetCelShadeColor() : GetShadowColor();
 	float3 diffuse = lerp(GetShadowColor(), GetCelShadeColor(), ramp);
-	float3 color = diffuse * light.color * GetDirectBRDF(surface, brdfLight, light) * light.attenuation;
-	// return SAMPLE_TEXTURE2D(_RampMap, sampler_BaseMap, float2(halfLambert - GetShadowRange(), 0.5));
+
+	float nDotV = saturate(dot(surface.normal, surface.viewDirection));
+
+	// rim light
+	float f = 1 - nDotV;
+	float4 rimColor = GetRimColor();
+	float2 rimRange = GetRimRange();
+	f = smoothstep(rimRange.x, rimRange.y, f);
+	float3 rim = f * rimColor.rgb * rimColor.a;
+	
+	float3 color = (diffuse * GetDirectBRDF(surface, brdfLight, light) + rim) * light.color * light.attenuation;
 	return color;
 }
 
