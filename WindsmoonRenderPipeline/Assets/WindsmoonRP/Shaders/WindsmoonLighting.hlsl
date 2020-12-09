@@ -1,23 +1,14 @@
 #ifndef WINDSMOON_LIGHTING_INCLUDED
 #define WINDSMOON_LIGHTING_INCLUDED
 
-#if defined(CEL_SHADING)
-float3 GetLighting(Surface surface, Light light, BRDF brdfLight)
-{
-	// ?? why tutorial do light attenuation in saturate
-	//return saturate(dot(surface.normal, light.direction) * light.attenuation;) * light.color * GetDirectBRDFLight(surface, brdfLight, light);
-
-	return saturate(dot(surface.normal, light.direction)) * light.color * GetDirectBRDF(surface, brdfLight, light) * light.attenuation;
-}
-#else
 float3 GetLighting(Surface surface, Light light, BRDF brdfLight)
 {
     // ?? why tutorial do light attenuation in saturate
     //return saturate(dot(surface.normal, light.direction) * light.attenuation;) * light.color * GetDirectBRDFLight(surface, brdfLight, light);
+	// return light.attenuation.rrr;
 
     return saturate(dot(surface.normal, light.direction)) * light.color * GetDirectBRDF(surface, brdfLight, light) * light.attenuation;
 }
-#endif
 
 float3 GetLighting(Surface surfaceWS, BRDF brdf, GI gi) 
 {

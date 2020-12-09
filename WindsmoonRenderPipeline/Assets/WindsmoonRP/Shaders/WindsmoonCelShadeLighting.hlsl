@@ -3,26 +3,30 @@
 
 float3 GetLighting(Surface surface, Light light, BRDF brdfLight)
 {
+	// return light.attenuation.rrr;
+	
     // return saturate(dot(surface.normal, light.direction)) * light.color * GetDirectBRDF(surface, brdfLight, light) * light.attenuation;
 	float nDotL = dot(surface.normal, light.direction);
+	float nDotV = dot(surface.normal, surface.viewDirection);
+	float saturatedNDotV = saturate(nDotV);
+	float saturatedNDotL = saturate(nDotL);
 
 	// diffuse
 	float halfLambert = nDotL * 0.5 + 0.5;
-	half ramp = GetRamp(halfLambert - GetShadowRange()); // todo : edge light ?
+	half ramp = GetRamp(halfLambert * light.attenuation- GetShadowRange()); // todo : edge light ?
 	// half ramp = smoothstep(0, _ShadowSmooth, halfLambert -  GetShadowRange());
 	// float3 diffuse = halfLambert >  GetShadowRange() ? GetCelShadeColor() : GetShadowColor();
 	float3 diffuse = lerp(GetShadowColor(), GetCelShadeColor(), ramp);
 
-	float nDotV = saturate(dot(surface.normal, surface.viewDirection));
-
 	// rim light
-	float f = 1 - nDotV;
+	float f = 1 - saturatedNDotV;
+	f = f * (nDotL * 0.5 + 0.5); // (nDotL * 0.5 + 0.5) make rim light range bigger
+	float3 rimRange = GetRimRange();
 	float4 rimColor = GetRimColor();
-	float2 rimRange = GetRimRange();
 	f = smoothstep(rimRange.x, rimRange.y, f);
 	float3 rim = f * rimColor.rgb * rimColor.a;
-	
-	float3 color = (diffuse * GetDirectBRDF(surface, brdfLight, light) + rim) * light.color * light.attenuation;
+	// return rim;
+	float3 color = (diffuse * GetDirectBRDF(surface, brdfLight, light) + rim) * light.color;
 	return color;
 }
 

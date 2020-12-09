@@ -213,7 +213,7 @@ float4 GetRimColor()
     return INPUT_PROP(_RimColor);
 }
 
-float2 GetRimRange()
+float3 GetRimRange()
 {
     return INPUT_PROP(_RimRange); 
 }
