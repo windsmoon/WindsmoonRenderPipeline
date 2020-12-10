@@ -86,7 +86,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _MaskMapToggle: 0
-    - _Metallic: 0.605
+    - _Metallic: 0
     - _Mode: 0
     - _NormalMapToggle: 0
     - _NormalScale: 1
