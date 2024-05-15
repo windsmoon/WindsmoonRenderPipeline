@@ -33,28 +33,28 @@ namespace WindsmoonRP.PostProcessing
         private ToneMappingSettings toneMappingSettings = new ToneMappingSettings();
         #endregion
 
-        #region properties
-        public Material Material
-        {
-            get
-            {
-                if (material == null && shader != null)
-                {
-                    material = new Material(shader);
-                    material.hideFlags = HideFlags.HideAndDontSave;
-                }
-
-                return material;
-            }
-        }
-
-        public BloomSettings BloomSettings => bloomSettings;
-        public ColorGradingSettings ColorGradingSettings => colorGradingSettings;
-        public WhiteBalanceSettings WhiteBalanceSettings => whiteBalanceSettings;
-        public SplitToningSettings SplitToningSettings => splitToningSettings;
-        public ChannelMixerSettings ChannelMixerSettings => channelMixerSettings;
-        public ShadowsMidtonesHighLightsSettings ShadowsMidtonesHighLightsSettings => shadowsMidtonesHighLightsSettings;
-        public ToneMappingSettings ToneMappingSettings => toneMappingSettings;
-        #endregion
-    }
-}
+        
+}#region properties
+         public Material Material
+         {
+             get
+             {
+                 if (material == null && shader != null)
+                 {
+                     material = new Material(shader);
+                     material.hideFlags = HideFlags.HideAndDontSave;
+                 }
+ 
+                 return material;
+             }
+         }
+ 
+         public BloomSettings BloomSettings => bloomSettings;
+         public ColorGradingSettings ColorGradingSettings => colorGradingSettings;
+         public WhiteBalanceSettings WhiteBalanceSettings => whiteBalanceSettings;
+         public SplitToningSettings SplitToningSettings => splitToningSettings;
+         public ChannelMixerSettings ChannelMixerSettings => channelMixerSettings;
+         public ShadowsMidtonesHighLightsSettings ShadowsMidtonesHighLightsSettings => shadowsMidtonesHighLightsSettings;
+         public ToneMappingSettings ToneMappingSettings => toneMappingSettings;
+         #endregion
+     }
